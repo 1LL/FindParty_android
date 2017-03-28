@@ -4,12 +4,25 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "ga.findparty.findparty"
-        minSdkVersion 16
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        def versionPropsFile = file('version.properties') // version.properties 파일에서 버전 정보를 관리합니다
+        if (versionPropsFile.canRead()) {
+            def Properties versionProps = new Properties()
+            versionProps.load(new FileInputStream(versionPropsFile))
+            def code = versionProps['VERSION_CODE'].toInteger() + 1 // Gradle이 실행될 때 버전 코드 증가
+            versionProps['VERSION_CODE'] = code.toString()
+            versionProps.store(versionPropsFile.newWriter(), null)
+            defaultConfig {
+                applicationId "ga.findparty.findparty"
+                minSdkVersion 16
+                targetSdkVersion 25
+                versionCode code
+                versionName "1.0.0"
+                testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+                versionName "1.0.0"// + code
+            }
+        } else {
+            throw new GradleException("Could not read version.properties!") // version.properties를 읽어올 수 없을 때
+        }
     }
     buildTypes {
         release {
@@ -20,10 +33,27 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:design:25.1.1'
+    compile 'com.android.support:support-v4:25.+'
+    compile 'com.android.support:cardview-v7:25.1.1'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    //
+    // kenburn view
+    compile 'com.flaviofaria:kenburnsview:1.0.7'
+    // picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'jp.wasabeef:picasso-transformations:2.1.0'
+    // edit text
+    compile 'com.rengwuxian.materialedittext:library:2.1.4'
+    // Material Dialog
+    compile 'com.afollestad.material-dialogs:core:0.9.3.0'
+    // loding indicator
+    compile 'com.wang.avi:library:2.1.2'
     testCompile 'junit:junit:4.12'
+    compile files('libs/3rdparty_login_library_android_4.1.4_source.jar')
 }

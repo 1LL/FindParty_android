@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_wt_info"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ga.findparty.findparty.profile.WtInfoActivity"
+    android:background="@color/background_color">
+
+    <Button
+        android:id="@+id/nextBtn"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/dark_gray"
+        android:text="계속"
+        android:textColor="@color/light_gray"
+        android:gravity="center"
+        android:layout_alignParentBottom="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparency"
+        android:layout_above="@id/nextBtn"
+        android:clickable="false">
+
+
+        <RelativeLayout
+            android:background="@color/transparency"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <FrameLayout
+                android:id="@+id/fm_profile_img"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:id="@+id/backgroundImg"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:scaleType="centerCrop"
+                    android:background="@color/colorPrimary" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_gravity="bottom"
+                    android:background="@color/background_color" />
+
+                <ImageView
+                    android:id="@+id/profileImg"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="80dp"
+                    android:layout_gravity="center_horizontal"
+                    />
+
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_below="@+id/fm_profile_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/background_color">
+
+
+                <TextView
+                    android:id="@+id/profileName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="name"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profileName"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:minHeight="40dp"
+                        >
+
+                        <TextView
+                            android:id="@+id/tv_school"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="학교"
+                            android:textSize="12sp"
+                            android:textColor="@color/profile_title"
+                            android:gravity="right"
+                            android:paddingRight="5dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/btn_school"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="학교를 선택해주세요."
+                            android:textSize="12sp"
+                            android:textColor="@color/profile_content"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:minHeight="40dp"
+                        >
+
+                        <TextView
+                            android:id="@+id/tv_studentId"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="학번"
+                            android:textSize="12sp"
+                            android:textColor="@color/profile_title"
+                            android:gravity="right"
+                            android:paddingRight="5dp"
+                            />
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edit_studentId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="학번을 입력해주세요."
+                            android:textSize="12sp"
+                            android:textColor="@color/profile_content"
+                            android:inputType="number"
+                            app:met_minCharacters="1"
+                            app:met_singleLineEllipsis="true"
+                            app:met_primaryColor="@color/profile_content"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:minHeight="40dp"
+                        >
+
+                        <TextView
+                            android:id="@+id/tv_email"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="이메일"
+                            android:textSize="12sp"
+                            android:textColor="@color/profile_title"
+                            android:gravity="right"
+                            android:paddingRight="5dp"
+                            />
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edit_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="이메일을 입력해주세요."
+                            android:textSize="12sp"
+                            android:textColor="@color/profile_content"
+                            app:met_minCharacters="1"
+                            app:met_singleLineEllipsis="true"
+                            app:met_primaryColor="@color/profile_content"
+                            />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:minHeight="40dp"
+                        >
+
+                        <TextView
+                            android:id="@+id/tv_contact"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="연락수단"
+                            android:textSize="12sp"
+                            android:textColor="@color/profile_title"
+                            android:gravity="right"
+                            android:paddingRight="5dp"
+                            />
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edit_contact"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="연락수단을 입력해주세요.(ex. 카톡ID)"
+                            android:textSize="12sp"
+                            android:textColor="@color/profile_content"
+                            app:met_minCharacters="1"
+                            app:met_maxCharacters="30"
+                            app:met_singleLineEllipsis="true"
+                            app:met_primaryColor="@color/profile_content"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:minHeight="40dp"
+                        >
+
+                        <TextView
+                            android:id="@+id/tv_interest"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="관심분야"
+                            android:textSize="12sp"
+                            android:textColor="@color/profile_title"
+                            android:gravity="right"
+                            android:paddingRight="5dp"
+                            />
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:id="@+id/interest_field"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                >
+
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/interest_btn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:text="선택하기"
+                                    android:textStyle="bold"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/white"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:paddingRight="10dp"
+                                    android:paddingLeft="10dp"
+                                    android:background="@drawable/round_button_blue"
+                                    />
+
+                            </RelativeLayout>
+
+
+                        </FrameLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:minHeight="40dp"
+                        >
+
+                        <TextView
+                            android:id="@+id/tv_intro"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="자기소개"
+                            android:textSize="12sp"
+                            android:textColor="@color/profile_title"
+                            android:gravity="right"
+                            android:paddingRight="5dp"
+                            />
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edit_intro"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="자기소개를 입력해주세요."
+                            android:textSize="12sp"
+                            android:textColor="@color/profile_content"
+                            app:met_primaryColor="@color/profile_content"
+                            app:met_minCharacters="1"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

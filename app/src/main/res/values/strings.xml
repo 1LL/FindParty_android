@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">FindParty</string>
+    <string name="app_name">파티구함</string>
+    <string name="facebook_app_id">246669205794721</string>
 </resources>
