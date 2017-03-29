@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">파티구함</string>
     <string name="facebook_app_id">246669205794721</string>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
 </resources>
