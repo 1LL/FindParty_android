@@ -21,7 +21,8 @@ android {
                 versionName "1.0.0"// + code
             }
         } else {
-            throw new GradleException("Could not read version.properties!") // version.properties를 읽어올 수 없을 때
+            throw new GradleException("Could not read version.properties!")
+            // version.properties를 읽어올 수 없을 때
         }
     }
     buildTypes {
@@ -37,23 +38,23 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.1'
-    compile 'com.android.support:design:25.1.1'
-    compile 'com.android.support:support-v4:25.+'
-    compile 'com.android.support:cardview-v7:25.1.1'
-    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     //
     // kenburn view
-    compile 'com.flaviofaria:kenburnsview:1.0.7'
     // picasso
+    // edit text
+    // Material Dialog
+    // loding indicator
+    compile files('libs/3rdparty_login_library_android_4.1.4_source.jar')
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:design:25.1.1'
+    compile 'com.android.support:support-v4:25.1.1'
+    compile 'com.android.support:cardview-v7:25.1.1'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.flaviofaria:kenburnsview:1.0.7'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
-    // edit text
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
-    // Material Dialog
     compile 'com.afollestad.material-dialogs:core:0.9.3.0'
-    // loding indicator
     compile 'com.wang.avi:library:2.1.2'
     testCompile 'junit:junit:4.12'
-    compile files('libs/3rdparty_login_library_android_4.1.4_source.jar')
 }

@@ -114,19 +114,6 @@ public class StartActivity extends AppCompatActivity implements FacebookLoginSup
             }
         });
 
-        findViewById(R.id.fb_logout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                facebookLogin.logout();
-            }
-        });
-        findViewById(R.id.naver_logout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                naverLogin.deleteToken();
-            }
-        });
-
     }
 
     private void checkAlreadyLogin(){

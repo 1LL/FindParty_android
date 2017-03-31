@@ -32,6 +32,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
+import ga.findparty.findparty.fragment.MyClassFragment;
+import ga.findparty.findparty.fragment.MyTeamFragment;
 import ga.findparty.findparty.util.FacebookLogin;
 import ga.findparty.findparty.util.NaverLogin;
 import ga.findparty.findparty.util.ParsePHP;
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private NavigationView navigationView;
 
-    private String[] menuList = {"nav_show_my_team", "nav_info", "nav_report", "nav_help", "nav_open_source"};
+    private String[] menuList = {"nav_my_team", "nav_my_class", "nav_info", "nav_report", "nav_help", "nav_open_source"};
 
     // Logout
     private MaterialDialog progressDialog;
@@ -103,6 +105,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView tv_email = (TextView)headerView.findViewById(R.id.tv_email);
         tv_email.setText(email);
 
+
+        showFragment("nav_my_team", new MyTeamFragment());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("내 팀");
+        }
+        navigationView.setCheckedItem(R.id.nav_my_team);
+
     }
 
     @Override
@@ -115,8 +124,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item) {
 
         int id = item.getItemId();
 
@@ -124,7 +134,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if(id == R.id.nav_my_team){
 
-            showSnackbar("내팀");
+            showFragment("nav_my_team", new MyTeamFragment());
+            title = "내 팀";
+
+        }else if(id == R.id.nav_my_class){
+
+            showFragment("nav_my_class", new MyClassFragment());
+            title = "내 수업";
 
         } else if (id == R.id.nav_show_profile) {
 
