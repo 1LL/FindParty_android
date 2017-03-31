@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import ga.findparty.findparty.R;
 
-public class MyTeamFragment extends Fragment {
+public class MyTeamFragment extends BaseFragment {
 
     // UI
     private View view;

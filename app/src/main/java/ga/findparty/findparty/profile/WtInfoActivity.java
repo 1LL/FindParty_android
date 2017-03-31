@@ -225,6 +225,7 @@ public class WtInfoActivity extends AppCompatActivity {
             switch (msg.what)
             {
                 case MSG_MESSAGE_FINISH:
+                    StartActivity.USER_SCHOOL = (String)StartActivity.USER_DATA.get("school");
                     progressDialog.hide();
                     redirectMainActivity();
                     break;

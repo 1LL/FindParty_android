@@ -169,4 +169,41 @@ public class AdditionalFunc {
 
     }
 
+    public static ArrayList<HashMap<String, String>> getCourseInfo(String data){
+
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+
+        try {
+            JSONObject jObject = new JSONObject(data);
+            JSONArray results = jObject.getJSONArray("result");
+            String countTemp = (String)jObject.get("num_result");
+            int count = Integer.parseInt(countTemp);
+
+            for ( int i = 0; i < count; ++i ) {
+                JSONObject temp = results.getJSONObject(i);
+
+                HashMap<String, String> hashTemp = new HashMap<>();
+                hashTemp.put("id", (String)temp.get("id"));
+                hashTemp.put("school", (String)temp.get("school"));
+                hashTemp.put("department", (String)temp.get("department"));
+                hashTemp.put("no", (String)temp.get("no"));
+                hashTemp.put("class", (String)temp.get("class"));
+                hashTemp.put("title", (String)temp.get("title"));
+                hashTemp.put("classification", (String)temp.get("classification"));
+                hashTemp.put("day", (String)temp.get("day"));
+                hashTemp.put("room", (String) temp.get("room"));
+                hashTemp.put("lecturer", (String) temp.get("lecturer"));
+
+                list.add(hashTemp);
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+
+    }
+
 }

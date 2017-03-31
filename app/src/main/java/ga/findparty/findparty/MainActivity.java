@@ -39,7 +39,7 @@ import ga.findparty.findparty.util.NaverLogin;
 import ga.findparty.findparty.util.ParsePHP;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener  {
 
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_FINISH = 500;
@@ -319,13 +319,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
-    }
-
-    public void showSnackbar(String msg){
-        Snackbar snackbar = Snackbar.make(getWindow().getDecorView().getRootView(), msg, Snackbar.LENGTH_SHORT);
-        View view = snackbar.getView();
-        view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.snackbar_color));
-        snackbar.show();
     }
 
 }

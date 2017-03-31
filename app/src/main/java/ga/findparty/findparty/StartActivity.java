@@ -35,7 +35,7 @@ import ga.findparty.findparty.util.NaverLogin;
 import ga.findparty.findparty.util.NaverLoginSupport;
 import ga.findparty.findparty.util.ParsePHP;
 
-public class StartActivity extends AppCompatActivity implements FacebookLoginSupport, NaverLoginSupport {
+public class StartActivity extends BaseActivity implements FacebookLoginSupport, NaverLoginSupport {
 
     public static final String FACEBOOK_LOGIN = "facebook";
     public static final String NAVER_LOGIN = "naver";
@@ -65,6 +65,7 @@ public class StartActivity extends AppCompatActivity implements FacebookLoginSup
 
     public static String USER_ID = "";
     public static HashMap<String, Object> USER_DATA = new HashMap<>();
+    public static String USER_SCHOOL = "";
 
     // ToWtInfo
     private String wt_id;
@@ -181,6 +182,7 @@ public class StartActivity extends AppCompatActivity implements FacebookLoginSup
                     rl_background.setVisibility(View.VISIBLE);
                     break;
                 case MSG_MESSAGE_SUCCESS:
+                    USER_SCHOOL = (String)USER_DATA.get("school");
                     redirectMainActivity();
                     break;
                 case MSG_MESSAGE_FAIL_FB:
@@ -285,13 +287,6 @@ public class StartActivity extends AppCompatActivity implements FacebookLoginSup
         }
     }
 
-
-    public void showSnackbar(String msg){
-        Snackbar snackbar = Snackbar.make(getWindow().getDecorView().getRootView(), msg, Snackbar.LENGTH_SHORT);
-        View view = snackbar.getView();
-        view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.snackbar_color));
-        snackbar.show();
-    }
 
     private void printKeyHash(){
         try {
