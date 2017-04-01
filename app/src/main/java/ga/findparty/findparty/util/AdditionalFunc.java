@@ -123,6 +123,37 @@ public class AdditionalFunc {
 
     }
 
+    public static String addFieldToString(ArrayList<HashMap<String, String>> list){
+
+        String str = "";
+
+        for(int i=0; i<list.size(); i++){
+
+            HashMap<String, String> item = list.get(i);
+            str += (item.get("title") + ":" + item.get("number"));
+
+            if(i<list.size()-1){
+                str += ";";
+            }
+
+        }
+
+        return str;
+
+    }
+
+    public static String interestListToString(ArrayList<String> list){
+
+        String str = "";
+
+        for(String s : list){
+            str += (" # " + s);
+        }
+
+        return str;
+
+    }
+
     public static HashMap<String, Object> getUserInfo(String data){
 
         HashMap<String, Object> item = new HashMap<>();
@@ -231,6 +262,96 @@ public class AdditionalFunc {
                 hashTemp.put("day", (String)temp.get("day"));
                 hashTemp.put("room", (String) temp.get("room"));
                 hashTemp.put("lecturer", (String) temp.get("lecturer"));
+
+                list.add(hashTemp);
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+
+    }
+
+    public static ArrayList<HashMap<String, Object>> getBoardListInfo(String data){
+
+        ArrayList<HashMap<String, Object>> list = new ArrayList<>();
+
+        try {
+            JSONObject jObject = new JSONObject(data);
+            JSONArray results = jObject.getJSONArray("result");
+            String countTemp = (String)jObject.get("num_result");
+            int count = Integer.parseInt(countTemp);
+
+            for ( int i = 0; i < count; ++i ) {
+                JSONObject temp = results.getJSONObject(i);
+
+                HashMap<String, Object> hashTemp = new HashMap<>();
+                hashTemp.put("id", (String)temp.get("id"));
+                hashTemp.put("courseId", (String)temp.get("courseId"));
+                hashTemp.put("userId", (String)temp.get("userId"));
+                hashTemp.put("name", (String)temp.get("name"));
+                hashTemp.put("img", (String)temp.get("img"));
+                hashTemp.put("email", (String)temp.get("email"));
+                hashTemp.put("content", (String)temp.get("content"));
+                hashTemp.put("start", Long.parseLong((String)temp.get("start")));
+                hashTemp.put("finish", Long.parseLong((String)temp.get("finish")));
+
+                ArrayList<String> in = new ArrayList<String>();
+                String interest = (String)temp.get("interest");
+                if(!interest.equals("")){
+                    for(String s : interest.split(",")){
+                        in.add(s);
+                    }
+                }
+                hashTemp.put("interest", in);
+
+                list.add(hashTemp);
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+
+    }
+
+    public static ArrayList<HashMap<String, Object>> getBoardFieldListInfo(String data){
+
+        ArrayList<HashMap<String, Object>> list = new ArrayList<>();
+
+        try {
+            JSONObject jObject = new JSONObject(data);
+            JSONArray results = jObject.getJSONArray("result");
+            String countTemp = (String)jObject.get("num_result");
+            int count = Integer.parseInt(countTemp);
+
+            for ( int i = 0; i < count; ++i ) {
+                JSONObject temp = results.getJSONObject(i);
+
+                HashMap<String, Object> hashTemp = new HashMap<>();
+                hashTemp.put("id", (String)temp.get("id"));
+                hashTemp.put("boardId", (String)temp.get("boardId"));
+                hashTemp.put("field", (String)temp.get("field"));
+                hashTemp.put("number", (String)temp.get("number"));
+
+                String participant = (String)temp.get("participant");
+                ArrayList<String> par = new ArrayList<>();
+                if(!participant.equals("")){
+                    String[] p = participant.split(",");
+
+                    for(String s : p){
+                        par.add(s);
+                    }
+                }
+                if (par.size() > 0 && par.get(0).equals("")) {
+                    par.remove(0);
+                }
+                hashTemp.put("participant", par);
 
                 list.add(hashTemp);
 

@@ -1,41 +1,40 @@
-package ga.findparty.findparty.fragment;
+package ga.findparty.findparty.activity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import ga.findparty.findparty.R;
-import ga.findparty.findparty.activity.AddCourseActivity;
-import ga.findparty.findparty.activity.BoardListCustomAdapter;
-import ga.findparty.findparty.activity.CourseBoardActivity;
 import ga.findparty.findparty.util.OnAdapterSupport;
 import ga.findparty.findparty.util.OnLoadMoreListener;
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 
 /**
  * Created by tw on 2016-08-16.
  */
-public class UserCourseListCustomAdapter extends RecyclerView.Adapter<UserCourseListCustomAdapter.ViewHolder> {
+public class DetailBoardCustomAdapter extends RecyclerView.Adapter<DetailBoardCustomAdapter.ViewHolder> {
 
     // UI
     private Context context;
-    private MyClassFragment fragment;
+    private DetailBoardActivity activity;
 
     private OnAdapterSupport onAdapterSupport;
 
-    public ArrayList<HashMap<String, String>> list;
+    public ArrayList<HashMap<String, Object>> list;
 
     // 무한 스크롤
     private OnLoadMoreListener onLoadMoreListener;
@@ -44,11 +43,11 @@ public class UserCourseListCustomAdapter extends RecyclerView.Adapter<UserCourse
     private boolean loading = false;
 
     // 생성자
-    public UserCourseListCustomAdapter(Context context, ArrayList<HashMap<String, String>> list, RecyclerView recyclerView, OnAdapterSupport listener, Fragment fragment) {
+    public DetailBoardCustomAdapter(Context context, ArrayList<HashMap<String, Object>> list, RecyclerView recyclerView, OnAdapterSupport listener, Activity activity) {
         this.context = context;
         this.list = list;
         this.onAdapterSupport = listener;
-        this.fragment = (MyClassFragment)fragment;
+        this.activity = (DetailBoardActivity)activity;
 
         if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
             recyclerView.addOnScrollListener(new ScrollListener() {
@@ -68,61 +67,22 @@ public class UserCourseListCustomAdapter extends RecyclerView.Adapter<UserCourse
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //recycler view에 반복될 아이템 레이아웃 연결
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_course_list_custom_item,null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.detail_board_custom_item,null);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final HashMap<String,String> item = list.get(position);
+        final HashMap<String,Object> item = list.get(position);
         final int pos = position;
 
-        final String id = item.get("id");
-        final String courseId = item.get("courseId");
-        String department = item.get("department");
-        String no = item.get("no");
-        String _class = item.get("class");
-        final String title = item.get("title");
-        String classification = item.get("classification");
-        String day = item.get("day");
-        String room = item.get("room");
-        String lecturer = item.get("lecturer");
+        String title = (String)item.get("field");
+        String number = (String)item.get("number") + "명";
+        String currentNumber = "현재 " + ((ArrayList)item.get("participant")).size() + "명 지원 중";
 
-        holder.tv_title.setText(title + "-" + _class);
-        holder.tv_day.setText(day);
-
-        if("".equals(room)){
-
-            if(!"".equals(lecturer)){
-                holder.tv_room.setText(lecturer);
-            }
-
-        }else{
-
-            if("".equals(lecturer)){
-                holder.tv_room.setText(room);
-            }else{
-                holder.tv_room.setText(room + ", " + lecturer);
-            }
-
-        }
-
-        holder.root.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                fragment.checkRemoveUserCourse(id, title, pos);
-                return false;
-            }
-        });
-        holder.root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, CourseBoardActivity.class);
-                intent.putExtra("courseId", courseId);
-                intent.putExtra("title", title);
-                onAdapterSupport.redirectActivity(intent);
-            }
-        });
+        holder.tv_title.setText(title);
+        holder.tv_number.setText(number);
+        holder.tv_currentNumber.setText(currentNumber);
 
     }
 
@@ -198,17 +158,15 @@ public class UserCourseListCustomAdapter extends RecyclerView.Adapter<UserCourse
 
     public final static class ViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout root;
         TextView tv_title;
-        TextView tv_day;
-        TextView tv_room;
+        TextView tv_number;
+        TextView tv_currentNumber;
 
         public ViewHolder(View v) {
             super(v);
-            root = (RelativeLayout)v.findViewById(R.id.root);
             tv_title = (TextView)v.findViewById(R.id.tv_title);
-            tv_day = (TextView)v.findViewById(R.id.tv_day);
-            tv_room = (TextView)v.findViewById(R.id.tv_room);
+            tv_number = (TextView)v.findViewById(R.id.tv_number);
+            tv_currentNumber = (TextView)v.findViewById(R.id.tv_current_number);
         }
     }
 

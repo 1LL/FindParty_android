@@ -57,5 +57,7 @@ dependencies {
     compile 'com.wang.avi:library:2.1.2'
     // floating button
     compile 'com.getbase:floatingactionbutton:1.10.1'
+    // date range picker
+    compile 'com.borax12.materialdaterangepicker:library:1.9'
     testCompile 'junit:junit:4.12'
 }

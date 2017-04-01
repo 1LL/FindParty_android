@@ -245,7 +245,7 @@ public class MyClassFragment extends BaseFragment implements OnAdapterSupport {
 
     @Override
     public void redirectActivity(Intent intent) {
-
+        startActivity(intent);
     }
 
     @Override
