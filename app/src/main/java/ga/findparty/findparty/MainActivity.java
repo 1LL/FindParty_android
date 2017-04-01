@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
@@ -106,11 +107,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         tv_email.setText(email);
 
 
-        showFragment("nav_my_team", new MyTeamFragment());
+        showFragment("nav_my_class", new MyClassFragment());
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("내 팀");
+            getSupportActionBar().setTitle("내 수업");
         }
-        navigationView.setCheckedItem(R.id.nav_my_team);
+        navigationView.setCheckedItem(R.id.nav_my_class);
 
     }
 
@@ -120,7 +121,24 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            new MaterialDialog.Builder(this)
+                    .title("확인")
+                    .content("앱을 종료하시겠습니까?")
+                    .positiveText("종료")
+                    .negativeText("취소")
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            MainActivity.super.onBackPressed();
+                        }
+                    })
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
         }
     }
 
@@ -180,20 +198,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             String text = getResources().getString(R.string.app_name) + " " + getVersion() + "(build " + getVersionCode() + ")";
 
-            showSnackbar(text);
-//            final MaterialDialog dialog = new MaterialDialog(MainActivity.this);
-//            dialog.content(text)
-//                    .title("정보")
-//                    .btnNum(1)
-//                    .btnText("확인")
-//                    .showAnim(new FadeEnter())
-//                    .show();
-//            dialog.setOnBtnClickL(new OnBtnClickL() {
-//                @Override
-//                public void onBtnClick() {
-//                    dialog.dismiss();
-//                }
-//            });
+            new MaterialDialog.Builder(this)
+                    .title("정보")
+                    .content(text)
+                    .positiveText("확인")
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
 
         } else if(id == R.id.nav_report){
 
@@ -274,6 +289,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     break;
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) {
+            case MyClassFragment.ADD_COURSE: {
+                MyClassFragment fragment = (MyClassFragment) getSupportFragmentManager().findFragmentByTag("nav_my_class");
+                fragment.getUserCourseList();
+                break;
+            }
+            default:
+                break;
+        }
+
     }
 
     private void removeUser(String userId){

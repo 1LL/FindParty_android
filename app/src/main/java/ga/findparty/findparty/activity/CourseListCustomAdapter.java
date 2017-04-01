@@ -46,7 +46,7 @@ public class CourseListCustomAdapter extends RecyclerView.Adapter<CourseListCust
 
     // 무한 스크롤
     private OnLoadMoreListener onLoadMoreListener;
-    private int visibleThreshold = 3;
+    private int visibleThreshold = 10;
     private int lastVisibleItem, totalItemCount;
     private boolean loading = false;
 
@@ -125,7 +125,7 @@ public class CourseListCustomAdapter extends RecyclerView.Adapter<CourseListCust
         holder.addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.addCourse(item);
+                activity.checkAddCourse(item);
             }
         });
 
@@ -158,7 +158,7 @@ public class CourseListCustomAdapter extends RecyclerView.Adapter<CourseListCust
     }
 
     public abstract class ScrollListener extends RecyclerView.OnScrollListener {
-        private static final int HIDE_THRESHOLD = 100;
+        private static final int HIDE_THRESHOLD = 30;
         private int scrolledDistance = 0;
         private boolean controlsVisible = true;
 
