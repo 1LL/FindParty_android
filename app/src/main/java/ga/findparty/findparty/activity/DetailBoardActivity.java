@@ -3,6 +3,7 @@ package ga.findparty.findparty.activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.squareup.picasso.Picasso;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -21,6 +24,7 @@ import java.util.Objects;
 import ga.findparty.findparty.BaseActivity;
 import ga.findparty.findparty.Information;
 import ga.findparty.findparty.R;
+import ga.findparty.findparty.StartActivity;
 import ga.findparty.findparty.util.AdditionalFunc;
 import ga.findparty.findparty.util.OnAdapterSupport;
 import ga.findparty.findparty.util.OnLoadMoreListener;
@@ -28,6 +32,8 @@ import ga.findparty.findparty.util.ParsePHP;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class DetailBoardActivity extends BaseActivity implements OnAdapterSupport {
+
+    public static final int UPDATE_APPLY_FORM = 100;
 
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_FILL_FORM = 500;
@@ -121,6 +127,30 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
         String startText = AdditionalFunc.getDateString((Long)item.get("start"));
         String finishText = AdditionalFunc.getDateString((Long)item.get("finish"));
         tv_duration.setText(startText + " ~ " + finishText);
+
+    }
+
+    public void applyField(HashMap<String, Object> map){
+
+        String userId = (String)item.get("userId");
+
+        if(StartActivity.USER_ID.equals(userId)){
+            new MaterialDialog.Builder(this)
+                    .title("경고")
+                    .content("본인 글에는 지원할 수 없습니다.")
+                    .positiveText("확인")
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        }else{
+            Intent intent = new Intent(getApplicationContext(), ApplyFormActivity.class);
+            intent.putExtra("field", (String)map.get("field"));
+            startActivityForResult(intent, UPDATE_APPLY_FORM);
+        }
 
     }
 

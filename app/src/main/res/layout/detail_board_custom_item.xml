@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/addBtn"
+                android:layout_toLeftOf="@+id/applyBtn"
                 android:background="@color/white"
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
@@ -80,7 +80,7 @@
             </RelativeLayout>
 
             <Button
-                android:id="@+id/addBtn"
+                android:id="@+id/applyBtn"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:background="@color/transparency"

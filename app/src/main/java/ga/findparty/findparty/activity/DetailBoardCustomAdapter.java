@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -83,6 +84,13 @@ public class DetailBoardCustomAdapter extends RecyclerView.Adapter<DetailBoardCu
         holder.tv_title.setText(title);
         holder.tv_number.setText(number);
         holder.tv_currentNumber.setText(currentNumber);
+
+        holder.applyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.applyField(item);
+            }
+        });
 
     }
 
@@ -161,12 +169,14 @@ public class DetailBoardCustomAdapter extends RecyclerView.Adapter<DetailBoardCu
         TextView tv_title;
         TextView tv_number;
         TextView tv_currentNumber;
+        Button applyBtn;
 
         public ViewHolder(View v) {
             super(v);
             tv_title = (TextView)v.findViewById(R.id.tv_title);
             tv_number = (TextView)v.findViewById(R.id.tv_number);
             tv_currentNumber = (TextView)v.findViewById(R.id.tv_current_number);
+            applyBtn = (Button)v.findViewById(R.id.applyBtn);
         }
     }
 
