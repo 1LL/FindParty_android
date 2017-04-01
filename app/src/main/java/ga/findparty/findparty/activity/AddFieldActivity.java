@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -17,6 +18,7 @@ import ga.findparty.findparty.R;
 
 public class AddFieldActivity extends AppCompatActivity {
 
+    private RelativeLayout root;
     private MaterialEditText editTitle;
     private MaterialEditText editNumber;
     private Button submit;
@@ -31,6 +33,14 @@ public class AddFieldActivity extends AppCompatActivity {
     }
 
     void init(){
+
+        root = (RelativeLayout)findViewById(R.id.activity_add_field);
+        root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddFieldActivity.super.onBackPressed();
+            }
+        });
 
         TextWatcher textWatcher = new TextWatcher() {
             @Override

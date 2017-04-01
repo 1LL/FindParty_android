@@ -8,8 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -50,11 +53,13 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
     private TextView tv_content;
     private TextView tv_interest;
     private TextView tv_duration;
+    // UI-FIELD
+    private LinearLayout li_add_field;
 
     // Recycle View
-    private RecyclerView rv;
-    private LinearLayoutManager mLinearLayoutManager;
-    private DetailBoardCustomAdapter adapter;
+//    private RecyclerView rv;
+//    private LinearLayoutManager mLinearLayoutManager;
+//    private DetailBoardCustomAdapter adapter;
 
 
     private String boardId;
@@ -87,11 +92,12 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
         tv_interest = (TextView)findViewById(R.id.tv_interest);
         tv_duration = (TextView)findViewById(R.id.tv_duration);
 
-        mLinearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rv = (RecyclerView) findViewById(R.id.rv);
-        rv.setHasFixedSize(true);
-        rv.setLayoutManager(mLinearLayoutManager);
+//        mLinearLayoutManager = new LinearLayoutManager(getApplicationContext());
+//        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//        rv = (RecyclerView) findViewById(R.id.rv);
+//        rv.setHasFixedSize(true);
+//        rv.setLayoutManager(mLinearLayoutManager);
+        li_add_field = (LinearLayout)findViewById(R.id.li_add_field);
 
         loadingContent = (AVLoadingIndicatorView)findViewById(R.id.loading_content);
         loadingDuration = (AVLoadingIndicatorView)findViewById(R.id.loading_duration);
@@ -105,11 +111,42 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
 
     public void makeList(){
 
-        adapter = new DetailBoardCustomAdapter(getApplicationContext(), fieldList, rv, this, this);
+//        adapter = new DetailBoardCustomAdapter(getApplicationContext(), fieldList, rv, this, this);
+//
+//        rv.setAdapter(adapter);
+//
+//        adapter.notifyDataSetChanged();
 
-        rv.setAdapter(adapter);
+        li_add_field.removeAllViews();
 
-        adapter.notifyDataSetChanged();
+        for(int i=0; i<fieldList.size(); i++){
+            final HashMap<String, Object> map  = fieldList.get(i);
+
+            View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.detail_board_custom_item, null, false);
+
+            TextView tv_title = (TextView)v.findViewById(R.id.tv_title);
+            TextView tv_number = (TextView)v.findViewById(R.id.tv_number);
+            TextView tv_currentNumber = (TextView)v.findViewById(R.id.tv_current_number);
+            Button applyBtn = (Button)v.findViewById(R.id.applyBtn);
+
+            String title = (String)map.get("field");
+            String number = (String)map.get("number") + "명";
+            String currentNumber = "현재 " + ((ArrayList)map.get("participant")).size() + "명 지원 중";
+
+            tv_title.setText(title);
+            tv_number.setText(number);
+            tv_currentNumber.setText(currentNumber);
+
+            applyBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    applyField(map);
+                }
+            });
+
+            li_add_field.addView(v);
+
+        }
 
     }
 
