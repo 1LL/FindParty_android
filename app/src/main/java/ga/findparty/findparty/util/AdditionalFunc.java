@@ -123,6 +123,18 @@ public class AdditionalFunc {
 
     }
 
+    public static String integerArrayListToString(ArrayList<Integer> list){
+
+        String str = "";
+        for(int i=0; i<list.size(); i++){
+            str += list.get(i);
+            if(i+1<list.size()){
+                str += ",";
+            }
+        }
+        return str;
+    }
+
     public static String addFieldToString(ArrayList<HashMap<String, String>> list){
 
         String str = "";

@@ -19,6 +19,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import ga.findparty.findparty.BaseActivity;
@@ -29,6 +32,8 @@ import ga.findparty.findparty.util.AdditionalFunc;
 import ga.findparty.findparty.util.ParsePHP;
 
 public class ApplyFormActivity extends BaseActivity {
+
+    public static final int UPDATE_TIME = 100;
 
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_FINISH = 500;
@@ -50,10 +55,29 @@ public class ApplyFormActivity extends BaseActivity {
     private int skill=0;
     private String impossibleTime;
 
+    private ArrayList<Integer> monList;
+    private ArrayList<Integer> tueList;
+    private ArrayList<Integer> wedList;
+    private ArrayList<Integer> thuList;
+    private ArrayList<Integer> friList;
+
+
+    Comparator<Integer> compare = new Comparator<Integer>() {
+        @Override public int compare(Integer lhs, Integer rhs) {
+            return lhs.compareTo(rhs);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply_form);
+
+        monList = new ArrayList<>();
+        tueList = new ArrayList<>();
+        wedList = new ArrayList<>();
+        thuList = new ArrayList<>();
+        friList = new ArrayList<>();
 
         Intent intent = getIntent();
         item = (HashMap<String, Object>)intent.getSerializableExtra("item");
@@ -123,7 +147,13 @@ public class ApplyFormActivity extends BaseActivity {
         timeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(ApplyFormActivity.this, SelectTimeActivity.class);
+                intent.putIntegerArrayListExtra("mon", monList);
+                intent.putIntegerArrayListExtra("tue", tueList);
+                intent.putIntegerArrayListExtra("wed", wedList);
+                intent.putIntegerArrayListExtra("thu", thuList);
+                intent.putIntegerArrayListExtra("fri", friList);
+                startActivityForResult(intent, UPDATE_TIME);
             }
         });
         editContent = (MaterialEditText)findViewById(R.id.edit_content);
@@ -166,6 +196,11 @@ public class ApplyFormActivity extends BaseActivity {
         map.put("userId", StartActivity.USER_ID);
         map.put("skill", skill+"");
         map.put("content", AdditionalFunc.replaceNewLineString(editContent.getText().toString()));
+        map.put("mon", AdditionalFunc.integerArrayListToString(monList));
+        map.put("tue", AdditionalFunc.integerArrayListToString(tueList));
+        map.put("wed", AdditionalFunc.integerArrayListToString(wedList));
+        map.put("thu", AdditionalFunc.integerArrayListToString(thuList));
+        map.put("fri", AdditionalFunc.integerArrayListToString(friList));
 
         new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
 
@@ -227,6 +262,28 @@ public class ApplyFormActivity extends BaseActivity {
                 default:
                     break;
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) {
+            case UPDATE_TIME:
+                monList = data.getIntegerArrayListExtra("mon");
+                tueList = data.getIntegerArrayListExtra("tue");
+                wedList = data.getIntegerArrayListExtra("wed");
+                thuList = data.getIntegerArrayListExtra("thu");
+                friList = data.getIntegerArrayListExtra("fri");
+                Collections.sort(monList, compare);
+                Collections.sort(tueList, compare);
+                Collections.sort(wedList, compare);
+                Collections.sort(thuList, compare);
+                Collections.sort(friList, compare);
+                timeBtn.setText("수정하기");
+                break;
+            default:
+                break;
         }
     }
 
