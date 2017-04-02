@@ -89,6 +89,10 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
         holder.tv_email.setText((String)item.get("email"));
         holder.tv_content.setText((String)item.get("content"));
 
+        int current = (int)item.get("current");
+        int total = (int)item.get("total");
+        holder.tv_count.setText(current + " / " + total);
+
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

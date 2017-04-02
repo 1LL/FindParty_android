@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.squareup.picasso.Picasso;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -41,10 +42,13 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_FILL_FORM = 500;
     private final int MSG_MESSAGE_MAKE_LIST = 501;
+    private final int MSG_MESSAGE_SHOW_APPLY_FORM = 502;
+    private final int MSG_MESSAGE_NOT_SHOW_APPLY_FORM = 503;
 
     private AVLoadingIndicatorView loadingContent;
     private AVLoadingIndicatorView loadingDuration;
     private AVLoadingIndicatorView loadingList;
+    private MaterialDialog progressDialog;
 
     // UI
     private ImageView profileImage;
@@ -56,15 +60,10 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
     // UI-FIELD
     private LinearLayout li_add_field;
 
-    // Recycle View
-//    private RecyclerView rv;
-//    private LinearLayoutManager mLinearLayoutManager;
-//    private DetailBoardCustomAdapter adapter;
-
-
     private String boardId;
     private HashMap<String, Object> item;
     private ArrayList<HashMap<String, Object>> fieldList;
+    private HashMap<String, Object> lastTouchField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +84,13 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
 
     private void init(){
 
+        progressDialog = new MaterialDialog.Builder(this)
+                .content("잠시만 기다려주세요.")
+                .progress(true, 0)
+                .progressIndeterminateStyle(true)
+                .theme(Theme.LIGHT)
+                .build();
+
         profileImage = (ImageView)findViewById(R.id.profileImg);
         tv_name = (TextView)findViewById(R.id.tv_name);
         tv_email = (TextView)findViewById(R.id.tv_email);
@@ -92,11 +98,6 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
         tv_interest = (TextView)findViewById(R.id.tv_interest);
         tv_duration = (TextView)findViewById(R.id.tv_duration);
 
-//        mLinearLayoutManager = new LinearLayoutManager(getApplicationContext());
-//        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        rv = (RecyclerView) findViewById(R.id.rv);
-//        rv.setHasFixedSize(true);
-//        rv.setLayoutManager(mLinearLayoutManager);
         li_add_field = (LinearLayout)findViewById(R.id.li_add_field);
 
         loadingContent = (AVLoadingIndicatorView)findViewById(R.id.loading_content);
@@ -110,12 +111,6 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
     }
 
     public void makeList(){
-
-//        adapter = new DetailBoardCustomAdapter(getApplicationContext(), fieldList, rv, this, this);
-//
-//        rv.setAdapter(adapter);
-//
-//        adapter.notifyDataSetChanged();
 
         li_add_field.removeAllViews();
 
@@ -167,8 +162,9 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
 
     }
 
-    public void applyField(HashMap<String, Object> map){
+    public void applyField(HashMap<String, Object> h){
 
+        lastTouchField = h;
         String userId = (String)item.get("userId");
 
         if(StartActivity.USER_ID.equals(userId)){
@@ -184,9 +180,26 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
                     })
                     .show();
         }else{
-            Intent intent = new Intent(getApplicationContext(), ApplyFormActivity.class);
-            intent.putExtra("field", (String)map.get("field"));
-            startActivityForResult(intent, UPDATE_APPLY_FORM);
+            progressDialog.show();
+
+            HashMap<String, String> map = new HashMap<>();
+            map.put("service", "checkApplyAble");
+            map.put("userId", StartActivity.USER_ID);
+            map.put("boardFieldIdList", AdditionalFunc.makeBoardFieldIdListToString(fieldList));
+
+            new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
+
+                @Override
+                protected void afterThreadFinish(String data) {
+
+                    if("1".equals(data)){
+                        handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_SHOW_APPLY_FORM));
+                    }else{
+                        handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_NOT_SHOW_APPLY_FORM));
+                    }
+
+                }
+            }.start();
         }
 
     }
@@ -225,6 +238,26 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
                 case MSG_MESSAGE_MAKE_LIST:
                     makeList();
                     loadingList.hide();
+                    break;
+                case MSG_MESSAGE_SHOW_APPLY_FORM:
+                    progressDialog.hide();
+                    Intent intent = new Intent(getApplicationContext(), ApplyFormActivity.class);
+                    intent.putExtra("item", lastTouchField);
+                    startActivityForResult(intent, UPDATE_APPLY_FORM);
+                    break;
+                case MSG_MESSAGE_NOT_SHOW_APPLY_FORM:
+                    progressDialog.hide();
+                    new MaterialDialog.Builder(DetailBoardActivity.this)
+                            .title("알림")
+                            .content("이미 다른 분야에 지원하였습니다.")
+                            .positiveText("확인")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
                     break;
                 default:
                     break;
@@ -276,6 +309,18 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
             }
         }.start();
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) {
+            case UPDATE_APPLY_FORM:
+                getFieldList();
+                break;
+            default:
+                break;
+        }
     }
 
 }

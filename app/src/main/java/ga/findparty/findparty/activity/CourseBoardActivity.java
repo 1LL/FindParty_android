@@ -278,11 +278,13 @@ public class CourseBoardActivity extends BaseActivity implements OnAdapterSuppor
     @Override
     public void showView() {
         toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
+        menu.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideView() {
         toolbar.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2));
+        menu.setVisibility(View.INVISIBLE);
     }
 
     @Override

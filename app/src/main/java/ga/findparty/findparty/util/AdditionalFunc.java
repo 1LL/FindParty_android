@@ -154,6 +154,23 @@ public class AdditionalFunc {
 
     }
 
+    public static String makeBoardFieldIdListToString(ArrayList<HashMap<String, Object>> list){
+
+        String str = "";
+        for(int i=0; i<list.size(); i++){
+
+            HashMap<String, Object> map = list.get(i);
+            str += (String)map.get("id");
+
+            if(i<list.size()-1){
+                str += ",";
+            }
+        }
+
+        return str;
+
+    }
+
     public static HashMap<String, Object> getUserInfo(String data){
 
         HashMap<String, Object> item = new HashMap<>();
@@ -298,6 +315,8 @@ public class AdditionalFunc {
                 hashTemp.put("content", (String)temp.get("content"));
                 hashTemp.put("start", Long.parseLong((String)temp.get("start")));
                 hashTemp.put("finish", Long.parseLong((String)temp.get("finish")));
+                hashTemp.put("current", Integer.parseInt((String)temp.get("current")));
+                hashTemp.put("total", Integer.parseInt((String)temp.get("total")));
 
                 ArrayList<String> in = new ArrayList<String>();
                 String interest = (String)temp.get("interest");

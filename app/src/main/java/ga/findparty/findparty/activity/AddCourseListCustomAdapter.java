@@ -2,18 +2,13 @@ package ga.findparty.findparty.activity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,21 +16,21 @@ import java.util.HashMap;
 import ga.findparty.findparty.R;
 import ga.findparty.findparty.util.OnAdapterSupport;
 import ga.findparty.findparty.util.OnLoadMoreListener;
-import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 
 /**
  * Created by tw on 2016-08-16.
  */
-public class DetailBoardCustomAdapter extends RecyclerView.Adapter<DetailBoardCustomAdapter.ViewHolder> {
+public class AddCourseListCustomAdapter extends RecyclerView.Adapter<AddCourseListCustomAdapter.ViewHolder> {
 
     // UI
     private Context context;
-    private DetailBoardActivity activity;
+    private AddCourseActivity activity;
 
+    //    private MaterialNavigationDrawer activity;
     private OnAdapterSupport onAdapterSupport;
 
-    public ArrayList<HashMap<String, Object>> list;
+    public ArrayList<HashMap<String, String>> list;
 
     // 무한 스크롤
     private OnLoadMoreListener onLoadMoreListener;
@@ -44,11 +39,11 @@ public class DetailBoardCustomAdapter extends RecyclerView.Adapter<DetailBoardCu
     private boolean loading = false;
 
     // 생성자
-    public DetailBoardCustomAdapter(Context context, ArrayList<HashMap<String, Object>> list, RecyclerView recyclerView, OnAdapterSupport listener, Activity activity) {
+    public AddCourseListCustomAdapter(Context context, ArrayList<HashMap<String, String>> list, RecyclerView recyclerView, OnAdapterSupport listener, Activity activity) {
         this.context = context;
         this.list = list;
         this.onAdapterSupport = listener;
-        this.activity = (DetailBoardActivity)activity;
+        this.activity = (AddCourseActivity)activity;
 
         if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
             recyclerView.addOnScrollListener(new ScrollListener() {
@@ -68,27 +63,57 @@ public class DetailBoardCustomAdapter extends RecyclerView.Adapter<DetailBoardCu
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //recycler view에 반복될 아이템 레이아웃 연결
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.detail_board_custom_item,null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.add_course_list_custom_item,null);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final HashMap<String,Object> item = list.get(position);
+        final HashMap<String,String> item = list.get(position);
         final int pos = position;
 
-        String title = (String)item.get("field");
-        String number = (String)item.get("number") + "명";
-        String currentNumber = "현재 " + ((ArrayList)item.get("participant")).size() + "명 지원 중";
+        String id = item.get("id");
+        String department = item.get("department");
+        String no = item.get("no");
+        String _class = item.get("class");
+        String title = item.get("title");
+        String classification = item.get("classification");
+        String day = item.get("day");
+        String room = item.get("room");
+        String lecturer = item.get("lecturer");
 
-        holder.tv_title.setText(title);
-        holder.tv_number.setText(number);
-        holder.tv_currentNumber.setText(currentNumber);
+        holder.tv_title.setText(title + "-" + _class);
+        holder.tv_day.setText(day);
 
-        holder.applyBtn.setOnClickListener(new View.OnClickListener() {
+        if("".equals(room)){
+
+            if(!"".equals(lecturer)){
+                holder.tv_room.setText(lecturer);
+            }
+
+        }else{
+
+            if("".equals(lecturer)){
+                holder.tv_room.setText(room);
+            }else{
+                holder.tv_room.setText(room + ", " + lecturer);
+            }
+
+        }
+
+        final String text = "개설학과 : " + department + "\n" +
+                "학수번호 : " + no + "\n" +
+                "분반 : " + _class + "\n" +
+                "수업명 : " + title + "\n" +
+                "이수구분 : " + classification + "\n" +
+                "요일 및 강의시간 : \n" + day + "\n" +
+                "강의실 : " + room + "\n" +
+                "교수 : " + lecturer;
+
+        holder.addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.applyField(item);
+                activity.checkAddCourse(item);
             }
         });
 
@@ -167,16 +192,16 @@ public class DetailBoardCustomAdapter extends RecyclerView.Adapter<DetailBoardCu
     public final static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_title;
-        TextView tv_number;
-        TextView tv_currentNumber;
-        Button applyBtn;
+        TextView tv_day;
+        TextView tv_room;
+        Button addBtn;
 
         public ViewHolder(View v) {
             super(v);
             tv_title = (TextView)v.findViewById(R.id.tv_title);
-            tv_number = (TextView)v.findViewById(R.id.tv_number);
-            tv_currentNumber = (TextView)v.findViewById(R.id.tv_current_number);
-            applyBtn = (Button)v.findViewById(R.id.applyBtn);
+            tv_day = (TextView)v.findViewById(R.id.tv_day);
+            tv_room = (TextView)v.findViewById(R.id.tv_room);
+            addBtn = (Button)v.findViewById(R.id.addBtn);
         }
     }
 

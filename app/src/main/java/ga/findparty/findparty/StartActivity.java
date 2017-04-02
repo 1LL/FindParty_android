@@ -15,6 +15,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.facebook.FacebookException;
@@ -62,6 +63,7 @@ public class StartActivity extends BaseActivity implements FacebookLoginSupport,
     // UI
     private KenBurnsView kenBurnsView;
     private RelativeLayout rl_background;
+    private LinearLayout li_login;
 
     public static String USER_ID = "";
     public static HashMap<String, Object> USER_DATA = new HashMap<>();
@@ -97,6 +99,8 @@ public class StartActivity extends BaseActivity implements FacebookLoginSupport,
 //                .into(kenBurnsView);
 
         rl_background = (RelativeLayout) findViewById(R.id.rl_background);
+        rl_background.setVisibility(View.INVISIBLE);
+        li_login = (LinearLayout)findViewById(R.id.li_login);
 
         fbLogin = (ImageView)findViewById(R.id.fb_login);
         fbLogin.setOnClickListener(new View.OnClickListener() {

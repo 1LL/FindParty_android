@@ -2,6 +2,9 @@ package ga.findparty.findparty.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,12 +14,27 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.util.HashMap;
+
 import ga.findparty.findparty.BaseActivity;
+import ga.findparty.findparty.Information;
 import ga.findparty.findparty.R;
+import ga.findparty.findparty.StartActivity;
+import ga.findparty.findparty.util.AdditionalFunc;
+import ga.findparty.findparty.util.ParsePHP;
 
 public class ApplyFormActivity extends BaseActivity {
+
+    private MyHandler handler = new MyHandler();
+    private final int MSG_MESSAGE_FINISH = 500;
+    private final int MSG_MESSAGE_ERROR = 501;
+
+    private MaterialDialog progressDialog;
 
     private RelativeLayout root;
     private TextView tv_field;
@@ -27,8 +45,9 @@ public class ApplyFormActivity extends BaseActivity {
     private MaterialEditText editContent;
     private Button applyBtn;
 
+    private HashMap<String, Object> item;
     private String field;
-    private int level=0;
+    private int skill=0;
     private String impossibleTime;
 
     @Override
@@ -37,13 +56,21 @@ public class ApplyFormActivity extends BaseActivity {
         setContentView(R.layout.activity_apply_form);
 
         Intent intent = getIntent();
-        field = intent.getStringExtra("field");
+        item = (HashMap<String, Object>)intent.getSerializableExtra("item");
+        field = (String)item.get("field");
 
         init();
 
     }
 
     private void init(){
+
+        progressDialog = new MaterialDialog.Builder(this)
+                .content("잠시만 기다려주세요.")
+                .progress(true, 0)
+                .progressIndeterminateStyle(true)
+                .theme(Theme.LIGHT)
+                .build();
 
         root = (RelativeLayout)findViewById(R.id.activity_apply_form);
         root.setOnClickListener(new View.OnClickListener() {
@@ -59,19 +86,19 @@ public class ApplyFormActivity extends BaseActivity {
                 int tag = (int)v.getTag();
                 switch (tag){
                     case 1:
-                        level = 1;
+                        skill = 1;
                         start1.setImageResource(R.drawable.star_yellow);
                         start2.setImageResource(R.drawable.star_black);
                         start3.setImageResource(R.drawable.star_black);
                         break;
                     case 2:
-                        level = 2;
+                        skill = 2;
                         start1.setImageResource(R.drawable.star_yellow);
                         start2.setImageResource(R.drawable.star_yellow);
                         start3.setImageResource(R.drawable.star_black);
                         break;
                     case 3:
-                        level = 3;
+                        skill = 3;
                         start1.setImageResource(R.drawable.star_yellow);
                         start2.setImageResource(R.drawable.star_yellow);
                         start3.setImageResource(R.drawable.star_yellow);
@@ -116,11 +143,12 @@ public class ApplyFormActivity extends BaseActivity {
                 checkApplyable();
             }
         });
+
         applyBtn = (Button)findViewById(R.id.applyBtn);
         applyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                apply();
             }
         });
 
@@ -128,11 +156,36 @@ public class ApplyFormActivity extends BaseActivity {
 
     }
 
+    private void apply(){
 
+        progressDialog.show();
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("service", "applyField");
+        map.put("boardFieldId", (String)item.get("id"));
+        map.put("userId", StartActivity.USER_ID);
+        map.put("skill", skill+"");
+        map.put("content", AdditionalFunc.replaceNewLineString(editContent.getText().toString()));
+
+        new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
+
+            @Override
+            protected void afterThreadFinish(String data) {
+
+                if("1".equals(data)) {
+                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_FINISH));
+                }else{
+                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_ERROR));
+                }
+
+            }
+        }.start();
+
+    }
 
     private void checkApplyable(){
 
-        boolean isLevel = level > 0;
+        boolean isLevel = skill > 0;
         boolean isContent = editContent.isCharactersCountValid();
 
         boolean setting = isLevel && isContent;
@@ -144,6 +197,37 @@ public class ApplyFormActivity extends BaseActivity {
             applyBtn.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_gray));
         }
 
+    }
+
+    private class MyHandler extends Handler {
+
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what)
+            {
+                case MSG_MESSAGE_FINISH:
+                    progressDialog.dismiss();
+                    setResult(DetailBoardActivity.UPDATE_APPLY_FORM);
+                    finish();
+                    break;
+                case MSG_MESSAGE_ERROR:
+                    progressDialog.hide();
+                    new MaterialDialog.Builder(ApplyFormActivity.this)
+                            .title("오류")
+                            .content("잠시 후 다시시도해주세요.")
+                            .positiveText("확인")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
 }

@@ -58,7 +58,7 @@ public class AddCourseActivity extends BaseActivity implements OnAdapterSupport{
     // Recycle View
     private RecyclerView rv;
     private LinearLayoutManager mLinearLayoutManager;
-    private CourseListCustomAdapter adapter;
+    private AddCourseListCustomAdapter adapter;
     private boolean isLoadFinish;
 
     @Override
@@ -199,7 +199,7 @@ public class AddCourseActivity extends BaseActivity implements OnAdapterSupport{
 
     public void makeList(){
 
-        adapter = new CourseListCustomAdapter(getApplicationContext(), list, rv, this, this);
+        adapter = new AddCourseListCustomAdapter(getApplicationContext(), list, rv, this, this);
 
         rv.setAdapter(adapter);
 
