@@ -3,6 +3,7 @@ package ga.findparty.findparty.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,9 @@ import java.util.ArrayList;
 import ga.findparty.findparty.R;
 
 public class SelectTimeActivity extends AppCompatActivity {
+
+    private Toolbar toolbar;
+    private boolean isEditAble;
 
     private Button saveBtn;
 
@@ -42,11 +46,20 @@ public class SelectTimeActivity extends AppCompatActivity {
         thuList = intent.getIntegerArrayListExtra("thu");
         friList = intent.getIntegerArrayListExtra("fri");
 
+        isEditAble = intent.getBooleanExtra("isEditAble", true);
+
         init();
 
     }
 
     private void init(){
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if(isEditAble){
+            toolbar.setVisibility(View.GONE);
+        }else{
+            toolbar.setVisibility(View.VISIBLE);
+        }
 
         saveBtn = (Button)findViewById(R.id.save_btn);
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +75,10 @@ public class SelectTimeActivity extends AppCompatActivity {
                 finish();
             }
         });
+        if(!isEditAble){
+            saveBtn.setEnabled(false);
+            saveBtn.setVisibility(View.GONE);
+        }
 
         li_timeTitle = (LinearLayout)findViewById(R.id.li_time_title);
         li_mon = (LinearLayout)findViewById(R.id.li_mon);
@@ -129,95 +146,105 @@ public class SelectTimeActivity extends AppCompatActivity {
                         if(monList.contains(j)){
                             tv.setBackgroundResource(R.drawable.board_select);
                         }
-                        tv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                int tag = (int)v.getTag();
-                                if(monList.contains(tag)){
-                                    v.setBackgroundResource(R.drawable.board);
-                                    monList.remove((Integer)tag);
-                                }else{
-                                    v.setBackgroundResource(R.drawable.board_select);
-                                    monList.add(tag);
+                        if(isEditAble) {
+                            tv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int tag = (int) v.getTag();
+                                    if (monList.contains(tag)) {
+                                        v.setBackgroundResource(R.drawable.board);
+                                        monList.remove((Integer) tag);
+                                    } else {
+                                        v.setBackgroundResource(R.drawable.board_select);
+                                        monList.add(tag);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                         li_mon.addView(v);
                         break;
                     case 2:
                         if(tueList.contains(j)){
                             tv.setBackgroundResource(R.drawable.board_select);
                         }
-                        tv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                int tag = (int)v.getTag();
-                                if(tueList.contains(tag)){
-                                    v.setBackgroundResource(R.drawable.board);
-                                    tueList.remove((Integer)tag);
-                                }else{
-                                    v.setBackgroundResource(R.drawable.board_select);
-                                    tueList.add(tag);
+                        if(isEditAble) {
+                            tv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int tag = (int) v.getTag();
+                                    if (tueList.contains(tag)) {
+                                        v.setBackgroundResource(R.drawable.board);
+                                        tueList.remove((Integer) tag);
+                                    } else {
+                                        v.setBackgroundResource(R.drawable.board_select);
+                                        tueList.add(tag);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                         li_tue.addView(v);
                         break;
                     case 3:
                         if(wedList.contains(j)){
                             tv.setBackgroundResource(R.drawable.board_select);
                         }
-                        tv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                int tag = (int)v.getTag();
-                                if(wedList.contains(tag)){
-                                    v.setBackgroundResource(R.drawable.board);
-                                    wedList.remove((Integer)tag);
-                                }else{
-                                    v.setBackgroundResource(R.drawable.board_select);
-                                    wedList.add(tag);
+                        if(isEditAble) {
+                            tv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int tag = (int) v.getTag();
+                                    if (wedList.contains(tag)) {
+                                        v.setBackgroundResource(R.drawable.board);
+                                        wedList.remove((Integer) tag);
+                                    } else {
+                                        v.setBackgroundResource(R.drawable.board_select);
+                                        wedList.add(tag);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                         li_wed.addView(v);
                         break;
                     case 4:
                         if(thuList.contains(j)){
                             tv.setBackgroundResource(R.drawable.board_select);
                         }
-                        tv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                int tag = (int)v.getTag();
-                                if(thuList.contains(tag)){
-                                    v.setBackgroundResource(R.drawable.board);
-                                    thuList.remove((Integer)tag);
-                                }else{
-                                    v.setBackgroundResource(R.drawable.board_select);
-                                    thuList.add(tag);
+                        if(isEditAble) {
+                            tv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int tag = (int) v.getTag();
+                                    if (thuList.contains(tag)) {
+                                        v.setBackgroundResource(R.drawable.board);
+                                        thuList.remove((Integer) tag);
+                                    } else {
+                                        v.setBackgroundResource(R.drawable.board_select);
+                                        thuList.add(tag);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                         li_thu.addView(v);
                         break;
                     case 5:
                         if(friList.contains(j)){
                             tv.setBackgroundResource(R.drawable.board_select);
                         }
-                        tv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                int tag = (int)v.getTag();
-                                if(friList.contains(tag)){
-                                    v.setBackgroundResource(R.drawable.board);
-                                    friList.remove((Integer)tag);
-                                }else{
-                                    v.setBackgroundResource(R.drawable.board_select);
-                                    friList.add(tag);
+                        if(isEditAble) {
+                            tv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int tag = (int) v.getTag();
+                                    if (friList.contains(tag)) {
+                                        v.setBackgroundResource(R.drawable.board);
+                                        friList.remove((Integer) tag);
+                                    } else {
+                                        v.setBackgroundResource(R.drawable.board_select);
+                                        friList.add(tag);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                         li_fri.addView(v);
                         break;
                 }

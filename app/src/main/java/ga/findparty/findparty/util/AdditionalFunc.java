@@ -396,4 +396,89 @@ public class AdditionalFunc {
 
     }
 
+    public static ArrayList<HashMap<String, Object>> getApplyParticipantList(String data){
+
+        ArrayList<HashMap<String, Object>> list = new ArrayList<>();
+
+        try {
+            JSONObject jObject = new JSONObject(data);
+            JSONArray results = jObject.getJSONArray("result");
+            String countTemp = (String)jObject.get("num_result");
+            int count = Integer.parseInt(countTemp);
+
+            for ( int i = 0; i < count; ++i ) {
+                JSONObject temp = results.getJSONObject(i);
+
+                HashMap<String, Object> hashTemp = new HashMap<>();
+                hashTemp.put("id", (String)temp.get("id"));
+                hashTemp.put("boardFieldId", (String)temp.get("boardFieldId"));
+                hashTemp.put("skill", Integer.parseInt((String)temp.get("skill")));
+                hashTemp.put("content", (String)temp.get("content"));
+                hashTemp.put("userId", (String)temp.get("userId"));
+                hashTemp.put("name", (String)temp.get("name"));
+                hashTemp.put("img", (String)temp.get("img"));
+                hashTemp.put("email", (String)temp.get("email"));
+
+                String mon = (String)temp.get("mon");
+                ArrayList<Integer> monList = new ArrayList<>();
+                for(String s : mon.split(",")){
+                    if("".equals(s)){
+                        break;
+                    }
+                    monList.add(Integer.parseInt(s));
+                }
+                hashTemp.put("mon", monList);
+
+                String tue = (String)temp.get("tue");
+                ArrayList<Integer> tueList = new ArrayList<>();
+                for(String s : tue.split(",")){
+                    if("".equals(s)){
+                        break;
+                    }
+                    tueList.add(Integer.parseInt(s));
+                }
+                hashTemp.put("tue", tueList);
+
+                String wed = (String)temp.get("wed");
+                ArrayList<Integer> wedList = new ArrayList<>();
+                for(String s : wed.split(",")){
+                    if("".equals(s)){
+                        break;
+                    }
+                    wedList.add(Integer.parseInt(s));
+                }
+                hashTemp.put("wed", wedList);
+
+                String thu = (String)temp.get("thu");
+                ArrayList<Integer> thuList = new ArrayList<>();
+                for(String s : thu.split(",")){
+                    if("".equals(s)){
+                        break;
+                    }
+                    thuList.add(Integer.parseInt(s));
+                }
+                hashTemp.put("thu", thuList);
+
+                String fri = (String)temp.get("fri");
+                ArrayList<Integer> friList = new ArrayList<>();
+                for(String s : fri.split(",")){
+                    if("".equals(s)){
+                        break;
+                    }
+                    friList.add(Integer.parseInt(s));
+                }
+                hashTemp.put("fri", friList);
+
+                list.add(hashTemp);
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+
+    }
+
 }

@@ -43,9 +43,9 @@ public class ApplyFormActivity extends BaseActivity {
 
     private RelativeLayout root;
     private TextView tv_field;
-    private ImageView start1;
-    private ImageView start2;
-    private ImageView start3;
+    private ImageView star1;
+    private ImageView star2;
+    private ImageView star3;
     private TextView timeBtn;
     private MaterialEditText editContent;
     private Button applyBtn;
@@ -111,21 +111,21 @@ public class ApplyFormActivity extends BaseActivity {
                 switch (tag){
                     case 1:
                         skill = 1;
-                        start1.setImageResource(R.drawable.star_yellow);
-                        start2.setImageResource(R.drawable.star_black);
-                        start3.setImageResource(R.drawable.star_black);
+                        star1.setImageResource(R.drawable.star_yellow);
+                        star2.setImageResource(R.drawable.star_black);
+                        star3.setImageResource(R.drawable.star_black);
                         break;
                     case 2:
                         skill = 2;
-                        start1.setImageResource(R.drawable.star_yellow);
-                        start2.setImageResource(R.drawable.star_yellow);
-                        start3.setImageResource(R.drawable.star_black);
+                        star1.setImageResource(R.drawable.star_yellow);
+                        star2.setImageResource(R.drawable.star_yellow);
+                        star3.setImageResource(R.drawable.star_black);
                         break;
                     case 3:
                         skill = 3;
-                        start1.setImageResource(R.drawable.star_yellow);
-                        start2.setImageResource(R.drawable.star_yellow);
-                        start3.setImageResource(R.drawable.star_yellow);
+                        star1.setImageResource(R.drawable.star_yellow);
+                        star2.setImageResource(R.drawable.star_yellow);
+                        star3.setImageResource(R.drawable.star_yellow);
                         break;
                 }
                 checkApplyable();
@@ -134,15 +134,15 @@ public class ApplyFormActivity extends BaseActivity {
 
         tv_field = (TextView)findViewById(R.id.tv_field);
         tv_field.setText(field);
-        start1 = (ImageView)findViewById(R.id.star1);
-        start1.setTag(1);
-        start1.setOnClickListener(listener);
-        start2 = (ImageView)findViewById(R.id.star2);
-        start2.setTag(2);
-        start2.setOnClickListener(listener);
-        start3 = (ImageView)findViewById(R.id.star3);
-        start3.setTag(3);
-        start3.setOnClickListener(listener);
+        star1 = (ImageView)findViewById(R.id.star1);
+        star1.setTag(1);
+        star1.setOnClickListener(listener);
+        star2 = (ImageView)findViewById(R.id.star2);
+        star2.setTag(2);
+        star2.setOnClickListener(listener);
+        star3 = (ImageView)findViewById(R.id.star3);
+        star3.setTag(3);
+        star3.setOnClickListener(listener);
         timeBtn = (TextView)findViewById(R.id.time_btn);
         timeBtn.setOnClickListener(new View.OnClickListener() {
             @Override

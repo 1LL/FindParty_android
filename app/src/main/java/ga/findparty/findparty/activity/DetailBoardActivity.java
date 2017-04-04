@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,19 +20,16 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 import ga.findparty.findparty.BaseActivity;
 import ga.findparty.findparty.Information;
 import ga.findparty.findparty.R;
 import ga.findparty.findparty.StartActivity;
 import ga.findparty.findparty.util.AdditionalFunc;
-import ga.findparty.findparty.util.OnAdapterSupport;
-import ga.findparty.findparty.util.OnLoadMoreListener;
 import ga.findparty.findparty.util.ParsePHP;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class DetailBoardActivity extends BaseActivity implements OnAdapterSupport {
+public class DetailBoardActivity extends BaseActivity {
 
     public static final int UPDATE_APPLY_FORM = 100;
 
@@ -118,6 +112,15 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
             final HashMap<String, Object> map  = fieldList.get(i);
 
             View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.detail_board_custom_item, null, false);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(DetailBoardActivity.this, ShowApplyPeopleActivity.class);
+                    intent.putExtra("id", (String)map.get("id"));
+                    intent.putExtra("title", (String)map.get("field"));
+                    startActivity(intent);
+                }
+            });
 
             TextView tv_title = (TextView)v.findViewById(R.id.tv_title);
             TextView tv_number = (TextView)v.findViewById(R.id.tv_number);
@@ -201,26 +204,6 @@ public class DetailBoardActivity extends BaseActivity implements OnAdapterSuppor
                 }
             }.start();
         }
-
-    }
-
-    @Override
-    public void showView() {
-
-    }
-
-    @Override
-    public void hideView() {
-
-    }
-
-    @Override
-    public void redirectActivityForResult(Intent intent) {
-
-    }
-
-    @Override
-    public void redirectActivity(Intent intent) {
 
     }
 
