@@ -35,6 +35,7 @@ import java.util.HashMap;
 
 import ga.findparty.findparty.fragment.MyClassFragment;
 import ga.findparty.findparty.fragment.MyTeamFragment;
+import ga.findparty.findparty.profile.ProfileActivity;
 import ga.findparty.findparty.util.FacebookLogin;
 import ga.findparty.findparty.util.NaverLogin;
 import ga.findparty.findparty.util.ParsePHP;
@@ -162,7 +163,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         } else if (id == R.id.nav_show_profile) {
 
-            showSnackbar("프로필 보기");
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            intent.putExtra("id", StartActivity.USER_ID);
+            startActivity(intent);
 
         } else if(id == R.id.nav_logout){
 

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import ga.findparty.findparty.Information;
 import ga.findparty.findparty.R;
 import ga.findparty.findparty.StartActivity;
+import ga.findparty.findparty.profile.ProfileActivity;
 import ga.findparty.findparty.util.AdditionalFunc;
 import ga.findparty.findparty.util.ParsePHP;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
@@ -106,6 +107,15 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
             final HashMap<String, Object> map  = list.get(i);
 
             View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.show_apply_people_custom_item, null, false);
+
+            v.findViewById(R.id.rl_profile).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ShowApplyPeopleActivity.this, ProfileActivity.class);
+                    intent.putExtra("id", (String)map.get("userId"));
+                    startActivity(intent);
+                }
+            });
 
             TextView tv_name = (TextView)v.findViewById(R.id.tv_name);
             TextView tv_email = (TextView)v.findViewById(R.id.tv_email);

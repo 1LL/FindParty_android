@@ -25,6 +25,7 @@ import ga.findparty.findparty.BaseActivity;
 import ga.findparty.findparty.Information;
 import ga.findparty.findparty.R;
 import ga.findparty.findparty.StartActivity;
+import ga.findparty.findparty.profile.ProfileActivity;
 import ga.findparty.findparty.util.AdditionalFunc;
 import ga.findparty.findparty.util.ParsePHP;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
@@ -97,6 +98,15 @@ public class DetailBoardActivity extends BaseActivity {
         loadingContent = (AVLoadingIndicatorView)findViewById(R.id.loading_content);
         loadingDuration = (AVLoadingIndicatorView)findViewById(R.id.loading_duration);
         loadingList = (AVLoadingIndicatorView)findViewById(R.id.loading_list);
+
+        findViewById(R.id.rl_profile).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailBoardActivity.this, ProfileActivity.class);
+                intent.putExtra("id", (String)item.get("userId"));
+                startActivity(intent);
+            }
+        });
 
         loadingContent.show();
         loadingDuration.show();

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ga.findparty.findparty.R;
+import ga.findparty.findparty.profile.ProfileActivity;
 import ga.findparty.findparty.util.OnAdapterSupport;
 import ga.findparty.findparty.util.OnLoadMoreListener;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
@@ -79,6 +81,7 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
         final int pos = position;
 
         final String id = (String)item.get("id");
+        final String userId = (String)item.get("userId");
 
         Picasso.with(context)
                 .load((String)item.get("img"))
@@ -92,6 +95,15 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
         int current = (int)item.get("current");
         int total = (int)item.get("total");
         holder.tv_count.setText(current + " / " + total);
+
+        holder.rl_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("id", userId);
+                onAdapterSupport.redirectActivity(intent);
+            }
+        });
 
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,6 +189,7 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
     public final static class ViewHolder extends RecyclerView.ViewHolder {
 
         LinearLayout root;
+        RelativeLayout rl_profile;
         ImageView profileImg;
         TextView tv_name;
         TextView tv_email;
@@ -186,6 +199,7 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
         public ViewHolder(View v) {
             super(v);
             root = (LinearLayout)v.findViewById(R.id.root);
+            rl_profile = (RelativeLayout)v.findViewById(R.id.rl_profile);
             profileImg = (ImageView)v.findViewById(R.id.profileImg);
             tv_name = (TextView)v.findViewById(R.id.tv_name);
             tv_email = (TextView)v.findViewById(R.id.tv_email);
