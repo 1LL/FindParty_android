@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
+        android:layout_above="@+id/decision_btn"
         >
 
         <LinearLayout
@@ -196,6 +197,17 @@
 
     </ScrollView>
 
+
+    <Button
+        android:id="@+id/decision_btn"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/dark_gray"
+        android:text="팀 결정하기"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        />
 
     <!--<RelativeLayout-->
         <!--android:id="@+id/rl_rv"-->

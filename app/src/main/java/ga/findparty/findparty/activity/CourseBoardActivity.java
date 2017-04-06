@@ -177,6 +177,9 @@ public class CourseBoardActivity extends BaseActivity implements OnAdapterSuppor
 
     }
 
+    public String getCourseId(){
+        return courseId;
+    }
 
     private void initLoadValue(){
         page = 0;
@@ -289,7 +292,7 @@ public class CourseBoardActivity extends BaseActivity implements OnAdapterSuppor
 
     @Override
     public void redirectActivityForResult(Intent intent) {
-
+        startActivityForResult(intent, UPDATE_COURSE_BOARD);
     }
 
     @Override

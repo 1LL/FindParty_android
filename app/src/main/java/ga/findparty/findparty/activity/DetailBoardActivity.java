@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -41,6 +42,8 @@ public class DetailBoardActivity extends BaseActivity {
     private final int MSG_MESSAGE_MAKE_LIST = 501;
     private final int MSG_MESSAGE_SHOW_APPLY_FORM = 502;
     private final int MSG_MESSAGE_NOT_SHOW_APPLY_FORM = 503;
+    private final int MSG_MESSAGE_SUCCESS_DECISION = 504;
+    private final int MSG_MESSAGE_FAIL_DECISION = 505;
 
     private AVLoadingIndicatorView loadingContent;
     private AVLoadingIndicatorView loadingDuration;
@@ -54,14 +57,18 @@ public class DetailBoardActivity extends BaseActivity {
     private TextView tv_content;
     private TextView tv_interest;
     private TextView tv_duration;
+    private Button decisionBtn;
     // UI-FIELD
     private LinearLayout li_add_field;
 
     private String boardId;
+    private String courseId;
     private HashMap<String, Object> item;
     private ArrayList<HashMap<String, Object>> fieldList;
     private HashMap<String, Object> lastTouchField;
+    private ArrayList<String> endFieldList;
     private boolean isMyBoard;
+    private boolean isDecision;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +77,16 @@ public class DetailBoardActivity extends BaseActivity {
 
         Intent intent = getIntent();
         boardId = intent.getStringExtra("boardId");
+        courseId = intent.getStringExtra("courseId");
         String userId = intent.getStringExtra("userId");
+        isDecision = intent.getBooleanExtra("isDecision", false);
 
         if(StartActivity.USER_ID.equals(userId)){
             isMyBoard = true;
         }
 
         fieldList = new ArrayList<>();
+        endFieldList = new ArrayList<>();
 
         init();
 
@@ -100,6 +110,8 @@ public class DetailBoardActivity extends BaseActivity {
         tv_content = (TextView)findViewById(R.id.tv_content);
         tv_interest = (TextView)findViewById(R.id.tv_interest);
         tv_duration = (TextView)findViewById(R.id.tv_duration);
+        decisionBtn = (Button)findViewById(R.id.decision_btn);
+        decisionBtn.setEnabled(false);
 
         li_add_field = (LinearLayout)findViewById(R.id.li_add_field);
 
@@ -125,6 +137,7 @@ public class DetailBoardActivity extends BaseActivity {
     public void makeList(){
 
         li_add_field.removeAllViews();
+        endFieldList.clear();
 
         for(int i=0; i<fieldList.size(); i++){
             final HashMap<String, Object> map  = fieldList.get(i);
@@ -147,6 +160,7 @@ public class DetailBoardActivity extends BaseActivity {
             if(memberList.size() > 0){
                 rl_finish.setVisibility(View.VISIBLE);
                 v.setOnClickListener(null);
+                endFieldList.addAll(memberList);
             }
 
             TextView tv_title = (TextView)v.findViewById(R.id.tv_title);
@@ -188,10 +202,20 @@ public class DetailBoardActivity extends BaseActivity {
                 }
             });
 
+            if(isDecision){
+                v.setOnClickListener(null);
+                applyBtn.setOnClickListener(null);
+                applyBtn.setEnabled(false);
+            }
 
 
             li_add_field.addView(v);
 
+        }
+
+        if(endFieldList.size() > 0){
+            decisionBtn.setEnabled(true);
+            decisionBtn.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
         }
 
     }
@@ -206,10 +230,64 @@ public class DetailBoardActivity extends BaseActivity {
         tv_email.setText((String)item.get("email"));
         tv_content.setText((String)item.get("content"));
         tv_interest.setText(AdditionalFunc.interestListToString((ArrayList<String>)item.get("interest")));
+        if(isMyBoard && !isDecision){
+            decisionBtn.setVisibility(View.VISIBLE);
+            decisionBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    decision();
+                }
+            });
+        }
 
         String startText = AdditionalFunc.getDateString((Long)item.get("start"));
         String finishText = AdditionalFunc.getDateString((Long)item.get("finish"));
         tv_duration.setText(startText + " ~ " + finishText);
+
+    }
+
+    private void decision(){
+
+        new MaterialDialog.Builder(this)
+                .title("확인")
+                .content("총 " + endFieldList.size() + "명으로 팀을 구성하시겠습니까?")
+                .positiveText("확인")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+
+                        progressDialog.show();
+
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("service", "decisionMember");
+                        map.put("boardId", boardId);
+                        map.put("courseId", courseId);
+                        map.put("member", AdditionalFunc.arrayListToString(endFieldList));
+
+                        new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
+
+                            @Override
+                            protected void afterThreadFinish(String data) {
+
+                                if("1".equals(data)){
+                                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_SUCCESS_DECISION));
+                                }else{
+                                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_FAIL_DECISION));
+                                }
+
+                            }
+                        }.start();
+                    }
+                })
+                .negativeText("취소")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
 
     }
 
@@ -236,6 +314,7 @@ public class DetailBoardActivity extends BaseActivity {
             HashMap<String, String> map = new HashMap<>();
             map.put("service", "checkApplyAble");
             map.put("userId", StartActivity.USER_ID);
+            map.put("courseId", courseId);
             map.put("boardFieldIdList", AdditionalFunc.makeBoardFieldIdListToString(fieldList));
 
             new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
@@ -281,6 +360,25 @@ public class DetailBoardActivity extends BaseActivity {
                     new MaterialDialog.Builder(DetailBoardActivity.this)
                             .title("알림")
                             .content("이미 다른 분야에 지원하였습니다.")
+                            .positiveText("확인")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                    break;
+                case MSG_MESSAGE_SUCCESS_DECISION:
+                    progressDialog.hide();
+                    setResult(CourseBoardActivity.UPDATE_COURSE_BOARD);
+                    finish();
+                    break;
+                case MSG_MESSAGE_FAIL_DECISION:
+                    progressDialog.hide();
+                    new MaterialDialog.Builder(DetailBoardActivity.this)
+                            .title("오류")
+                            .content("잠시 후 다시 시도해주세요.")
                             .positiveText("확인")
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override

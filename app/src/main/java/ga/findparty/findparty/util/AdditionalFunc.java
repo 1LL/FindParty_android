@@ -329,6 +329,7 @@ public class AdditionalFunc {
                 hashTemp.put("finish", Long.parseLong((String)temp.get("finish")));
                 hashTemp.put("current", Integer.parseInt((String)temp.get("current")));
                 hashTemp.put("total", Integer.parseInt((String)temp.get("total")));
+                hashTemp.put("isDecision", Integer.parseInt((String)temp.get("isDecision")));
 
                 ArrayList<String> in = new ArrayList<String>();
                 String interest = (String)temp.get("interest");
@@ -425,6 +426,7 @@ public class AdditionalFunc {
 
                 HashMap<String, Object> hashTemp = new HashMap<>();
                 hashTemp.put("id", (String)temp.get("id"));
+                hashTemp.put("courseId", (String)temp.get("courseId"));
                 hashTemp.put("boardFieldId", (String)temp.get("boardFieldId"));
                 hashTemp.put("skill", Integer.parseInt((String)temp.get("skill")));
                 hashTemp.put("content", (String)temp.get("content"));

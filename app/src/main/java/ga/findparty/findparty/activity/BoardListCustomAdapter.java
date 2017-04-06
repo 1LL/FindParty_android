@@ -80,6 +80,7 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
         final HashMap<String,Object> item = list.get(position);
         final int pos = position;
 
+        final int isDecision = (int)item.get("isDecision");
         final String id = (String)item.get("id");
         final String userId = (String)item.get("userId");
 
@@ -111,9 +112,19 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
                 Intent intent = new Intent(context, DetailBoardActivity.class);
                 intent.putExtra("boardId", id);
                 intent.putExtra("userId", userId);
-                onAdapterSupport.redirectActivity(intent);
+                intent.putExtra("courseId", activity.getCourseId());
+                if(isDecision == 1){
+                    intent.putExtra("isDecision", true);
+                }
+                onAdapterSupport.redirectActivityForResult(intent);
             }
         });
+
+        if(isDecision == 1){
+            holder.rl_finish.setVisibility(View.VISIBLE);
+        }else{
+            holder.rl_finish.setVisibility(View.GONE);
+        }
 
     }
 
@@ -196,6 +207,7 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
         TextView tv_email;
         TextView tv_content;
         TextView tv_count;
+        RelativeLayout rl_finish;
 
         public ViewHolder(View v) {
             super(v);
@@ -206,6 +218,7 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
             tv_email = (TextView)v.findViewById(R.id.tv_email);
             tv_content = (TextView)v.findViewById(R.id.tv_content);
             tv_count = (TextView)v.findViewById(R.id.tv_count);
+            rl_finish = (RelativeLayout)v.findViewById(R.id.rl_finish);
         }
     }
 
