@@ -110,6 +110,7 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailBoardActivity.class);
                 intent.putExtra("boardId", id);
+                intent.putExtra("userId", userId);
                 onAdapterSupport.redirectActivity(intent);
             }
         });

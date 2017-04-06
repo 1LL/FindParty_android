@@ -3,6 +3,8 @@ package ga.findparty.findparty.activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +15,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.squareup.picasso.Picasso;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -32,16 +36,24 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
 
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_MAKE_LIST = 500;
+    private final int MSG_MESSAGE_FINISH_SELECT_MEMBER = 501;
+    private final int MSG_MESSAGE_ERROR_SELECT_MEMBER = 502;
 
     private Toolbar toolbar;
     private AVLoadingIndicatorView loading;
     private TextView tv_msg;
+    private Button endBtn;
 
     private LinearLayout li_list;
 
+    private boolean isSelectMode;
     private String boardFieldId;
+    private int number;
     private String fieldTitle;
     private ArrayList<HashMap<String, Object>> list;
+    private ArrayList<String> selectList;
+
+    private MaterialDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +63,10 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
         Intent intent = getIntent();
         boardFieldId = intent.getStringExtra("id");
         fieldTitle = intent.getStringExtra("title");
+        number = intent.getIntExtra("number", 0);
+        isSelectMode = intent.getBooleanExtra("isSelectMode", false);
+
+        selectList = new ArrayList<>();
 
         init();
 
@@ -64,11 +80,50 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
         tv_msg = (TextView)findViewById(R.id.tv_msg);
         tv_msg.setVisibility(View.GONE);
 
+        endBtn = (Button)findViewById(R.id.end_btn);
+        if(isSelectMode){
+            endBtn.setVisibility(View.VISIBLE);
+        }else{
+            endBtn.setVisibility(View.GONE);
+        }
+        endBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressDialog.show();
+
+                HashMap<String, String> map = new HashMap<>();
+                map.put("service", "selectMember");
+                map.put("boardFieldId", boardFieldId);
+                map.put("member", AdditionalFunc.arrayListToString(selectList));
+
+                new ParsePHP(Information.MAIN_SERVER_ADDRESS, map){
+
+                    @Override
+                    protected void afterThreadFinish(String data) {
+
+                        if("1".equals(data)){
+                            handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_FINISH_SELECT_MEMBER));
+                        }else{
+                            handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_ERROR_SELECT_MEMBER));
+                        }
+
+                    }
+                }.start();
+            }
+        });
+
         li_list = (LinearLayout)findViewById(R.id.li_list);
 
         loading = (AVLoadingIndicatorView)findViewById(R.id.loading);
 
         getParticipantList();
+
+        progressDialog = new MaterialDialog.Builder(this)
+                .content("잠시만 기다려주세요.")
+                .progress(true, 0)
+                .progressIndeterminateStyle(true)
+                .theme(Theme.LIGHT)
+                .build();
 
     }
 
@@ -148,6 +203,7 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
 
             TextView tv_content = (TextView)v.findViewById(R.id.tv_content);
 
+
             tv_name.setText((String)map.get("name"));
             tv_email.setText((String)map.get("email"));
             Picasso.with(getApplicationContext())
@@ -176,9 +232,49 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
 
             tv_content.setText((String)map.get("content"));
 
+            Button selectBtn = (Button)v.findViewById(R.id.select_btn);
+            if(isSelectMode){
+                selectBtn.setVisibility(View.VISIBLE);
+            }
+            selectBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String id = (String)map.get("id");
+                    if(selectList.contains(id)){
+                        selectList.remove(id);
+                        v.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_gray));
+                        ((Button)v).setText("선택하기");
+                    }else{
+                        if(selectList.size() < number) {
+                            selectList.add(id);
+                            v.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                            ((Button) v).setText("취소하기");
+                        }else{
+                            showNumberWarningAlert();
+                        }
+                    }
+                }
+            });
+
             li_list.addView(v);
 
         }
+
+    }
+
+    private void showNumberWarningAlert(){
+
+        new MaterialDialog.Builder(this)
+                .title("경고")
+                .content("모집인원을 초과해서 선택할 수 없습니다.")
+                .positiveText("확인")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
 
     }
 
@@ -192,9 +288,37 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
                     loading.hide();
                     makeList();
                     break;
+                case MSG_MESSAGE_FINISH_SELECT_MEMBER:
+                    progressDialog.hide();
+                    setResult(DetailBoardActivity.UPDATE_APPLY_FORM_SELECT_MODE);
+                    finish();
+                    break;
+                case MSG_MESSAGE_ERROR_SELECT_MEMBER:
+                    progressDialog.hide();
+                    new MaterialDialog.Builder(ShowApplyPeopleActivity.this)
+                            .title("오류")
+                            .content("잠시 후 다시 시도해주세요.")
+                            .positiveText("확인")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                    break;
                 default:
                     break;
             }
+        }
+    }
+
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(progressDialog != null){
+            progressDialog.dismiss();
         }
     }
 

@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
+        android:layout_above="@+id/end_btn"
         >
 
         <LinearLayout
@@ -28,6 +29,16 @@
 
     </ScrollView>
 
+    <Button
+        android:id="@+id/end_btn"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:text="마감하기"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        />
 
     <TextView
         android:id="@+id/tv_msg"

@@ -368,7 +368,7 @@ public class AdditionalFunc {
                 hashTemp.put("id", (String)temp.get("id"));
                 hashTemp.put("boardId", (String)temp.get("boardId"));
                 hashTemp.put("field", (String)temp.get("field"));
-                hashTemp.put("number", (String)temp.get("number"));
+                hashTemp.put("number", Integer.parseInt((String)temp.get("number")));
 
                 String participant = (String)temp.get("participant");
                 ArrayList<String> par = new ArrayList<>();
@@ -383,6 +383,20 @@ public class AdditionalFunc {
                     par.remove(0);
                 }
                 hashTemp.put("participant", par);
+
+                String member = (String)temp.get("member");
+                ArrayList<String> mem = new ArrayList<>();
+                if(!member.equals("")){
+                    String[] p = member.split(",");
+
+                    for(String s : p){
+                        mem.add(s);
+                    }
+                }
+                if (mem.size() > 0 && mem.get(0).equals("")) {
+                    mem.remove(0);
+                }
+                hashTemp.put("member", mem);
 
                 list.add(hashTemp);
 

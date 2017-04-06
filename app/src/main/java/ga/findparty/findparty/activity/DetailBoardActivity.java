@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -33,6 +34,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class DetailBoardActivity extends BaseActivity {
 
     public static final int UPDATE_APPLY_FORM = 100;
+    public static final int UPDATE_APPLY_FORM_SELECT_MODE = 101;
 
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_FILL_FORM = 500;
@@ -59,6 +61,7 @@ public class DetailBoardActivity extends BaseActivity {
     private HashMap<String, Object> item;
     private ArrayList<HashMap<String, Object>> fieldList;
     private HashMap<String, Object> lastTouchField;
+    private boolean isMyBoard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,11 @@ public class DetailBoardActivity extends BaseActivity {
 
         Intent intent = getIntent();
         boardId = intent.getStringExtra("boardId");
+        String userId = intent.getStringExtra("userId");
+
+        if(StartActivity.USER_ID.equals(userId)){
+            isMyBoard = true;
+        }
 
         fieldList = new ArrayList<>();
 
@@ -128,18 +136,37 @@ public class DetailBoardActivity extends BaseActivity {
                     Intent intent = new Intent(DetailBoardActivity.this, ShowApplyPeopleActivity.class);
                     intent.putExtra("id", (String)map.get("id"));
                     intent.putExtra("title", (String)map.get("field"));
+                    intent.putExtra("number", (int)map.get("number"));
                     startActivity(intent);
                 }
             });
+
+
+            ArrayList<String> memberList = (ArrayList<String>)map.get("member");
+            RelativeLayout rl_finish = (RelativeLayout)v.findViewById(R.id.rl_finish);
+            if(memberList.size() > 0){
+                rl_finish.setVisibility(View.VISIBLE);
+                v.setOnClickListener(null);
+            }
 
             TextView tv_title = (TextView)v.findViewById(R.id.tv_title);
             TextView tv_number = (TextView)v.findViewById(R.id.tv_number);
             TextView tv_currentNumber = (TextView)v.findViewById(R.id.tv_current_number);
             Button applyBtn = (Button)v.findViewById(R.id.applyBtn);
+            if(isMyBoard){
+                applyBtn.setText("마감하기");
+            }else{
+                applyBtn.setText("지원하기");
+            }
 
             String title = (String)map.get("field");
-            String number = (String)map.get("number") + "명";
-            String currentNumber = "현재 " + ((ArrayList)map.get("participant")).size() + "명 지원 중";
+            String number = (int)map.get("number") + "명";
+            String currentNumber;
+            if(memberList.size() > 0){
+                currentNumber = "마감되었습니다.";
+            }else {
+                 currentNumber = "현재 " + ((ArrayList) map.get("participant")).size() + "명 지원 중";
+            }
 
             tv_title.setText(title);
             tv_number.setText(number);
@@ -148,9 +175,20 @@ public class DetailBoardActivity extends BaseActivity {
             applyBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    applyField(map);
+                    if(isMyBoard){
+                        Intent intent = new Intent(DetailBoardActivity.this, ShowApplyPeopleActivity.class);
+                        intent.putExtra("id", (String)map.get("id"));
+                        intent.putExtra("title", (String)map.get("field"));
+                        intent.putExtra("isSelectMode", true);
+                        intent.putExtra("number", (int)map.get("number"));
+                        startActivityForResult(intent, UPDATE_APPLY_FORM_SELECT_MODE);
+                    }else {
+                        applyField(map);
+                    }
                 }
             });
+
+
 
             li_add_field.addView(v);
 
@@ -308,6 +346,7 @@ public class DetailBoardActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode) {
+            case UPDATE_APPLY_FORM_SELECT_MODE:
             case UPDATE_APPLY_FORM:
                 getFieldList();
                 break;

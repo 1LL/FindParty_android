@@ -119,6 +119,17 @@
 
         </RelativeLayout>
 
+        <Button
+            android:id="@+id/select_btn"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:background="@color/dark_gray"
+            android:text="선택하기"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="gone"
+            />
+
     </LinearLayout>
 
 
