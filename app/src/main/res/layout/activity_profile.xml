@@ -29,7 +29,7 @@
                     <ImageView
                         android:id="@+id/backgroundImg"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="200dp"
                         android:scaleType="centerCrop"
                         android:background="@color/colorPrimary" />
 
@@ -43,7 +43,7 @@
                         android:id="@+id/profileImg"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop="100dp"
                         android:layout_gravity="center_horizontal"
                         android:src="@drawable/round_background"
                         />

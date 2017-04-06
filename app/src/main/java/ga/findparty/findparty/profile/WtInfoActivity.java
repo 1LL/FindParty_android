@@ -47,6 +47,8 @@ public class WtInfoActivity extends AppCompatActivity {
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_FINISH = 500;
     private final int MSG_MESSAGE_SAVE_USER_PROFILE = 501;
+    private final int MSG_MESSAGE_UPDATE_PROFILE_FINISH = 502;
+    private final int MSG_MESSAGE_UPDATE_PROFILE = 503;
 
     // UI
     private ImageView profileImage;
@@ -86,6 +88,24 @@ public class WtInfoActivity extends AppCompatActivity {
         initData();
 
         init();
+
+        if (isEditMode) {
+            progressDialog.setContent("잠시만 기다려주세요.");
+            progressDialog.show();
+
+            HashMap<String, String> map = new HashMap<>();
+            map.put("service", "getUserInfo");
+            map.put("id", id);
+
+            new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
+                @Override
+                protected void afterThreadFinish(String data) {
+                    item.clear();
+                    item = AdditionalFunc.getUserInfo(data);
+                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_UPDATE_PROFILE));
+                }
+            }.start();
+        }
 
     }
 
@@ -216,6 +236,40 @@ public class WtInfoActivity extends AppCompatActivity {
 
         nextBtn.setEnabled(type);
 
+
+    }
+
+    private void fillField() {
+
+        img = (String) item.get("img");
+        name = (String) item.get("name");
+        String contact = (String) item.get("contact");
+        String intro = (String) item.get("intro");
+        String email = (String) item.get("email");
+        this.interest = (ArrayList<String>) item.get("interest");
+
+        schoolCode = (String)item.get("school");
+        schoolName = Information.getSchoolName(schoolCode);
+        selectSchoolBtn.setText(schoolName);
+        selectSchoolBtn.setEnabled(false);
+
+        Picasso.with(getApplicationContext())
+                .load(img)
+                .transform(new CropCircleTransformation())
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .networkPolicy(NetworkPolicy.NO_CACHE)
+                .into(profileImage);
+        profileName.setText(name + "님");
+
+        editStudentId.setText((String)item.get("studentId"));
+        editContact.setText(contact);
+        editIntro.setText(intro);
+        editEmail.setText(email);
+
+        setInterestField();
+
+        checkEditText();
+
     }
 
     private class MyHandler extends Handler {
@@ -231,6 +285,14 @@ public class WtInfoActivity extends AppCompatActivity {
                     break;
                 case MSG_MESSAGE_SAVE_USER_PROFILE:
                     saveUserInformation();
+                    break;
+                case MSG_MESSAGE_UPDATE_PROFILE:
+                    progressDialog.hide();
+                    fillField();
+                    break;
+                case MSG_MESSAGE_UPDATE_PROFILE_FINISH:
+                    progressDialog.hide();
+                    redirectPreviousActivity();
                     break;
                 default:
                     break;
@@ -407,7 +469,7 @@ public class WtInfoActivity extends AppCompatActivity {
                         protected void afterThreadFinish(String data) {
                             StartActivity.USER_DATA = AdditionalFunc.getUserInfo(data);
                             if (isEditMode) {
-                                //handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_UPDATE_PROFILE_FINISH));
+                                handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_UPDATE_PROFILE_FINISH));
                             } else {
                                 handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_FINISH));
                             }
@@ -431,6 +493,13 @@ public class WtInfoActivity extends AppCompatActivity {
     private void redirectMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
+    }
+
+    private void redirectPreviousActivity() {
+        Intent intent = new Intent();
+        intent.putExtra("item", StartActivity.USER_DATA);
+        setResult(ProfileActivity.EDIT_PROFILE, intent);
         finish();
     }
 

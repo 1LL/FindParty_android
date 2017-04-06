@@ -18,10 +18,14 @@ import com.gigamole.navigationtabstrip.NavigationTabStrip;
 import com.squareup.picasso.Picasso;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import java.util.HashMap;
+
 import ga.findparty.findparty.R;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ProfileActivity extends AppCompatActivity {
+
+    public final static int EDIT_PROFILE = 100;
 
     private String[] titles = {
             "정보",
@@ -32,6 +36,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private NavigationTabStrip mNavigationTabStrip;
+    private InfoFragment infoFragment;
+    private ReviewFragment reviewFragment;
 
     private TextView tv_name;
     private ImageView profileImg;
@@ -67,13 +73,19 @@ public class ProfileActivity extends AppCompatActivity {
 
                 switch (pattern){
                     case 0:
-                        f = new InfoFragment();
-                        Bundle bdl = new Bundle(1);
-                        bdl.putString("id", userId);
-                        f.setArguments(bdl);
+                        if(infoFragment == null){
+                            infoFragment = new InfoFragment();
+                            Bundle bdl = new Bundle(1);
+                            bdl.putString("id", userId);
+                            infoFragment.setArguments(bdl);
+                        }
+                        f = infoFragment;
                         break;
                     case 1:
-                        f = new ReviewFragment();
+                        if(reviewFragment == null){
+                            reviewFragment = new ReviewFragment();
+                        }
+                        f = reviewFragment;
                         break;
                     default:
                         f = new Fragment();
@@ -103,6 +115,20 @@ public class ProfileActivity extends AppCompatActivity {
                 .load(img)
                 .transform(new CropCircleTransformation())
                 .into(profileImg);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) {
+            case EDIT_PROFILE:
+                //InfoFragment fragment = (InfoFragment)((FragmentStatePagerAdapter)mViewPager.getAdapter()).ins;
+                infoFragment.updateUI((HashMap<String, Object>) data.getSerializableExtra("item"));
+                break;
+            default:
+                break;
+        }
 
     }
 

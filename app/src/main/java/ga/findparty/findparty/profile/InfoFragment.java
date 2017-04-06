@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 
 import ga.findparty.findparty.Information;
 import ga.findparty.findparty.R;
+import ga.findparty.findparty.StartActivity;
 import ga.findparty.findparty.util.AdditionalFunc;
 import ga.findparty.findparty.util.ParsePHP;
 
@@ -34,6 +36,7 @@ public class InfoFragment extends Fragment {
 
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_FILL_FORM = 500;
+
 
     // BASIC UI
     private View view;
@@ -52,9 +55,12 @@ public class InfoFragment extends Fragment {
     private TextView tv_intro;
     private AVLoadingIndicatorView loadingIntro;
 
+    private FloatingActionButton fabEdit;
 
     private String userId;
     private HashMap<String, Object> item;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -93,6 +99,28 @@ public class InfoFragment extends Fragment {
         tv_intro = (TextView)view.findViewById(R.id.tv_intro);
         loadingIntro = (AVLoadingIndicatorView)view.findViewById(R.id.loading_intro);
 
+        fabEdit = (FloatingActionButton) view.findViewById(R.id.fab_edit);
+        fabEdit.setTitle("편집");
+        fabEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, WtInfoActivity.class);
+                intent.putExtra("edit", true);
+                intent.putExtra("id", StartActivity.USER_ID);
+                startActivityForResult(intent, ProfileActivity.EDIT_PROFILE);
+            }
+        });
+        if (StartActivity.USER_ID.equals(userId)) {
+            fabEdit.setVisibility(View.VISIBLE);
+        } else {
+            fabEdit.setVisibility(View.GONE);
+        }
+
+    }
+
+    public void updateUI(HashMap<String, Object> map){
+        item = map;
+        fillForm();
     }
 
     private void fillForm(){
