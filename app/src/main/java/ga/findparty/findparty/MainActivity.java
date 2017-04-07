@@ -108,11 +108,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         tv_email.setText(email);
 
 
-        showFragment("nav_my_class", new MyClassFragment());
+        showFragment("nav_my_team", new MyTeamFragment());
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("내 수업");
+            getSupportActionBar().setTitle("내 팀");
         }
-        navigationView.setCheckedItem(R.id.nav_my_class);
+        navigationView.setCheckedItem(R.id.nav_my_team);
 
     }
 

@@ -261,6 +261,7 @@ public class DetailBoardActivity extends BaseActivity {
 
                         HashMap<String, String> map = new HashMap<>();
                         map.put("service", "decisionMember");
+                        map.put("userId", StartActivity.USER_ID);
                         map.put("boardId", boardId);
                         map.put("courseId", courseId);
                         map.put("member", AdditionalFunc.arrayListToString(endFieldList));

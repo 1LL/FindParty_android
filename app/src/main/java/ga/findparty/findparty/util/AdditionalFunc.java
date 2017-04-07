@@ -497,4 +497,133 @@ public class AdditionalFunc {
 
     }
 
+    public static ArrayList<HashMap<String, Object>> getTeamList(String data){
+
+        ArrayList<HashMap<String, Object>> list = new ArrayList<>();
+
+        try {
+            JSONObject jObject = new JSONObject(data);
+            JSONArray results = jObject.getJSONArray("result");
+            String countTemp = (String)jObject.get("num_result");
+            int count = Integer.parseInt(countTemp);
+
+            for ( int i = 0; i < count; ++i ) {
+                JSONObject temp = results.getJSONObject(i);
+
+                HashMap<String, Object> hashTemp = new HashMap<>();
+                hashTemp.put("id", (String)temp.get("id"));
+                hashTemp.put("boardId", (String)temp.get("boardId"));
+                hashTemp.put("boardStart", Long.parseLong((String)temp.get("boardStart")));
+                hashTemp.put("boardFinish", Long.parseLong((String)temp.get("boardFinish")));
+                hashTemp.put("boardUserId", (String)temp.get("boardUserId"));
+                hashTemp.put("boardUserName", (String)temp.get("boardUserName"));
+                hashTemp.put("boardUserEmail", (String)temp.get("boardUserEmail"));
+                hashTemp.put("boardUserImg", (String)temp.get("boardUserImg"));
+                hashTemp.put("courseId", (String)temp.get("courseId"));
+                hashTemp.put("courseTitle", (String)temp.get("courseTitle"));
+                hashTemp.put("courseClass", (String)temp.get("courseClass"));
+
+                String member = (String)temp.get("member");
+                ArrayList<String> mem = new ArrayList<>();
+                if(!member.equals("")){
+                    String[] p = member.split(",");
+
+                    for(String s : p){
+                        mem.add(s);
+                    }
+                }
+                if (mem.size() > 0 && mem.get(0).equals("")) {
+                    mem.remove(0);
+                }
+                hashTemp.put("member", mem);
+
+                JSONObject jObjectMem = (JSONObject)temp.get("memberList");
+                JSONArray resultsMem = jObjectMem.getJSONArray("result");
+                String countTempMem = (String)jObjectMem.get("num_member");
+                int countMem = Integer.parseInt(countTempMem);
+
+                ArrayList<HashMap<String, Object>> memberList = new ArrayList<>();
+                for(int j=0; j<countMem; j++){
+
+                    JSONObject tempMem = resultsMem.getJSONObject(j);
+
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("applyFormId", (String)tempMem.get("applyFormId"));
+                    map.put("boardFieldId", (String)tempMem.get("boardFieldId"));
+                    map.put("userId", (String)tempMem.get("memberUserId"));
+                    map.put("name", (String)tempMem.get("memberName"));
+                    map.put("email", (String)tempMem.get("memberEmail"));
+                    map.put("img", (String)tempMem.get("memberImg"));
+                    map.put("field", (String)tempMem.get("field"));
+                    map.put("skill", Integer.parseInt((String)tempMem.get("skill")));
+                    map.put("content", (String)tempMem.get("content"));
+
+                    String mon = (String)tempMem.get("mon");
+                    ArrayList<Integer> monList = new ArrayList<>();
+                    for(String s : mon.split(",")){
+                        if("".equals(s)){
+                            break;
+                        }
+                        monList.add(Integer.parseInt(s));
+                    }
+                    map.put("mon", monList);
+
+                    String tue = (String)tempMem.get("tue");
+                    ArrayList<Integer> tueList = new ArrayList<>();
+                    for(String s : tue.split(",")){
+                        if("".equals(s)){
+                            break;
+                        }
+                        tueList.add(Integer.parseInt(s));
+                    }
+                    map.put("tue", tueList);
+
+                    String wed = (String)tempMem.get("wed");
+                    ArrayList<Integer> wedList = new ArrayList<>();
+                    for(String s : wed.split(",")){
+                        if("".equals(s)){
+                            break;
+                        }
+                        wedList.add(Integer.parseInt(s));
+                    }
+                    map.put("wed", wedList);
+
+                    String thu = (String)tempMem.get("thu");
+                    ArrayList<Integer> thuList = new ArrayList<>();
+                    for(String s : thu.split(",")){
+                        if("".equals(s)){
+                            break;
+                        }
+                        thuList.add(Integer.parseInt(s));
+                    }
+                    map.put("thu", thuList);
+
+                    String fri = (String)tempMem.get("fri");
+                    ArrayList<Integer> friList = new ArrayList<>();
+                    for(String s : fri.split(",")){
+                        if("".equals(s)){
+                            break;
+                        }
+                        friList.add(Integer.parseInt(s));
+                    }
+                    map.put("fri", friList);
+
+                    memberList.add(map);
+
+                }
+
+                hashTemp.put("memberList", memberList);
+
+                list.add(hashTemp);
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+
+    }
+
 }
