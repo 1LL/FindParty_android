@@ -51,6 +51,7 @@ public class ApplyFormActivity extends BaseActivity {
     private Button applyBtn;
 
     private HashMap<String, Object> item;
+    private String courseId;
     private String field;
     private int skill=0;
     private String impossibleTime;
@@ -82,6 +83,7 @@ public class ApplyFormActivity extends BaseActivity {
         Intent intent = getIntent();
         item = (HashMap<String, Object>)intent.getSerializableExtra("item");
         field = (String)item.get("field");
+        courseId = intent.getStringExtra("courseId");
 
         init();
 
@@ -192,6 +194,7 @@ public class ApplyFormActivity extends BaseActivity {
 
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "applyField");
+        map.put("courseId", courseId);
         map.put("boardFieldId", (String)item.get("id"));
         map.put("userId", StartActivity.USER_ID);
         map.put("skill", skill+"");

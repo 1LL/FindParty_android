@@ -354,6 +354,7 @@ public class DetailBoardActivity extends BaseActivity {
                     progressDialog.hide();
                     Intent intent = new Intent(getApplicationContext(), ApplyFormActivity.class);
                     intent.putExtra("item", lastTouchField);
+                    intent.putExtra("courseId", courseId);
                     startActivityForResult(intent, UPDATE_APPLY_FORM);
                     break;
                 case MSG_MESSAGE_NOT_SHOW_APPLY_FORM:
