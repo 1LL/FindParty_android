@@ -43,6 +43,9 @@ public class CourseBoardActivity extends BaseActivity implements OnAdapterSuppor
     private final int MSG_MESSAGE_MAKE_ENDLESS_LIST = 501;
     private final int MSG_MESSAGE_PROGRESS_HIDE = 502;
     private final int MSG_MESSAGE_SHOW_LOADING = 503;
+    private final int MSG_MESSAGE_SHOW_ADD_COURSE = 504;
+    private final int MSG_MESSAGE_ALREADY_WRITE_BOARD = 505;
+    private final int MSG_MESSAGE_ALREADY_APPLY_FIELD = 506;
 
     private Toolbar toolbar;
     private AVLoadingIndicatorView loading;
@@ -167,9 +170,28 @@ public class CourseBoardActivity extends BaseActivity implements OnAdapterSuppor
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AddCourseBoardActivity.class);
-                intent.putExtra("courseId", courseId);
-                startActivityForResult(intent, UPDATE_COURSE_BOARD);
+                progressDialog.show();
+
+                HashMap<String, String> map = new HashMap<>();
+                map.put("service", "checkAddAble");
+                map.put("userId", StartActivity.USER_ID);
+                map.put("courseId", courseId);
+
+                new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
+
+                    @Override
+                    protected void afterThreadFinish(String data) {
+
+                        if("0".equals(data)){
+                            handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_SHOW_ADD_COURSE));
+                        }else if("1".equals(data)){
+                            handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_ALREADY_WRITE_BOARD));
+                        }else if("2".equals(data)){
+                            handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_ALREADY_APPLY_FIELD));
+                        }
+
+                    }
+                }.start();
                 menu.toggle();
             }
         });
@@ -322,6 +344,40 @@ public class CourseBoardActivity extends BaseActivity implements OnAdapterSuppor
                     break;
                 case MSG_MESSAGE_SHOW_LOADING:
                     loading.show();
+                    break;
+                case MSG_MESSAGE_SHOW_ADD_COURSE:
+                    progressDialog.hide();
+                    Intent intent = new Intent(getApplicationContext(), AddCourseBoardActivity.class);
+                    intent.putExtra("courseId", courseId);
+                    startActivityForResult(intent, UPDATE_COURSE_BOARD);
+                    break;
+                case MSG_MESSAGE_ALREADY_WRITE_BOARD:
+                    progressDialog.hide();
+                    new MaterialDialog.Builder(CourseBoardActivity.this)
+                            .title("경고")
+                            .content("이미 다른 모집글을 작성하였습니다.")
+                            .positiveText("확인")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                    break;
+                case MSG_MESSAGE_ALREADY_APPLY_FIELD:
+                    progressDialog.hide();
+                    new MaterialDialog.Builder(CourseBoardActivity.this)
+                            .title("경고")
+                            .content("이미 다른 분야에 지원하였습니다.")
+                            .positiveText("확인")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
                     break;
                 default:
                     break;

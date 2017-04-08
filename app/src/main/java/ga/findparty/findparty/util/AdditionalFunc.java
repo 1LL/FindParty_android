@@ -519,7 +519,8 @@ public class AdditionalFunc {
                 hashTemp.put("boardUserName", (String)temp.get("boardUserName"));
                 hashTemp.put("boardUserEmail", (String)temp.get("boardUserEmail"));
                 hashTemp.put("boardUserImg", (String)temp.get("boardUserImg"));
-                hashTemp.put("courseId", (String)temp.get("courseId"));
+                String courseId = (String)temp.get("courseId");
+                hashTemp.put("courseId", courseId);
                 hashTemp.put("courseTitle", (String)temp.get("courseTitle"));
                 hashTemp.put("courseClass", (String)temp.get("courseClass"));
 
@@ -548,7 +549,8 @@ public class AdditionalFunc {
                     JSONObject tempMem = resultsMem.getJSONObject(j);
 
                     HashMap<String, Object> map = new HashMap<>();
-                    map.put("applyFormId", (String)tempMem.get("applyFormId"));
+                    map.put("id", (String)tempMem.get("applyFormId"));
+                    map.put("courseId", courseId);
                     map.put("boardFieldId", (String)tempMem.get("boardFieldId"));
                     map.put("userId", (String)tempMem.get("memberUserId"));
                     map.put("name", (String)tempMem.get("memberName"));

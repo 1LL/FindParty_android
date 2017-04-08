@@ -28,6 +28,7 @@ import java.util.HashMap;
 import ga.findparty.findparty.Information;
 import ga.findparty.findparty.R;
 import ga.findparty.findparty.StartActivity;
+import ga.findparty.findparty.activity.ShowApplyPeopleActivity;
 import ga.findparty.findparty.profile.ProfileActivity;
 import ga.findparty.findparty.util.AdditionalFunc;
 import ga.findparty.findparty.util.ParsePHP;
@@ -112,7 +113,7 @@ public class MyTeamFragment extends BaseFragment {
             View v = LayoutInflater.from(context).inflate(R.layout.team_list_custom_item, null, false);
 
             TextView tv_courseTitle = (TextView)v.findViewById(R.id.tv_course_title);
-            String courseTitle = (String)map.get("courseTitle");
+            final String courseTitle = (String)map.get("courseTitle");
             String courseClass = (String)map.get("courseClass");
             tv_courseTitle.setText(courseTitle + "-" + courseClass);
 
@@ -136,7 +137,7 @@ public class MyTeamFragment extends BaseFragment {
             tv_name.setText((String)map.get("boardUserName"));
             tv_email.setText((String)map.get("boardUserEmail"));
 
-            ArrayList<HashMap<String, Object>> memberList = (ArrayList<HashMap<String,Object>>)map.get("memberList");
+            final ArrayList<HashMap<String, Object>> memberList = (ArrayList<HashMap<String,Object>>)map.get("memberList");
 
             HorizontalScrollView sv = (HorizontalScrollView)v.findViewById(R.id.sv_member);
             sv.setOnTouchListener(new View.OnTouchListener() {
@@ -168,6 +169,18 @@ public class MyTeamFragment extends BaseFragment {
                 mv.setTag(m);
                 li_memberField.addView(mv);
             }
+
+            ImageView showApplyMemberBtn = (ImageView)v.findViewById(R.id.show_apply_member_btn);
+            showApplyMemberBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ShowApplyPeopleActivity.class);
+                    intent.putExtra("title", courseTitle);
+                    intent.putExtra("isTeamListMode", true);
+                    intent.putExtra("list", memberList);
+                    startActivity(intent);
+                }
+            });
 
             TextView tv_duration = (TextView)v.findViewById(R.id.tv_duration);
             String startText = AdditionalFunc.getDateString((Long)map.get("boardStart"));

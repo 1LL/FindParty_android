@@ -44,6 +44,8 @@ public class DetailBoardActivity extends BaseActivity {
     private final int MSG_MESSAGE_NOT_SHOW_APPLY_FORM = 503;
     private final int MSG_MESSAGE_SUCCESS_DECISION = 504;
     private final int MSG_MESSAGE_FAIL_DECISION = 505;
+    private final int MSG_MESSAGE_ALREADY_WRITE_BOARD = 506;
+    private final int MSG_MESSAGE_ALREADY_APPLY_FIELD = 507;
 
     private AVLoadingIndicatorView loadingContent;
     private AVLoadingIndicatorView loadingDuration;
@@ -313,20 +315,21 @@ public class DetailBoardActivity extends BaseActivity {
             progressDialog.show();
 
             HashMap<String, String> map = new HashMap<>();
-            map.put("service", "checkApplyAble");
+            map.put("service", "checkAddAble");
             map.put("userId", StartActivity.USER_ID);
             map.put("courseId", courseId);
-            map.put("boardFieldIdList", AdditionalFunc.makeBoardFieldIdListToString(fieldList));
 
             new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
 
                 @Override
                 protected void afterThreadFinish(String data) {
 
-                    if("1".equals(data)){
+                    if("0".equals(data)){
                         handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_SHOW_APPLY_FORM));
-                    }else{
-                        handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_NOT_SHOW_APPLY_FORM));
+                    }else if("1".equals(data)){
+                        handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_ALREADY_WRITE_BOARD));
+                    }else if("2".equals(data)){
+                        handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_ALREADY_APPLY_FIELD));
                     }
 
                 }
@@ -357,20 +360,6 @@ public class DetailBoardActivity extends BaseActivity {
                     intent.putExtra("courseId", courseId);
                     startActivityForResult(intent, UPDATE_APPLY_FORM);
                     break;
-                case MSG_MESSAGE_NOT_SHOW_APPLY_FORM:
-                    progressDialog.hide();
-                    new MaterialDialog.Builder(DetailBoardActivity.this)
-                            .title("알림")
-                            .content("이미 다른 분야에 지원하였습니다.")
-                            .positiveText("확인")
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .show();
-                    break;
                 case MSG_MESSAGE_SUCCESS_DECISION:
                     progressDialog.hide();
                     setResult(CourseBoardActivity.UPDATE_COURSE_BOARD);
@@ -381,6 +370,34 @@ public class DetailBoardActivity extends BaseActivity {
                     new MaterialDialog.Builder(DetailBoardActivity.this)
                             .title("오류")
                             .content("잠시 후 다시 시도해주세요.")
+                            .positiveText("확인")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                    break;
+                case MSG_MESSAGE_ALREADY_WRITE_BOARD:
+                    progressDialog.hide();
+                    new MaterialDialog.Builder(DetailBoardActivity.this)
+                            .title("경고")
+                            .content("이미 다른 모집글을 작성하였습니다.")
+                            .positiveText("확인")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                    break;
+                case MSG_MESSAGE_ALREADY_APPLY_FIELD:
+                    progressDialog.hide();
+                    new MaterialDialog.Builder(DetailBoardActivity.this)
+                            .title("경고")
+                            .content("이미 다른 분야에 지원하였습니다.")
                             .positiveText("확인")
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override

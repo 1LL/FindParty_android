@@ -47,6 +47,7 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
     private LinearLayout li_list;
 
     private boolean isSelectMode;
+    private boolean isTeamListMode;
     private String boardFieldId;
     private int number;
     private String fieldTitle;
@@ -65,6 +66,10 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
         fieldTitle = intent.getStringExtra("title");
         number = intent.getIntExtra("number", 0);
         isSelectMode = intent.getBooleanExtra("isSelectMode", false);
+        isTeamListMode = intent.getBooleanExtra("isTeamListMode", false);
+        if(isTeamListMode){
+            list = (ArrayList<HashMap<String, Object>>)intent.getSerializableExtra("list");
+        }
 
         selectList = new ArrayList<>();
 
@@ -116,14 +121,19 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
 
         loading = (AVLoadingIndicatorView)findViewById(R.id.loading);
 
-        getParticipantList();
+        if(!isTeamListMode) {
+            getParticipantList();
 
-        progressDialog = new MaterialDialog.Builder(this)
-                .content("잠시만 기다려주세요.")
-                .progress(true, 0)
-                .progressIndeterminateStyle(true)
-                .theme(Theme.LIGHT)
-                .build();
+            progressDialog = new MaterialDialog.Builder(this)
+                    .content("잠시만 기다려주세요.")
+                    .progress(true, 0)
+                    .progressIndeterminateStyle(true)
+                    .theme(Theme.LIGHT)
+                    .build();
+        }else{
+            loading.hide();
+            makeList();
+        }
 
     }
 
@@ -175,6 +185,7 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
             TextView tv_name = (TextView)v.findViewById(R.id.tv_name);
             TextView tv_email = (TextView)v.findViewById(R.id.tv_email);
             ImageView profileImg = (ImageView)v.findViewById(R.id.profileImg);
+            TextView tv_field = (TextView)v.findViewById(R.id.tv_field);
 
             ImageView star1 = (ImageView)v.findViewById(R.id.star1);
             ImageView star2 = (ImageView)v.findViewById(R.id.star2);
@@ -210,6 +221,11 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
                     .load((String)map.get("img"))
                     .transform(new CropCircleTransformation())
                     .into(profileImg);
+            if(isTeamListMode){
+                tv_field.setText((String)map.get("field"));
+            }else{
+                tv_field.setVisibility(View.GONE);
+            }
 
             int skill = (int)map.get("skill");
             switch (skill){

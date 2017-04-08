@@ -97,23 +97,42 @@
             android:background="@color/light_gray2"
             />
 
-        <HorizontalScrollView
-            android:id="@+id/sv_member"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
 
-            <LinearLayout
-                android:id="@+id/li_member_field"
+            <HorizontalScrollView
+                android:id="@+id/sv_member"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_toLeftOf="@+id/show_apply_member_btn"
                 >
 
+                <LinearLayout
+                    android:id="@+id/li_member_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
 
-            </LinearLayout>
 
-        </HorizontalScrollView>
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <ImageView
+                android:id="@+id/show_apply_member_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:src="@drawable/ic_chevron_right_grey600_24dp"
+                android:layout_alignParentRight="true"
+                />
+
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
