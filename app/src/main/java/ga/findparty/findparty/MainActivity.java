@@ -34,6 +34,7 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 
 import ga.findparty.findparty.fragment.MyClassFragment;
+import ga.findparty.findparty.fragment.MyReviewFragment;
 import ga.findparty.findparty.fragment.MyTeamFragment;
 import ga.findparty.findparty.profile.ProfileActivity;
 import ga.findparty.findparty.util.FacebookLogin;
@@ -48,7 +49,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private NavigationView navigationView;
 
-    private String[] menuList = {"nav_my_team", "nav_my_class", "nav_info", "nav_report", "nav_help", "nav_open_source"};
+    private String[] menuList = {"nav_my_team", "nav_my_class", "nav_my_review", "nav_info", "nav_report", "nav_help", "nav_open_source"};
 
     // Logout
     private MaterialDialog progressDialog;
@@ -160,6 +161,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             showFragment("nav_my_class", new MyClassFragment());
             title = "내 수업";
+
+        }else if(id == R.id.nav_my_review){
+
+            showFragment("nav_my_review", new MyReviewFragment());
+            title = "리뷰하기";
 
         } else if (id == R.id.nav_show_profile) {
 

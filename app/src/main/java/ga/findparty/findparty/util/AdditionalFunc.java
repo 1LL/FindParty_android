@@ -109,6 +109,19 @@ public class AdditionalFunc {
 
     }
 
+    public static ArrayList<String> stringToArrayList(String str){
+
+        ArrayList<String> list = new ArrayList<>();
+
+        for(String s : str.split(",")){
+            if(!"".equals(s)){
+                list.add(s);
+            }
+        }
+
+        return list;
+    }
+
     public static String arrayListToString(ArrayList<String> list) {
 
         String str = "";
@@ -519,6 +532,7 @@ public class AdditionalFunc {
                 hashTemp.put("boardUserName", (String)temp.get("boardUserName"));
                 hashTemp.put("boardUserEmail", (String)temp.get("boardUserEmail"));
                 hashTemp.put("boardUserImg", (String)temp.get("boardUserImg"));
+                hashTemp.put("review", (String)temp.get("review"));
                 String courseId = (String)temp.get("courseId");
                 hashTemp.put("courseId", courseId);
                 hashTemp.put("courseTitle", (String)temp.get("courseTitle"));
@@ -559,6 +573,7 @@ public class AdditionalFunc {
                     map.put("field", (String)tempMem.get("field"));
                     map.put("skill", Integer.parseInt((String)tempMem.get("skill")));
                     map.put("content", (String)tempMem.get("content"));
+                    map.put("review", (String)tempMem.get("review"));
 
                     String mon = (String)tempMem.get("mon");
                     ArrayList<Integer> monList = new ArrayList<>();
