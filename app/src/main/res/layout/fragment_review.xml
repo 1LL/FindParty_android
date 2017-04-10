@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ga.findparty.findparty.profile.ReviewFragment"
-    android:background="@color/background_color"
+    android:background="@color/white"
     >
 
 

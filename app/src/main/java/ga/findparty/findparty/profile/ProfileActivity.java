@@ -21,6 +21,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 import java.util.HashMap;
 
 import ga.findparty.findparty.R;
+import ga.findparty.findparty.fragment.MyTeamFragment;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -29,7 +30,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     private String[] titles = {
             "정보",
-            "평판"
+            "평판",
+            "기록"
     };
 
     private String userId;
@@ -38,6 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
     private NavigationTabStrip mNavigationTabStrip;
     private InfoFragment infoFragment;
     private ReviewFragment reviewFragment;
+    private MyTeamFragment teamFragment;
 
     private TextView tv_name;
     private ImageView profileImg;
@@ -86,6 +89,15 @@ public class ProfileActivity extends AppCompatActivity {
                             reviewFragment = new ReviewFragment();
                         }
                         f = reviewFragment;
+                        break;
+                    case 2:
+                        if(teamFragment == null){
+                            teamFragment = new MyTeamFragment();
+                            Bundle bdl = new Bundle(1);
+                            bdl.putString("userId", userId);
+                            teamFragment.setArguments(bdl);
+                        }
+                        f = teamFragment;
                         break;
                     default:
                         f = new Fragment();

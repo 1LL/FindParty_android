@@ -2,6 +2,7 @@ package ga.findparty.findparty.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,6 +29,7 @@ import java.util.HashMap;
 import ga.findparty.findparty.Information;
 import ga.findparty.findparty.R;
 import ga.findparty.findparty.StartActivity;
+import ga.findparty.findparty.activity.HistoryActivity;
 import ga.findparty.findparty.activity.ShowApplyPeopleActivity;
 import ga.findparty.findparty.profile.ProfileActivity;
 import ga.findparty.findparty.util.AdditionalFunc;
@@ -49,13 +51,18 @@ public class MyTeamFragment extends BaseFragment {
     private LinearLayout li_listField;
     private ArrayList<HorizontalScrollView> memberScrollViewList;
 
+    private String userId = null;
     private ArrayList<HashMap<String, Object>> list;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         this.setRetainInstance(true);
+        if(getArguments() != null) {
+            userId = getArguments().getString("userId");
+        }
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState){
@@ -111,6 +118,15 @@ public class MyTeamFragment extends BaseFragment {
             final HashMap<String, Object> map  = list.get(i);
 
             View v = LayoutInflater.from(context).inflate(R.layout.team_list_custom_item, null, false);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, HistoryActivity.class);
+                    intent.putExtra("teamId", (String)map.get("id"));
+                    startActivity(intent);
+
+                }
+            });
 
             TextView tv_courseTitle = (TextView)v.findViewById(R.id.tv_course_title);
             final String courseTitle = (String)map.get("courseTitle");
@@ -190,6 +206,7 @@ public class MyTeamFragment extends BaseFragment {
             TextView tv_count = (TextView)v.findViewById(R.id.tv_count);
             tv_count.setText((memberList.size()+1) + "명");
 
+
             li_listField.addView(v);
 
         }
@@ -202,7 +219,11 @@ public class MyTeamFragment extends BaseFragment {
 
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "getTeamList");
-        map.put("userId", StartActivity.USER_ID);
+        if(userId == null){
+            map.put("userId", StartActivity.USER_ID);
+        }else {
+            map.put("userId", userId);
+        }
 
         new ParsePHP(Information.MAIN_SERVER_ADDRESS, map){
 
