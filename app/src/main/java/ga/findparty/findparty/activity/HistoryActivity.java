@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -161,6 +162,7 @@ public class HistoryActivity extends BaseActivity {
             String title = (String)map.get("title");
             String content = (String)map.get("content");
             Long date = (Long)map.get("date");
+            ArrayList<HashMap<String, Object>> participant = (ArrayList<HashMap<String, Object>>)map.get("participant");
 
             tv_title.setText(title);
             Picasso.with(getApplicationContext())
@@ -181,6 +183,32 @@ public class HistoryActivity extends BaseActivity {
                 }
             });
 
+            // participant
+            View line1 = v.findViewById(R.id.line1);
+            if(participant.size() == 0){
+                line1.setVisibility(View.GONE);
+            }
+            HorizontalScrollView sv = (HorizontalScrollView)v.findViewById(R.id.sv_participant);
+            LinearLayout li_participantField = (LinearLayout)v.findViewById(R.id.li_participant_field);
+            li_participantField.removeAllViews();
+            for(HashMap<String, Object> p : participant){
+
+                View pv = getLayoutInflater().inflate(R.layout.team_list_user_custom_item, null, false);
+
+                ImageView pvProfileImg = (ImageView)pv.findViewById(R.id.profileImg);
+                TextView pvTv_name = (TextView)pv.findViewById(R.id.tv_name);
+                TextView pvTv_field = (TextView)pv.findViewById(R.id.tv_field);
+
+                Picasso.with(getApplicationContext())
+                        .load((String)p.get("img"))
+                        .transform(new CropCircleTransformation())
+                        .into(pvProfileImg);
+                pvTv_name.setText((String)p.get("name"));
+                pvTv_field.setText((String)p.get("status"));
+
+                li_participantField.addView(pv);
+
+            }
 
 
             li_listField.addView(v);

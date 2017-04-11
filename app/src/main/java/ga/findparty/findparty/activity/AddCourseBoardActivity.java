@@ -236,14 +236,6 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
         }
     }
 
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        if(progressDialog != null){
-            progressDialog.dismiss();
-        }
-    }
-
     private void checkAddable(){
 
         boolean isContent = editContent.isCharactersCountValid();
@@ -431,5 +423,13 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
         setDateBtn(durationBtn, text);
 
         checkAddable();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(progressDialog != null){
+            progressDialog.dismiss();
+        }
     }
 }

@@ -329,7 +329,7 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
         boolean isContent = editContent.isCharactersCountValid();
         boolean isStatus = memberList.size() == statusCheck.size();
 
-        boolean setting = isTitle && isContent && isStatus;
+        boolean setting = isTitle && isContent && isStatus && isDate;
 
         saveBtn.setEnabled(setting);
         setButtonColor(saveBtn, setting);
@@ -355,6 +355,14 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
         setDateBtn(dateBtn, text);
 
         checkAddable();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(progressDialog != null){
+            progressDialog.dismiss();
+        }
     }
 
 }
