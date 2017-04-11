@@ -117,14 +117,21 @@ public class MyTeamFragment extends BaseFragment {
         for(int i=0; i<list.size(); i++){
             final HashMap<String, Object> map  = list.get(i);
 
+            final ArrayList<HashMap<String,Object>> memberList = (ArrayList<HashMap<String,Object>>)map.get("memberList");
+            final ArrayList<HashMap<String, Object>> allMemberList = new ArrayList<>();
+            HashMap<String, Object> memberTempMap = (HashMap<String, Object>)map.get("boardUserMap");
+            allMemberList.add(memberTempMap);
+            allMemberList.addAll(memberList);
+
+
             View v = LayoutInflater.from(context).inflate(R.layout.team_list_custom_item, null, false);
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, HistoryActivity.class);
                     intent.putExtra("teamId", (String)map.get("id"));
+                    intent.putExtra("memberList", allMemberList);
                     startActivity(intent);
-
                 }
             });
 
@@ -153,7 +160,6 @@ public class MyTeamFragment extends BaseFragment {
             tv_name.setText((String)map.get("boardUserName"));
             tv_email.setText((String)map.get("boardUserEmail"));
 
-            final ArrayList<HashMap<String, Object>> memberList = (ArrayList<HashMap<String,Object>>)map.get("memberList");
 
             HorizontalScrollView sv = (HorizontalScrollView)v.findViewById(R.id.sv_member);
             sv.setOnTouchListener(new View.OnTouchListener() {

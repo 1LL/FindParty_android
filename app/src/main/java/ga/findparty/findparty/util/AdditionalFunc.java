@@ -196,6 +196,28 @@ public class AdditionalFunc {
 
     }
 
+    public static String makeHistoryMeetingParticipantList(HashMap<String, String> map){
+
+        String str="";
+
+        int i=0;
+        for(String key : map.keySet()){
+            String status = map.get(key);
+
+            str = str + key + ":" + status;
+
+            if(i < map.keySet().size()-1){
+                str += ",";
+            }
+
+            i+=1;
+        }
+
+        return str;
+
+    }
+
+
     public static HashMap<String, Object> getUserInfo(String data){
 
         HashMap<String, Object> item = new HashMap<>();
@@ -523,20 +545,33 @@ public class AdditionalFunc {
             for ( int i = 0; i < count; ++i ) {
                 JSONObject temp = results.getJSONObject(i);
 
+                String boardUserId = (String)temp.get("boardUserId");
+                String boardUserName = (String)temp.get("boardUserName");
+                String boardUserEmail = (String)temp.get("boardUserEmail");
+                String boardUserImg = (String)temp.get("boardUserImg");
+
                 HashMap<String, Object> hashTemp = new HashMap<>();
                 hashTemp.put("id", (String)temp.get("id"));
                 hashTemp.put("boardId", (String)temp.get("boardId"));
                 hashTemp.put("boardStart", Long.parseLong((String)temp.get("boardStart")));
                 hashTemp.put("boardFinish", Long.parseLong((String)temp.get("boardFinish")));
-                hashTemp.put("boardUserId", (String)temp.get("boardUserId"));
-                hashTemp.put("boardUserName", (String)temp.get("boardUserName"));
-                hashTemp.put("boardUserEmail", (String)temp.get("boardUserEmail"));
-                hashTemp.put("boardUserImg", (String)temp.get("boardUserImg"));
+                hashTemp.put("boardUserId", boardUserId);
+                hashTemp.put("boardUserName", boardUserName);
+                hashTemp.put("boardUserEmail", boardUserEmail);
+                hashTemp.put("boardUserImg", boardUserImg);
                 hashTemp.put("review", (String)temp.get("review"));
                 String courseId = (String)temp.get("courseId");
                 hashTemp.put("courseId", courseId);
                 hashTemp.put("courseTitle", (String)temp.get("courseTitle"));
                 hashTemp.put("courseClass", (String)temp.get("courseClass"));
+
+                HashMap<String, Object> memberMap = new HashMap<>();
+                memberMap.put("userId", boardUserId);
+                memberMap.put("name", boardUserName);
+                memberMap.put("email", boardUserEmail);
+                memberMap.put("img", boardUserImg);
+                memberMap.put("field", "대표");
+                hashTemp.put("boardUserMap", memberMap);
 
                 String member = (String)temp.get("member");
                 ArrayList<String> mem = new ArrayList<>();
@@ -666,6 +701,29 @@ public class AdditionalFunc {
                 hashTemp.put("title", (String)temp.get("title"));
                 hashTemp.put("content", (String)temp.get("content"));
                 hashTemp.put("date", Long.parseLong((String)temp.get("date")));
+
+                JSONObject jObjectMem = (JSONObject)temp.get("participant");
+                JSONArray resultsMem = jObjectMem.getJSONArray("result");
+                String countTempMem = (String)jObjectMem.get("num_participant");
+                int countMem = Integer.parseInt(countTempMem);
+
+                ArrayList<HashMap<String, Object>> participant = new ArrayList<>();
+                for(int j=0; j<countMem; j++){
+
+                    JSONObject tempMem = resultsMem.getJSONObject(j);
+
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("userId", (String)tempMem.get("userId"));
+                    map.put("name", (String)tempMem.get("name"));
+                    map.put("email", (String)tempMem.get("email"));
+                    map.put("img", (String)tempMem.get("img"));
+                    map.put("status", (String)tempMem.get("status"));
+
+                    participant.add(map);
+
+                }
+
+                hashTemp.put("participant", participant);
 
                 list.add(hashTemp);
 
