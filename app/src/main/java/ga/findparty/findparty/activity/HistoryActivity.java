@@ -48,6 +48,7 @@ public class HistoryActivity extends BaseActivity {
     // FAB
     private FloatingActionsMenu menu;
     private FloatingActionButton addMeetingBtn;
+    private FloatingActionButton addContentBtn;
 
     private String teamId;
     private ArrayList<HashMap<String, Object>> list;
@@ -104,6 +105,19 @@ public class HistoryActivity extends BaseActivity {
             }
         });
         addMeetingBtn.setTitle("회의추가");
+
+        addContentBtn = (FloatingActionButton)findViewById(R.id.add_content);
+        addContentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HistoryActivity.this, AddHistoryActivity.class);
+                intent.putExtra("teamId", teamId);
+                startActivityForResult(intent, UPDATE_HISTORY_LIST);
+                menu.toggle();
+            }
+        });
+        addContentBtn.setTitle("콘텐츠추가");
+
 
         if(isEditAble){
             menu.setVisibility(View.VISIBLE);
