@@ -40,7 +40,6 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class AddHistoryActivity extends BaseActivity implements DatePickerDialog.OnDateSetListener{
 
-
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_SAVE_SUCCESS = 503;
     private final int MSG_MESSAGE_SAVE_FAIL = 504;
@@ -51,14 +50,19 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
     private TextView tv_content;
     private TextView dateBtn;
     private MaterialEditText editContent;
+    private LinearLayout li_charge_field;
+    private TextView chargeBtn;
     private LinearLayout li_participantField;
     private Button saveBtn;
 
     private boolean isMeetingMode;
+    private boolean isHWMode;
     private String teamId;
     private ArrayList<HashMap<String, Object>> memberList;
     private HashMap<String, String> statusCheck;
+    private HashMap<String, Object> chargeMember;
     private boolean isDate;
+    private boolean isCharge;
     private long date;
 
     private MaterialDialog progressDialog;
@@ -71,7 +75,8 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
         Intent intent = getIntent();
         teamId = intent.getStringExtra("teamId");
         isMeetingMode = intent.getBooleanExtra("isMeetingMode", false);
-        if(isMeetingMode){
+        isHWMode = intent.getBooleanExtra("isHWMode", false);
+        if(isMeetingMode || isHWMode){
             memberList = (ArrayList<HashMap<String, Object>>)intent.getSerializableExtra("memberList");
         }else{
             memberList = new ArrayList<>();
@@ -131,6 +136,43 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
                 dpd.show(getFragmentManager(), "Datepickerdialog");
             }
         });
+        li_charge_field = (LinearLayout)findViewById(R.id.li_charge_field);
+        chargeBtn = (TextView)findViewById(R.id.charge_btn);
+        chargeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String[] memList = new String[memberList.size()];
+                for(int i=0; i<memberList.size(); i++){
+                    memList[i] = (String)memberList.get(i).get("name");
+                }
+
+                new MaterialDialog.Builder(AddHistoryActivity.this)
+                        .title("과제 담당자를 선택해주세요.")
+                        .items(memList)
+                        .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                            @Override
+                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                /**
+                                 * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
+                                 * returning false here won't allow the newly selected radio button to actually be selected.
+                                 **/
+                                chargeMember = memberList.get(which);
+                                setDateBtn(chargeBtn, (String)chargeMember.get("name"));
+                                isCharge = true;
+                                checkAddable();
+                                return true;
+                            }
+                        })
+                        .positiveText("확인")
+                        .show();
+            }
+        });
+        if(isHWMode){
+            li_charge_field.setVisibility(View.VISIBLE);
+        }else{
+            li_charge_field.setVisibility(View.GONE);
+        }
         li_participantField = (LinearLayout)findViewById(R.id.li_participant_field);
         saveBtn = (Button)findViewById(R.id.save_btn);
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -144,7 +186,13 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
             editTitle.setText("회의");
             tv_content.setText("회의내용");
             editContent.setHint("회의내용을 입력해주세요.");
-            makeList();
+            makeListMeeting();
+        }
+        if(isHWMode){
+            editTitle.setText("개별과제");
+            tv_content.setText("과제내용");
+            editContent.setHint("과제내용을 입력해주세요.");
+            makeListHW();
         }
 
         progressDialog = new MaterialDialog.Builder(this)
@@ -158,7 +206,7 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
 
     }
 
-    private void makeList(){
+    private void makeListMeeting(){
 
         li_participantField.removeAllViews();
 
@@ -239,6 +287,73 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
 
     }
 
+    private void makeListHW(){
+
+        li_participantField.removeAllViews();
+
+        for(int i=0; i<memberList.size(); i++){
+            HashMap<String, Object> map = memberList.get(i);
+            final String userId = (String)map.get("userId");
+            String img = (String)map.get("img");
+            String name = (String)map.get("name");
+            String email = (String)map.get("email");
+            String field = (String)map.get("field");
+
+            View v = getLayoutInflater().inflate(R.layout.history_homework_custom_item, null, false);
+
+            RelativeLayout rl_profile = (RelativeLayout)v.findViewById(R.id.rl_profile);
+            ImageView profileImg = (ImageView)v.findViewById(R.id.profileImg);
+            TextView tv_name = (TextView)v.findViewById(R.id.tv_name);
+            TextView tv_email = (TextView)v.findViewById(R.id.tv_email);
+            TextView tv_field = (TextView)v.findViewById(R.id.tv_field);
+
+            rl_profile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(AddHistoryActivity.this, ProfileActivity.class);
+                    intent.putExtra("id", userId);
+                    startActivity(intent);
+                }
+            });
+            Picasso.with(getApplicationContext())
+                    .load(img)
+                    .transform(new CropCircleTransformation())
+                    .into(profileImg);
+            tv_name.setText(name);
+            tv_email.setText(email);
+            tv_field.setText(field);
+
+            final Button satisBtn = (Button)v.findViewById(R.id.satis_btn);
+            final Button dissatisBtn = (Button)v.findViewById(R.id.dissatis_btn);
+
+            satisBtn.setTag(userId);
+            dissatisBtn.setTag(userId);
+
+            satisBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    statusCheck.put((String)v.getTag(), "만족");
+                    setButtonColor(satisBtn, true);
+                    setButtonColor(dissatisBtn, false);
+                    checkAddable();
+                }
+            });
+            dissatisBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    statusCheck.put((String)v.getTag(), "불만족");
+                    setButtonColor(satisBtn, false);
+                    setButtonColor(dissatisBtn, true);
+                    checkAddable();
+                }
+            });
+
+            li_participantField.addView(v);
+
+        }
+
+    }
+
     private void save(){
 
         progressDialog.show();
@@ -249,7 +364,11 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "saveHistory");
         map.put("teamId", teamId);
-        map.put("userId", StartActivity.USER_ID);
+        if(isHWMode){
+            map.put("userId", (String)chargeMember.get("userId"));
+        }else {
+            map.put("userId", StartActivity.USER_ID);
+        }
         map.put("title", title);
         map.put("content", content);
         map.put("date", Long.toString(date));
@@ -327,9 +446,11 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
 
         boolean isTitle = editTitle.isCharactersCountValid();
         boolean isContent = editContent.isCharactersCountValid();
-        boolean isStatus = memberList.size() == statusCheck.size();
+        boolean isStatus = (!isMeetingMode) || (memberList.size() == statusCheck.size());
+        boolean isChar = (!isHWMode) || isCharge;
+        boolean isSatis = (!isHWMode) || (memberList.size() == statusCheck.size());
 
-        boolean setting = isTitle && isContent && isStatus && isDate;
+        boolean setting = isTitle && isContent && isStatus && isDate && isChar && isSatis;
 
         saveBtn.setEnabled(setting);
         setButtonColor(saveBtn, setting);
@@ -364,5 +485,6 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
             progressDialog.dismiss();
         }
     }
+
 
 }

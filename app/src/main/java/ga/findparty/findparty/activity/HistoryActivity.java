@@ -49,6 +49,7 @@ public class HistoryActivity extends BaseActivity {
     private FloatingActionsMenu menu;
     private FloatingActionButton addMeetingBtn;
     private FloatingActionButton addContentBtn;
+    private FloatingActionButton addHomeworkBtn;
 
     private String teamId;
     private ArrayList<HashMap<String, Object>> list;
@@ -117,6 +118,20 @@ public class HistoryActivity extends BaseActivity {
             }
         });
         addContentBtn.setTitle("콘텐츠추가");
+
+        addHomeworkBtn = (FloatingActionButton)findViewById(R.id.add_homework);
+        addHomeworkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HistoryActivity.this, AddHistoryActivity.class);
+                intent.putExtra("teamId", teamId);
+                intent.putExtra("isHWMode", true);
+                intent.putExtra("memberList", memberList);
+                startActivityForResult(intent, UPDATE_HISTORY_LIST);
+                menu.toggle();
+            }
+        });
+        addHomeworkBtn.setTitle("개별과제추가");
 
 
         if(isEditAble){
