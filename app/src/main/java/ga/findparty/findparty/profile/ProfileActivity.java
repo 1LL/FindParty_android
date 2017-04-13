@@ -21,6 +21,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 import java.util.HashMap;
 
 import ga.findparty.findparty.R;
+import ga.findparty.findparty.StartActivity;
 import ga.findparty.findparty.fragment.MyTeamFragment;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -42,6 +43,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ReviewFragment reviewFragment;
     private MyTeamFragment teamFragment;
 
+    private TextView recommendBtn;
     private TextView tv_name;
     private ImageView profileImg;
     private AVLoadingIndicatorView loadingName;
@@ -60,6 +62,18 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void initUI(){
 
+        recommendBtn = (TextView)findViewById(R.id.recommend_btn);
+        if(StartActivity.USER_ID.equals(userId)){
+            recommendBtn.setVisibility(View.GONE);
+        }
+        recommendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, RecommendListActivity.class);
+                intent.putExtra("userId", userId);
+                startActivity(intent);
+            }
+        });
         tv_name = (TextView)findViewById(R.id.tv_name);
         profileImg = (ImageView)findViewById(R.id.profileImg);
         loadingName = (AVLoadingIndicatorView)findViewById(R.id.loading_name);

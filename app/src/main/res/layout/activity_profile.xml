@@ -33,11 +33,27 @@
                         android:scaleType="centerCrop"
                         android:background="@color/colorPrimary" />
 
-                    <View
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
                         android:layout_gravity="bottom"
-                        android:background="@color/white" />
+                        android:background="@color/white"
+                        >
+
+                        <TextView
+                            android:id="@+id/recommend_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="25dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:text="추천하기"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="12sp"
+                            android:padding="5dp"
+                            android:layout_marginRight="5dp"
+                            />
+
+                    </RelativeLayout>
 
                     <ImageView
                         android:id="@+id/profileImg"
