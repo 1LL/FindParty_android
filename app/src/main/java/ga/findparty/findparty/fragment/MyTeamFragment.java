@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -163,13 +164,26 @@ public class MyTeamFragment extends BaseFragment {
 
             HorizontalScrollView sv = (HorizontalScrollView)v.findViewById(R.id.sv_member);
             sv.setOnTouchListener(new View.OnTouchListener() {
+
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        Intent intent = new Intent(context, HistoryActivity.class);
+                        intent.putExtra("teamId", (String)map.get("id"));
+                        intent.putExtra("memberList", allMemberList);
+                        startActivity(intent);
+                    }
                     return false;
                 }
             });
-            memberScrollViewList.add(sv);
+//            sv.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//                    v.getParent().requestDisallowInterceptTouchEvent(true);
+//                    return false;
+//                }
+//            });
+                    memberScrollViewList.add(sv);
 
             LinearLayout li_memberField = (LinearLayout)v.findViewById(R.id.li_member_field);
             li_memberField.removeAllViews();
