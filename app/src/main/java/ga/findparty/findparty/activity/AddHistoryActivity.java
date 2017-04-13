@@ -186,12 +186,14 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
             editTitle.setText("회의");
             tv_content.setText("회의내용");
             editContent.setHint("회의내용을 입력해주세요.");
+            editContent.requestFocus();
             makeListMeeting();
         }
         if(isHWMode){
             editTitle.setText("개별과제");
             tv_content.setText("과제내용");
             editContent.setHint("과제내용을 입력해주세요.");
+            editContent.requestFocus();
             makeListHW();
         }
 
