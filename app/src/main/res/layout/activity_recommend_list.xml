@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ga.findparty.findparty.profile.RecommendListActivity"
-    android:background="@color/transparent"
-    >
+    android:background="@color/transparent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,7 +16,32 @@
         android:clickable="true"
         >
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/close_btn"
+            >
 
+            <LinearLayout
+                android:id="@+id/li_recommend_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+            </LinearLayout>
+
+        </ScrollView>
+
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:indicatorName="LineSpinFadeLoaderIndicator"
+            app:indicatorColor="@color/colorPrimary"
+            style="@style/AVLoadingIndicatorView.Small"
+            android:layout_centerInParent="true" />
 
         <Button
             android:id="@+id/close_btn"

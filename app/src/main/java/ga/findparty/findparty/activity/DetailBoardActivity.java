@@ -472,4 +472,12 @@ public class DetailBoardActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(progressDialog != null){
+            progressDialog.dismiss();
+        }
+    }
+
 }

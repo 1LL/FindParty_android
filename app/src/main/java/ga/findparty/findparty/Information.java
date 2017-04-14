@@ -16,6 +16,16 @@ public class Information {
     // 관리자 이메일
     public static String ADMINISTRATOR_EMAIL = "ldaytw@gmail.com";
 
+    public static String[] RECOMMEND_FIELD_LIST = {
+            "팀장",
+            "발표",
+            "자료관리",
+            "자료조사",
+            "PPT제작",
+            "커뮤니케이션",
+            "무임승차"
+    };
+
     public static String[] SCHOOL_LIST = {
             "세종대학교"
     };
