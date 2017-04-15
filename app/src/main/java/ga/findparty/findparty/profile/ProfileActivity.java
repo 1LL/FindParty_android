@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
@@ -46,10 +48,12 @@ public class ProfileActivity extends AppCompatActivity {
     private MyTeamFragment teamFragment;
     private RecommendFragment recommendFragment;
 
+    private RelativeLayout rl_profile;
     private TextView recommendBtn;
     private TextView tv_name;
     private ImageView profileImg;
     private AVLoadingIndicatorView loadingName;
+    boolean isProfileVisible = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void initUI(){
+
+        rl_profile = (RelativeLayout)findViewById(R.id.rl_profile);
 
         recommendBtn = (TextView)findViewById(R.id.recommend_btn);
         if(StartActivity.USER_ID.equals(userId)){
@@ -142,6 +148,19 @@ public class ProfileActivity extends AppCompatActivity {
         mNavigationTabStrip.setViewPager(mViewPager, 0);
         mNavigationTabStrip.setTabIndex(0, true);
 
+    }
+
+    public void setProfileVisible(){
+        isProfileVisible = !isProfileVisible;
+        if(isProfileVisible){
+            rl_profile.setVisibility(View.VISIBLE);
+            tv_name.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+            tv_name.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_gray));
+        }else{
+            rl_profile.setVisibility(View.GONE);
+            tv_name.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+            tv_name.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+        }
     }
 
     public void setProfile(String name, String img){

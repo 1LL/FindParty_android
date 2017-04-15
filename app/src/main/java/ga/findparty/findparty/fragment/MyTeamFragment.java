@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -45,6 +46,8 @@ public class MyTeamFragment extends BaseFragment {
     // UI
     private View view;
     private Context context;
+
+    private FloatingActionButton fabExtend;
 
     private ScrollView parentSV;
     private AVLoadingIndicatorView loading;
@@ -102,6 +105,20 @@ public class MyTeamFragment extends BaseFragment {
         tv_msg = (TextView)view.findViewById(R.id.tv_msg);
         tv_msg.setVisibility(View.GONE);
         li_listField = (LinearLayout)view.findViewById(R.id.li_list_field);
+
+
+        fabExtend = (FloatingActionButton) view.findViewById(R.id.fab_extend);
+        if(userId != null) {
+            fabExtend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((ProfileActivity)getActivity()).setProfileVisible();
+                }
+            });
+            fabExtend.setTitle("확장");
+        }else{
+            fabExtend.setVisibility(View.GONE);
+        }
 
     }
 
