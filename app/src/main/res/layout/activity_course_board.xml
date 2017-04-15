@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:id="@+id/rv"
         android:clipToPadding="false"
-        android:paddingTop="?attr/actionBarSize"
+        android:paddingTop="@dimen/custom_actionbar_size"
         >
     </android.support.v7.widget.RecyclerView>
 
@@ -88,16 +88,15 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         app:contentInsetStart="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/custom_actionbar_size"
         android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
         android:background="@color/colorPrimary"
         >
 
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -112,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:text="팀 모집 게시글"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/custom_actionbar_title_size"
                     android:layout_gravity="center_horizontal"
                     />
                 <TextView
@@ -121,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:text="수업명"
                     android:textColor="@color/light_gray2"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/custom_actionbar_sub_title_size"
                     android:layout_gravity="center_horizontal"
                     />
 

@@ -12,7 +12,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginTop="@dimen/custom_actionbar_size"
         android:layout_above="@+id/decision_btn"
         >
 
@@ -241,16 +241,15 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         app:contentInsetStart="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/custom_actionbar_size"
         android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
         android:background="@color/colorPrimary"
         >
 
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+            android:layout_height="match_parent">
 
 
             <TextView
@@ -259,7 +258,7 @@
                 android:layout_height="wrap_content"
                 android:text="상세보기"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="@dimen/custom_actionbar_title_size"
                 android:layout_centerInParent="true"
                 />
 
