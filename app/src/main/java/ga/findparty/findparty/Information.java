@@ -23,6 +23,7 @@ public class Information {
             "자료조사",
             "PPT제작",
             "커뮤니케이션",
+            "아이디어",
             "무임승차"
     };
 

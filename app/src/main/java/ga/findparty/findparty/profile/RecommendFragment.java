@@ -112,13 +112,17 @@ public class RecommendFragment extends BaseFragment implements OnAdapterSupport 
         return recipientId;
     }
 
-    private void makeList(){
-
+    private void checkMsg(){
         if(list.size()>0){
             tv_msg.setVisibility(View.GONE);
         }else{
             tv_msg.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void makeList(){
+
+        checkMsg();
 
         adapter = new RecommendCustomAdapter(context, list, rv, this, this);
 
@@ -140,6 +144,7 @@ public class RecommendFragment extends BaseFragment implements OnAdapterSupport 
                     break;
                 case MSG_MESSAGE_MAKE_LIST_UPDATE:
                     loading.hide();
+                    checkMsg();
                     adapter.notifyDataSetChanged();
                     break;
                 case MSG_MESSAGE_SHOW_LOADING:
