@@ -1,39 +1,43 @@
 package ga.findparty.findparty.profile;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import ga.findparty.findparty.R;
-import ga.findparty.findparty.activity.CourseBoardActivity;
-import ga.findparty.findparty.fragment.MyClassFragment;
+import ga.findparty.findparty.activity.AddCourseActivity;
 import ga.findparty.findparty.util.OnAdapterSupport;
 import ga.findparty.findparty.util.OnLoadMoreListener;
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 
 /**
  * Created by tw on 2016-08-16.
  */
-public class RecommendCustomAdapter extends RecyclerView.Adapter<RecommendCustomAdapter.ViewHolder> {
+public class RecommendUserListCustomAdapter extends RecyclerView.Adapter<RecommendUserListCustomAdapter.ViewHolder> {
 
     // UI
     private Context context;
-    private RecommendFragment fragment;
+    private RecommendUserListActivity activity;
 
+    //    private MaterialNavigationDrawer activity;
     private OnAdapterSupport onAdapterSupport;
 
-    public ArrayList<HashMap<String, Object>> list;
+    public ArrayList<HashMap<String, String>> list;
 
     // 무한 스크롤
     private OnLoadMoreListener onLoadMoreListener;
@@ -42,11 +46,11 @@ public class RecommendCustomAdapter extends RecyclerView.Adapter<RecommendCustom
     private boolean loading = false;
 
     // 생성자
-    public RecommendCustomAdapter(Context context, ArrayList<HashMap<String, Object>> list, RecyclerView recyclerView, OnAdapterSupport listener, Fragment fragment) {
+    public RecommendUserListCustomAdapter(Context context, ArrayList<HashMap<String, String>> list, RecyclerView recyclerView, OnAdapterSupport listener, Activity activity) {
         this.context = context;
         this.list = list;
         this.onAdapterSupport = listener;
-        this.fragment = (RecommendFragment)fragment;
+        this.activity = (RecommendUserListActivity)activity;
 
         if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
             recyclerView.addOnScrollListener(new ScrollListener() {
@@ -66,27 +70,29 @@ public class RecommendCustomAdapter extends RecyclerView.Adapter<RecommendCustom
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //recycler view에 반복될 아이템 레이아웃 연결
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recommend_custom_item,null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recommend_user_list_custom_item,null);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final HashMap<String,Object> item = list.get(position);
+        final HashMap<String,String> item = list.get(position);
         final int pos = position;
 
-        final String field = (String)item.get("field");
-        int count = (int)item.get("count");
+        final String userId = item.get("userId");
 
-        holder.tv_field.setText(field);
-        holder.tv_count.setText(count + "명");
+        Picasso.with(context)
+                .load(item.get("img"))
+                .transform(new CropCircleTransformation())
+                .into(holder.profileImg);
+        holder.tv_name.setText(item.get("name"));
+        holder.tv_email.setText(item.get("email"));
 
-        holder.root.setOnClickListener(new View.OnClickListener() {
+        holder.rl_background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, RecommendUserListActivity.class);
-                intent.putExtra("field", field);
-                intent.putExtra("recipientId", fragment.getRecipientId());
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("id", userId);
                 onAdapterSupport.redirectActivity(intent);
             }
         });
@@ -165,15 +171,17 @@ public class RecommendCustomAdapter extends RecyclerView.Adapter<RecommendCustom
 
     public final static class ViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout root;
-        TextView tv_field;
-        TextView tv_count;
+        RelativeLayout rl_background;
+        ImageView profileImg;
+        TextView tv_name;
+        TextView tv_email;
 
         public ViewHolder(View v) {
             super(v);
-            root = (RelativeLayout)v.findViewById(R.id.root);
-            tv_field = (TextView)v.findViewById(R.id.tv_field);
-            tv_count = (TextView)v.findViewById(R.id.tv_count);
+            rl_background = (RelativeLayout)v.findViewById(R.id.rl_background);
+            profileImg = (ImageView)v.findViewById(R.id.profileImg);
+            tv_name = (TextView)v.findViewById(R.id.tv_name);
+            tv_email = (TextView)v.findViewById(R.id.tv_email);
         }
     }
 

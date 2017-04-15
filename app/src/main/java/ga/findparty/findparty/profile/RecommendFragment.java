@@ -108,6 +108,10 @@ public class RecommendFragment extends BaseFragment implements OnAdapterSupport 
 
     }
 
+    public String getRecipientId(){
+        return recipientId;
+    }
+
     private void makeList(){
 
         if(list.size()>0){
