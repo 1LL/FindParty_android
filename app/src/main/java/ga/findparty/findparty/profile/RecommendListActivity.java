@@ -48,7 +48,6 @@ public class RecommendListActivity extends BaseActivity {
     private MaterialDialog progressDialog;
 
     private String userId;
-    //private ArrayList<String> recommendedList;
     private HashMap<String, String> recommendedInfo;
 
     @Override
@@ -260,6 +259,7 @@ public class RecommendListActivity extends BaseActivity {
                     getRecommendedList();
                     break;
                 case MSG_MESSAGE_SUCCESS_RECOMMEND:
+                    setResult(ProfileActivity.UPDATE_RECOMMEND_LIST);
                     new MaterialDialog.Builder(RecommendListActivity.this)
                             .title("성공")
                             .content("성공적으로 추천하였습니다.")
@@ -267,6 +267,7 @@ public class RecommendListActivity extends BaseActivity {
                             .show();
                     break;
                 case MSG_MESSAGE_SUCCESS_UNRECOMMEND:
+                    setResult(ProfileActivity.UPDATE_RECOMMEND_LIST);
                     new MaterialDialog.Builder(RecommendListActivity.this)
                             .title("성공")
                             .content("성공적으로 철회하였습니다.")

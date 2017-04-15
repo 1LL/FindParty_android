@@ -28,11 +28,13 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class ProfileActivity extends AppCompatActivity {
 
     public final static int EDIT_PROFILE = 100;
+    public final static int UPDATE_RECOMMEND_LIST = 200;
 
     private String[] titles = {
             "정보",
             "평판",
-            "기록"
+            "기록",
+            "추천"
     };
 
     private String userId;
@@ -42,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
     private InfoFragment infoFragment;
     private ReviewFragment reviewFragment;
     private MyTeamFragment teamFragment;
+    private RecommendFragment recommendFragment;
 
     private TextView recommendBtn;
     private TextView tv_name;
@@ -71,7 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ProfileActivity.this, RecommendListActivity.class);
                 intent.putExtra("userId", userId);
-                startActivity(intent);
+                startActivityForResult(intent, UPDATE_RECOMMEND_LIST);
             }
         });
         tv_name = (TextView)findViewById(R.id.tv_name);
@@ -113,6 +116,15 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                         f = teamFragment;
                         break;
+                    case 3:
+                        if(recommendFragment == null){
+                            recommendFragment = new RecommendFragment();
+                            Bundle bdl = new Bundle(1);
+                            bdl.putString("recipientId", userId);
+                            recommendFragment.setArguments(bdl);
+                        }
+                        f = recommendFragment;
+                        break;
                     default:
                         f = new Fragment();
                         break;
@@ -151,6 +163,9 @@ public class ProfileActivity extends AppCompatActivity {
             case EDIT_PROFILE:
                 //InfoFragment fragment = (InfoFragment)((FragmentStatePagerAdapter)mViewPager.getAdapter()).ins;
                 infoFragment.updateUI((HashMap<String, Object>) data.getSerializableExtra("item"));
+                break;
+            case UPDATE_RECOMMEND_LIST:
+                recommendFragment.getRecommendedList(true);
                 break;
             default:
                 break;
