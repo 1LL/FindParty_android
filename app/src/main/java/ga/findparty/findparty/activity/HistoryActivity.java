@@ -48,6 +48,7 @@ public class HistoryActivity extends BaseActivity {
 
     // FAB
     private FloatingActionsMenu menu;
+    private FloatingActionButton addPresentBtn;
     private FloatingActionButton addMeetingBtn;
     private FloatingActionButton addContentBtn;
     private FloatingActionButton addHomeworkBtn;
@@ -93,6 +94,20 @@ public class HistoryActivity extends BaseActivity {
     private void setFab(){
 
         menu = (FloatingActionsMenu)findViewById(R.id.multiple_actions);
+
+        addPresentBtn = (FloatingActionButton) findViewById(R.id.add_present);
+        addPresentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HistoryActivity.this, AddHistoryActivity.class);
+                intent.putExtra("isPresentMode", true);
+                intent.putExtra("memberList", memberList);
+                intent.putExtra("teamId", teamId);
+                startActivityForResult(intent, UPDATE_HISTORY_LIST);
+                menu.toggle();
+            }
+        });
+        addPresentBtn.setTitle("발표추가");
 
         addMeetingBtn = (FloatingActionButton) findViewById(R.id.add_meeting);
         addMeetingBtn.setOnClickListener(new View.OnClickListener() {

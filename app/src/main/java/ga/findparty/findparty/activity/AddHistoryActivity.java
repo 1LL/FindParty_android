@@ -53,12 +53,14 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
     private MaterialEditText editContent;
     private TextView addReferenceBtn;
     private LinearLayout li_referenceField;
+    private TextView tv_charge;
     private LinearLayout li_charge_field;
     private TextView chargeBtn;
     private LinearLayout li_participantField;
     private Button saveBtn;
 
     private boolean isMeetingMode;
+    private boolean isPresentMode;
     private boolean isHWMode;
     private String teamId;
     private ArrayList<HashMap<String, Object>> memberList;
@@ -79,8 +81,9 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
         Intent intent = getIntent();
         teamId = intent.getStringExtra("teamId");
         isMeetingMode = intent.getBooleanExtra("isMeetingMode", false);
+        isPresentMode = intent.getBooleanExtra("isPresentMode", false);
         isHWMode = intent.getBooleanExtra("isHWMode", false);
-        if(isMeetingMode || isHWMode){
+        if(isMeetingMode || isHWMode || isPresentMode){
             memberList = (ArrayList<HashMap<String, Object>>)intent.getSerializableExtra("memberList");
         }else{
             memberList = new ArrayList<>();
@@ -158,6 +161,7 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
             }
         });
         li_referenceField = (LinearLayout)findViewById(R.id.li_reference_field);
+        tv_charge = (TextView)findViewById(R.id.tv_charge);
         li_charge_field = (LinearLayout)findViewById(R.id.li_charge_field);
         chargeBtn = (TextView)findViewById(R.id.charge_btn);
         chargeBtn.setOnClickListener(new View.OnClickListener() {
@@ -169,8 +173,15 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
                     memList[i] = (String)memberList.get(i).get("name");
                 }
 
+                String title = "";
+                if(isHWMode){
+                    title = "과제 담당자를 선택해주세요.";
+                }else if(isPresentMode){
+                    title = "발표자를 선택해주세요.";
+                }
+
                 new MaterialDialog.Builder(AddHistoryActivity.this)
-                        .title("과제 담당자를 선택해주세요.")
+                        .title(title)
                         .items(memList)
                         .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
@@ -190,7 +201,7 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
                         .show();
             }
         });
-        if(isHWMode){
+        if(isHWMode || isPresentMode){
             li_charge_field.setVisibility(View.VISIBLE);
         }else{
             li_charge_field.setVisibility(View.GONE);
@@ -212,11 +223,20 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
             makeListMeeting();
         }
         if(isHWMode){
+            tv_charge.setText("담당자");
             editTitle.setText("개별과제");
             tv_content.setText("과제내용");
             editContent.setHint("과제내용을 입력해주세요.");
             editContent.requestFocus();
-            makeListHW();
+            makeListSatisfy();
+        }
+        if(isPresentMode){
+            tv_charge.setText("발표자");
+            editTitle.setText("발표");
+            tv_content.setText("발표내용");
+            editContent.setHint("발표내용을 입력해주세요.");
+            editContent.requestFocus();
+            makeListSatisfy();
         }
 
         progressDialog = new MaterialDialog.Builder(this)
@@ -338,7 +358,7 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
 
     }
 
-    private void makeListHW(){
+    private void makeListSatisfy(){
 
         li_participantField.removeAllViews();
 
@@ -415,7 +435,7 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "saveHistory");
         map.put("teamId", teamId);
-        if(isHWMode){
+        if(isHWMode || isPresentMode){
             map.put("userId", (String)chargeMember.get("userId"));
         }else {
             map.put("userId", StartActivity.USER_ID);
@@ -499,8 +519,8 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
         boolean isTitle = editTitle.isCharactersCountValid();
         boolean isContent = editContent.isCharactersCountValid();
         boolean isStatus = (!isMeetingMode) || (memberList.size() == statusCheck.size());
-        boolean isChar = (!isHWMode) || isCharge;
-        boolean isSatis = (!isHWMode) || (memberList.size() == statusCheck.size());
+        boolean isChar = (!isHWMode && !isPresentMode) || isCharge;
+        boolean isSatis = (!isHWMode && !isPresentMode) || (memberList.size() == statusCheck.size());
 
         boolean setting = isTitle && isContent && isStatus && isDate && isChar && isSatis;
 
