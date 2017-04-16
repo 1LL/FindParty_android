@@ -372,7 +372,7 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
             map.put("userId", StartActivity.USER_ID);
         }
         map.put("title", title);
-        map.put("content", content);
+        map.put("content", AdditionalFunc.replaceNewLineString(content));
         map.put("date", Long.toString(date));
         map.put("participant", AdditionalFunc.makeHistoryMeetingParticipantList(statusCheck));
 
