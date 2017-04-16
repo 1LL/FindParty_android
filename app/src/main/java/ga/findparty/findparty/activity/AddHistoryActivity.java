@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +51,8 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
     private TextView tv_content;
     private TextView dateBtn;
     private MaterialEditText editContent;
+    private TextView addReferenceBtn;
+    private LinearLayout li_referenceField;
     private LinearLayout li_charge_field;
     private TextView chargeBtn;
     private LinearLayout li_participantField;
@@ -61,6 +64,7 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
     private ArrayList<HashMap<String, Object>> memberList;
     private HashMap<String, String> statusCheck;
     private HashMap<String, Object> chargeMember;
+    private ArrayList<String> referenceList;
     private boolean isDate;
     private boolean isCharge;
     private long date;
@@ -82,6 +86,7 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
             memberList = new ArrayList<>();
         }
         statusCheck = new HashMap<>();
+        referenceList = new ArrayList<>();
 
         init();
 
@@ -136,6 +141,23 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
                 dpd.show(getFragmentManager(), "Datepickerdialog");
             }
         });
+        addReferenceBtn = (TextView)findViewById(R.id.add_reference_btn);
+        addReferenceBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new MaterialDialog.Builder(AddHistoryActivity.this)
+                        .title("입력")
+                        .inputType(InputType.TYPE_CLASS_TEXT)
+                        .input("url을 입력해주세요.", null, new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                referenceList.add(AdditionalFunc.replaceNewLineString(input.toString()));
+                                makeReferenceLayout();
+                            }
+                        }).show();
+            }
+        });
+        li_referenceField = (LinearLayout)findViewById(R.id.li_reference_field);
         li_charge_field = (LinearLayout)findViewById(R.id.li_charge_field);
         chargeBtn = (TextView)findViewById(R.id.charge_btn);
         chargeBtn.setOnClickListener(new View.OnClickListener() {
@@ -205,6 +227,33 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
                 .build();
 
         checkAddable();
+
+    }
+
+    private void makeReferenceLayout(){
+
+        li_referenceField.removeAllViews();
+
+        for(int i=0; i<referenceList.size(); i++){
+
+            View v = getLayoutInflater().inflate(R.layout.reference_custom_item, null, false);
+
+            TextView tv_reference = (TextView)v.findViewById(R.id.tv_reference);
+            tv_reference.setText(referenceList.get(i));
+            ImageView deleteBtn = (ImageView)v.findViewById(R.id.delete_btn);
+            deleteBtn.setTag(i);
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int index = (int)v.getTag();
+                    referenceList.remove(index);
+                    makeReferenceLayout();
+                }
+            });
+
+            li_referenceField.addView(v);
+
+        }
 
     }
 
@@ -373,6 +422,7 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
         }
         map.put("title", title);
         map.put("content", AdditionalFunc.replaceNewLineString(content));
+        map.put("reference", AdditionalFunc.arrayListToString(referenceList));
         map.put("date", Long.toString(date));
         map.put("participant", AdditionalFunc.makeHistoryMeetingParticipantList(statusCheck));
 
