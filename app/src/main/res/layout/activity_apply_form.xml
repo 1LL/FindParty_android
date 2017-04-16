@@ -9,160 +9,178 @@
     android:background="@color/transparent"
     >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="250dp"
         android:layout_centerInParent="true"
-        android:background="@color/white"
-        android:paddingTop="20dp"
-        android:clickable="true"
         >
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:minHeight="40dp"
-            android:gravity=""
+            android:layout_height="match_parent"
+            android:layout_above="@+id/applyBtn"
+            android:background="@color/white"
             >
-
-            <TextView
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:text="분야"
-                android:textSize="12sp"
-                android:textColor="@color/profile_title"
-                android:gravity="right"
-                android:paddingRight="5dp"
-                android:layout_marginLeft="10dp"
-                />
-
-            <TextView
-                android:id="@+id/tv_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="지원분야"
-                android:textSize="12sp"
-                android:textColor="@color/profile_content"
-                android:layout_marginRight="10dp"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:minHeight="40dp"
-            >
-
-            <TextView
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:text="숙련도"
-                android:textSize="12sp"
-                android:textColor="@color/profile_title"
-                android:gravity="right"
-                android:paddingRight="5dp"
-                android:layout_marginLeft="10dp"
-                />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:orientation="horizontal"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_centerInParent="true"
+                android:paddingTop="20dp"
+                android:clickable="true"
                 >
 
-                <ImageView
-                    android:id="@+id/star1"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/star_black"
-                    android:layout_marginRight="5dp"
-                    />
-                <ImageView
-                    android:id="@+id/star2"
-                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:minHeight="40dp"
+                    android:gravity=""
+                    >
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:text="분야"
+                        android:textSize="12sp"
+                        android:textColor="@color/profile_title"
+                        android:gravity="right"
+                        android:paddingRight="5dp"
+                        android:layout_marginLeft="10dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="지원분야"
+                        android:textSize="12sp"
+                        android:textColor="@color/profile_content"
+                        android:layout_marginRight="10dp"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/star_black"
-                    android:layout_marginRight="5dp"
-                    />
-                <ImageView
-                    android:id="@+id/star3"
-                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:minHeight="40dp"
+                    >
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:text="숙련도"
+                        android:textSize="12sp"
+                        android:textColor="@color/profile_title"
+                        android:gravity="right"
+                        android:paddingRight="5dp"
+                        android:layout_marginLeft="10dp"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:orientation="horizontal"
+                        >
+
+                        <ImageView
+                            android:id="@+id/star1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/star_black"
+                            android:layout_marginRight="5dp"
+                            />
+                        <ImageView
+                            android:id="@+id/star2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/star_black"
+                            android:layout_marginRight="5dp"
+                            />
+                        <ImageView
+                            android:id="@+id/star3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/star_black"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/star_black"
-                    />
+                    android:orientation="horizontal"
+                    android:minHeight="40dp"
+                    >
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:text="불가능시간"
+                        android:textSize="12sp"
+                        android:textColor="@color/profile_title"
+                        android:gravity="right"
+                        android:paddingRight="5dp"
+                        android:layout_marginLeft="10dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/time_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="추가하기"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center_horizontal"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:minHeight="40dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_content"
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:text="소개"
+                        android:textSize="12sp"
+                        android:textColor="@color/profile_title"
+                        android:gravity="right"
+                        android:paddingRight="5dp"
+                        android:layout_marginLeft="10dp"
+                        />
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/edit_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="본인을 어필할 수 있는 글을 적어주세요."
+                        android:textSize="12sp"
+                        android:textColor="@color/profile_content"
+                        android:layout_marginRight="10dp"
+                        app:met_minCharacters="1"
+                        app:met_primaryColor="@color/profile_content"
+                        />
+
+                </LinearLayout>
+
 
             </LinearLayout>
 
-        </LinearLayout>
+        </ScrollView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:minHeight="40dp"
-            >
-
-            <TextView
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:text="불가능시간"
-                android:textSize="12sp"
-                android:textColor="@color/profile_title"
-                android:gravity="right"
-                android:paddingRight="5dp"
-                android:layout_marginLeft="10dp"
-                />
-
-            <TextView
-                android:id="@+id/time_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="추가하기"
-                android:textSize="12sp"
-                android:textColor="@color/colorPrimary"
-                android:layout_marginRight="10dp"
-                android:gravity="center_horizontal"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:minHeight="40dp"
-            >
-
-            <TextView
-                android:id="@+id/tv_content"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:text="소개"
-                android:textSize="12sp"
-                android:textColor="@color/profile_title"
-                android:gravity="right"
-                android:paddingRight="5dp"
-                android:layout_marginLeft="10dp"
-                />
-
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/edit_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="본인을 어필할 수 있는 글을 적어주세요."
-                android:textSize="12sp"
-                android:textColor="@color/profile_content"
-                android:layout_marginRight="10dp"
-                app:met_minCharacters="1"
-                app:met_primaryColor="@color/profile_content"
-                />
-
-        </LinearLayout>
 
         <Button
             android:id="@+id/applyBtn"
@@ -172,9 +190,11 @@
             android:text="지원하기"
             android:textColor="@color/white"
             android:textSize="12sp"
-            android:layout_marginTop="10dp"
+            android:layout_alignParentBottom="true"
             />
 
-    </LinearLayout>
+    </RelativeLayout>
+
+
 
 </RelativeLayout>
