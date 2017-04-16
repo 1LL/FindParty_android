@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.squareup.picasso.Picasso;
@@ -180,6 +181,7 @@ public class HistoryActivity extends BaseActivity {
             TextView tv_name = (TextView)v.findViewById(R.id.tv_name);
             TextView tv_email = (TextView)v.findViewById(R.id.tv_email);
             TextView tv_content = (TextView)v.findViewById(R.id.tv_content);
+            TextView referenceBtn = (TextView)v.findViewById(R.id.reference_btn);
             TextView tv_date = (TextView)v.findViewById(R.id.tv_date);
 
             String id = (String)map.get("id");
@@ -190,6 +192,7 @@ public class HistoryActivity extends BaseActivity {
             String img = (String)map.get("img");
             String title = (String)map.get("title");
             String content = (String)map.get("content");
+            final String[] reference = (String[])map.get("reference");
             Long date = (Long)map.get("date");
             ArrayList<HashMap<String, Object>> participant = (ArrayList<HashMap<String, Object>>)map.get("participant");
 
@@ -222,12 +225,23 @@ public class HistoryActivity extends BaseActivity {
             li_participantField.removeAllViews();
             for(HashMap<String, Object> p : participant){
 
+                final String p_userId = (String)p.get("userId");
+
                 View pv = getLayoutInflater().inflate(R.layout.team_list_user_custom_item, null, false);
 
+                LinearLayout root = (LinearLayout)pv.findViewById(R.id.root);
                 ImageView pvProfileImg = (ImageView)pv.findViewById(R.id.profileImg);
                 TextView pvTv_name = (TextView)pv.findViewById(R.id.tv_name);
                 TextView pvTv_field = (TextView)pv.findViewById(R.id.tv_field);
 
+                root.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(HistoryActivity.this, ProfileActivity.class);
+                        intent.putExtra("id", p_userId);
+                        startActivity(intent);
+                    }
+                });
                 Picasso.with(getApplicationContext())
                         .load((String)p.get("img"))
                         .transform(new CropCircleTransformation())
@@ -239,6 +253,31 @@ public class HistoryActivity extends BaseActivity {
 
             }
 
+            if(reference.length > 0){
+                referenceBtn.setVisibility(View.VISIBLE);
+                referenceBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new MaterialDialog.Builder(HistoryActivity.this)
+                                .title("참고자료")
+                                .items(reference)
+                                .itemsCallback(new MaterialDialog.ListCallback() {
+                                    @Override
+                                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                        String url = text.toString();
+                                        if (!url.startsWith("http://") && !url.startsWith("https://"))
+                                            url = "http://" + url;
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                        startActivity(browserIntent);
+                                    }
+                                })
+                                .positiveText("닫기")
+                                .show();
+                    }
+                });
+            }else{
+                referenceBtn.setVisibility(View.GONE);
+            }
 
             li_listField.addView(v);
 

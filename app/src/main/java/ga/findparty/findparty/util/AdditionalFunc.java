@@ -702,6 +702,13 @@ public class AdditionalFunc {
                 hashTemp.put("content", (String)temp.get("content"));
                 hashTemp.put("date", Long.parseLong((String)temp.get("date")));
 
+                String referenceTemp = (String)temp.get("reference");
+                String[] reference = {};
+                if(!"".equals(referenceTemp)){
+                    reference = referenceTemp.split(",");
+                }
+                hashTemp.put("reference", reference);
+
                 JSONObject jObjectMem = (JSONObject)temp.get("participant");
                 JSONArray resultsMem = jObjectMem.getJSONArray("result");
                 String countTempMem = (String)jObjectMem.get("num_participant");
