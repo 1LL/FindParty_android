@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -36,16 +39,20 @@ public class RecommendUserListActivity extends BaseActivity  implements OnAdapte
     private final int MSG_MESSAGE_SAVE_SUCCESS = 503;
     private final int MSG_MESSAGE_SAVE_FAIL = 504;
 
-    private Toolbar toolbar;
     private AVLoadingIndicatorView loading;
     private MaterialDialog progressDialog;
 
+    private FrameLayout root;
+    private TextView tv_msg;
 
     private String field;
     private String recipientId;
+    private String userId;
     private int page = 0;
     private ArrayList<HashMap<String, String>> tempList;
     private ArrayList<HashMap<String, String>> list;
+
+    private boolean isUserMode;
 
     // Recycle View
     private RecyclerView rv;
@@ -59,8 +66,13 @@ public class RecommendUserListActivity extends BaseActivity  implements OnAdapte
         setContentView(R.layout.activity_recommend_user_list);
 
         Intent intent = getIntent();
-        field = intent.getStringExtra("field");
-        recipientId = intent.getStringExtra("recipientId");
+        isUserMode = intent.getBooleanExtra("isUserMode", false);
+        if(isUserMode){
+            userId = intent.getStringExtra("userId");
+        }else {
+            field = intent.getStringExtra("field");
+            recipientId = intent.getStringExtra("recipientId");
+        }
 
         init();
 
@@ -68,7 +80,15 @@ public class RecommendUserListActivity extends BaseActivity  implements OnAdapte
 
     void init(){
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        root = (FrameLayout)findViewById(R.id.root);
+        root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecommendUserListActivity.super.onBackPressed();
+            }
+        });
+        tv_msg = (TextView)findViewById(R.id.tv_msg);
+        tv_msg.setVisibility(View.GONE);
 
         mLinearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -100,10 +120,16 @@ public class RecommendUserListActivity extends BaseActivity  implements OnAdapte
         if(!isLoadFinish) {
             loading.show();
             HashMap<String, String> map = new HashMap<>();
-            map.put("service", "getRecommendList");
-            map.put("recipientId", recipientId);
-            map.put("field", field);
+            if(isUserMode){
+                map.put("service", "getUserRecommendList");
+                map.put("userId", userId);
+            }else {
+                map.put("service", "getRecommendList");
+                map.put("recipientId", recipientId);
+                map.put("field", field);
+            }
             map.put("page", Integer.toString(page));
+
 
             new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
 
@@ -113,13 +139,21 @@ public class RecommendUserListActivity extends BaseActivity  implements OnAdapte
                     if (page <= 0) {
                         list.clear();
 
-                        list = AdditionalFunc.getRecommendList(data);
+                        if(isUserMode){
+                            list = AdditionalFunc.getUserRecommendList(data);
+                        }else {
+                            list = AdditionalFunc.getRecommendList(data);
+                        }
 
                         handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_MAKE_LIST));
                     } else {
 
                         tempList.clear();
-                        tempList = AdditionalFunc.getRecommendList(data);
+                        if(isUserMode){
+                            tempList = AdditionalFunc.getUserRecommendList(data);
+                        }else {
+                            tempList = AdditionalFunc.getRecommendList(data);
+                        }
                         if (tempList.size() < 30) {
                             isLoadFinish = true;
                         }
@@ -138,6 +172,12 @@ public class RecommendUserListActivity extends BaseActivity  implements OnAdapte
 
 
     public void makeList(){
+
+        if(list.size() == 0){
+            tv_msg.setVisibility(View.VISIBLE);
+        }else{
+            tv_msg.setVisibility(View.GONE);
+        }
 
         adapter = new RecommendUserListCustomAdapter(getApplicationContext(), list, rv, this, this);
 

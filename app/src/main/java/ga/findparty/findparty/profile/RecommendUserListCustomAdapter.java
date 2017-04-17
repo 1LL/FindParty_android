@@ -87,6 +87,7 @@ public class RecommendUserListCustomAdapter extends RecyclerView.Adapter<Recomme
                 .into(holder.profileImg);
         holder.tv_name.setText(item.get("name"));
         holder.tv_email.setText(item.get("email"));
+        holder.tv_field.setText(item.get("field"));
 
         holder.rl_background.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,6 +176,7 @@ public class RecommendUserListCustomAdapter extends RecyclerView.Adapter<Recomme
         ImageView profileImg;
         TextView tv_name;
         TextView tv_email;
+        TextView tv_field;
 
         public ViewHolder(View v) {
             super(v);
@@ -182,6 +184,7 @@ public class RecommendUserListCustomAdapter extends RecyclerView.Adapter<Recomme
             profileImg = (ImageView)v.findViewById(R.id.profileImg);
             tv_name = (TextView)v.findViewById(R.id.tv_name);
             tv_email = (TextView)v.findViewById(R.id.tv_email);
+            tv_field = (TextView)v.findViewById(R.id.tv_field);
         }
     }
 

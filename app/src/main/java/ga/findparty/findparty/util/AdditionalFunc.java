@@ -778,4 +778,38 @@ public class AdditionalFunc {
 
     }
 
+    public static ArrayList<HashMap<String, String>> getUserRecommendList(String data){
+
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+
+        try {
+            JSONObject jObject = new JSONObject(data);
+            JSONArray results = jObject.getJSONArray("result");
+            String countTemp = (String)jObject.get("num_result");
+            int count = Integer.parseInt(countTemp);
+
+            for ( int i = 0; i < count; ++i ) {
+                JSONObject temp = results.getJSONObject(i);
+
+                HashMap<String, String> hashTemp = new HashMap<>();
+                hashTemp.put("id", (String)temp.get("id"));
+                hashTemp.put("userId", (String)temp.get("userId"));
+                hashTemp.put("recipientId", (String)temp.get("recipientId"));
+                hashTemp.put("name", (String)temp.get("recipientName"));
+                hashTemp.put("img", (String)temp.get("recipientImg"));
+                hashTemp.put("email", (String)temp.get("recipientEmail"));
+                hashTemp.put("field", (String)temp.get("field"));
+
+                list.add(hashTemp);
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+
+    }
+
 }

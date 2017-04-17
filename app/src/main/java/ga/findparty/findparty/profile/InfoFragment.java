@@ -50,6 +50,8 @@ public class InfoFragment extends Fragment {
     private AVLoadingIndicatorView loadingEmail;
     private TextView tv_contact;
     private AVLoadingIndicatorView loadingContact;
+    private TextView tv_recommend;
+    private AVLoadingIndicatorView loadingRecommend;
     private LinearLayout interestField;
     private AVLoadingIndicatorView loadingInterest;
     private TextView tv_intro;
@@ -94,6 +96,8 @@ public class InfoFragment extends Fragment {
         loadingEmail = (AVLoadingIndicatorView)view.findViewById(R.id.loading_email);
         tv_contact = (TextView)view.findViewById(R.id.tv_contact);
         loadingContact = (AVLoadingIndicatorView)view.findViewById(R.id.loading_contact);
+        tv_recommend = (TextView)view.findViewById(R.id.tv_recommend);
+        loadingRecommend = (AVLoadingIndicatorView)view.findViewById(R.id.loading_recommend);
         interestField = (LinearLayout)view.findViewById(R.id.interest_field);
         loadingInterest = (AVLoadingIndicatorView)view.findViewById(R.id.loading_interest);
         tv_intro = (TextView)view.findViewById(R.id.tv_intro);
@@ -136,6 +140,18 @@ public class InfoFragment extends Fragment {
 
         tv_contact.setText((String)item.get("contact"));
         loadingContact.hide();
+
+        tv_recommend.setText((String)item.get("name") + "님이 추천한 사람 보기");
+        tv_recommend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, RecommendUserListActivity.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("isUserMode", true);
+                startActivity(intent);
+            }
+        });
+        loadingRecommend.hide();
 
         tv_intro.setText((String)item.get("intro"));
         loadingIntro.hide();
