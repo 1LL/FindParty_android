@@ -698,6 +698,7 @@ public class AdditionalFunc {
                 hashTemp.put("name", (String)temp.get("name"));
                 hashTemp.put("email", (String)temp.get("email"));
                 hashTemp.put("img", (String)temp.get("img"));
+                hashTemp.put("classification", (String)temp.get("classification"));
                 hashTemp.put("title", (String)temp.get("title"));
                 hashTemp.put("content", (String)temp.get("content"));
                 hashTemp.put("date", Long.parseLong((String)temp.get("date")));

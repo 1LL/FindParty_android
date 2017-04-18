@@ -91,7 +91,6 @@
                         android:textSize="12sp"
                         android:textColor="@color/profile_content"
                         app:met_minCharacters="1"
-                        app:met_singleLineEllipsis="true"
                         app:met_primaryColor="@color/profile_content"
                         />
 
