@@ -80,6 +80,7 @@ public class RecommendUserListCustomAdapter extends RecyclerView.Adapter<Recomme
         final int pos = position;
 
         final String userId = item.get("userId");
+        final String recipientId = item.get("recipientId");
 
         Picasso.with(context)
                 .load(item.get("img"))
@@ -93,7 +94,11 @@ public class RecommendUserListCustomAdapter extends RecyclerView.Adapter<Recomme
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProfileActivity.class);
-                intent.putExtra("id", userId);
+                if(activity.isUserMode()){
+                    intent.putExtra("id", recipientId);
+                }else {
+                    intent.putExtra("id", userId);
+                }
                 onAdapterSupport.redirectActivity(intent);
             }
         });

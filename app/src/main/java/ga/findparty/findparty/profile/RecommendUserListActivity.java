@@ -78,6 +78,10 @@ public class RecommendUserListActivity extends BaseActivity  implements OnAdapte
 
     }
 
+    public boolean isUserMode(){
+        return isUserMode;
+    }
+
     void init(){
 
         root = (FrameLayout)findViewById(R.id.root);
