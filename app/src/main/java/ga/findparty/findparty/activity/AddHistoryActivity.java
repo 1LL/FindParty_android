@@ -154,8 +154,10 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
                         .input("url을 입력해주세요.", null, new MaterialDialog.InputCallback() {
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
-                                referenceList.add(AdditionalFunc.replaceNewLineString(input.toString()));
-                                makeReferenceLayout();
+                                if(!"".equals(input.toString())) {
+                                    referenceList.add(AdditionalFunc.replaceNewLineString(input.toString()));
+                                    makeReferenceLayout();
+                                }
                             }
                         }).show();
             }
@@ -186,10 +188,6 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
                         .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                /**
-                                 * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
-                                 * returning false here won't allow the newly selected radio button to actually be selected.
-                                 **/
                                 chargeMember = memberList.get(which);
                                 setDateBtn(chargeBtn, (String)chargeMember.get("name"));
                                 isCharge = true;
@@ -439,6 +437,13 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
             map.put("userId", (String)chargeMember.get("userId"));
         }else {
             map.put("userId", StartActivity.USER_ID);
+        }
+        if(isHWMode){
+            map.put("classification", "homework");
+        }else if(isMeetingMode){
+            map.put("classification", "meeting");
+        }else if(isPresentMode){
+            map.put("classification", "present");
         }
         map.put("title", title);
         map.put("content", AdditionalFunc.replaceNewLineString(content));
