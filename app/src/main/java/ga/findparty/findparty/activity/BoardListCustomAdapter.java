@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ga.findparty.findparty.R;
+import ga.findparty.findparty.StartActivity;
 import ga.findparty.findparty.profile.ProfileActivity;
 import ga.findparty.findparty.util.OnAdapterSupport;
 import ga.findparty.findparty.util.OnLoadMoreListener;
@@ -96,6 +99,32 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
         int current = (int)item.get("current");
         int total = (int)item.get("total");
         holder.tv_count.setText(current + " / " + total);
+
+        holder.dot_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(v.getContext(), v);
+                popup.getMenuInflater().inflate(R.menu.menu_delete, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.menu_delete:
+                                activity.remoceBoard(id);
+                                break;
+                        }
+
+                        return true;
+                    }
+                });
+                popup.show();
+            }
+        });
+        if(userId.equals(StartActivity.USER_ID) && isDecision != 1){
+            holder.dot_menu.setVisibility(View.VISIBLE);
+        }else{
+            holder.dot_menu.setVisibility(View.GONE);
+        }
 
         holder.rl_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,6 +234,7 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
         ImageView profileImg;
         TextView tv_name;
         TextView tv_email;
+        ImageView dot_menu;
         TextView tv_content;
         TextView tv_count;
         RelativeLayout rl_finish;
@@ -216,6 +246,7 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
             profileImg = (ImageView)v.findViewById(R.id.profileImg);
             tv_name = (TextView)v.findViewById(R.id.tv_name);
             tv_email = (TextView)v.findViewById(R.id.tv_email);
+            dot_menu = (ImageView)v.findViewById(R.id.dot_menu);
             tv_content = (TextView)v.findViewById(R.id.tv_content);
             tv_count = (TextView)v.findViewById(R.id.tv_count);
             rl_finish = (RelativeLayout)v.findViewById(R.id.rl_finish);

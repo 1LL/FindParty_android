@@ -285,6 +285,13 @@ public class CourseBoardActivity extends BaseActivity implements OnAdapterSuppor
         adapter.setLoaded();
 
     }
+
+    public void remoceBoard(String id){
+
+        showSnackbar(id + " remove!");
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
