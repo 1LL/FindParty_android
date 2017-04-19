@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -254,10 +253,10 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
 
         for(int i=0; i<referenceList.size(); i++){
 
-            View v = getLayoutInflater().inflate(R.layout.reference_custom_item, null, false);
+            View v = getLayoutInflater().inflate(R.layout.add_field_custom_item, null, false);
 
-            TextView tv_reference = (TextView)v.findViewById(R.id.tv_reference);
-            tv_reference.setText(referenceList.get(i));
+            TextView tv_text = (TextView)v.findViewById(R.id.tv_text);
+            tv_text.setText(referenceList.get(i));
             ImageView deleteBtn = (ImageView)v.findViewById(R.id.delete_btn);
             deleteBtn.setTag(i);
             deleteBtn.setOnClickListener(new View.OnClickListener() {

@@ -11,12 +11,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -55,6 +57,9 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
     // UI - Add Field
     private LinearLayout li_addField;
     private TextView addFieldBtn;
+    // UI - Question Field
+    private LinearLayout li_questionField;
+    private TextView addQuestionBtn;
 
     // DATA
     private String courseId;
@@ -62,6 +67,7 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
     private Long finish;
     private ArrayList<String> interest;
     private ArrayList<HashMap<String, String>> fieldList;
+    private ArrayList<String> questionList;
 
     private boolean isDuration = false;
 
@@ -77,6 +83,7 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
 
         interest = new ArrayList<>();
         fieldList = new ArrayList<>();
+        questionList = new ArrayList<>();
 
         init();
 
@@ -140,6 +147,26 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
             public void onClick(View v) {
                 Intent intent = new Intent(AddCourseBoardActivity.this, AddFieldActivity.class);
                 startActivityForResult(intent, UPDATE_ADD_FIELD);
+            }
+        });
+
+        li_questionField = (LinearLayout)findViewById(R.id.li_question_field);
+        addQuestionBtn = (TextView)findViewById(R.id.add_question_btn);
+        addQuestionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new MaterialDialog.Builder(AddCourseBoardActivity.this)
+                        .title("입력")
+                        .inputType(InputType.TYPE_CLASS_TEXT)
+                        .input("질문을 입력해주세요.", null, new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                if(!"".equals(input.toString())) {
+                                    questionList.add(AdditionalFunc.replaceNewLineString(input.toString()));
+                                    makeQuestionLayout();
+                                }
+                            }
+                        }).show();
             }
         });
 
@@ -261,26 +288,76 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
 
     }
 
+    private void makeQuestionLayout(){
+
+        li_questionField.removeAllViews();
+
+        for(int i=0; i<questionList.size(); i++){
+
+            View v = getLayoutInflater().inflate(R.layout.add_field_custom_item, null, false);
+
+            TextView tv_text = (TextView)v.findViewById(R.id.tv_text);
+            tv_text.setText(questionList.get(i));
+            tv_text.setSingleLine(false);
+            ImageView deleteBtn = (ImageView)v.findViewById(R.id.delete_btn);
+            deleteBtn.setTag(i);
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int index = (int)v.getTag();
+                    questionList.remove(index);
+                    makeQuestionLayout();
+                }
+            });
+
+            li_questionField.addView(v);
+
+        }
+
+        if(questionList.size() >= 3){
+            addQuestionBtn.setVisibility(View.GONE);
+        }else{
+            addQuestionBtn.setVisibility(View.VISIBLE);
+        }
+
+    }
+
     private void setAddFieldLayout(){
 
         li_addField.removeAllViews();
 
-        for(HashMap<String, String> item : fieldList){
+        for(int i=0; i<fieldList.size(); i++){
+            HashMap<String, String> item = fieldList.get(i);
 
             String title = item.get("title");
             String number = item.get("number");
             String text = title + " " + number + "명";
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.gravity = Gravity.CENTER;
+            View v = getLayoutInflater().inflate(R.layout.add_field_custom_item, null, false);
 
-            TextView tv = new TextView(this);
-            tv.setText(text);
-            tv.setLayoutParams(params);
-            tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.profile_content));
-            tv.setGravity(Gravity.CENTER);
+            TextView tv_text = (TextView)v.findViewById(R.id.tv_text);
+            tv_text.setText(text);
+            ImageView deleteBtn = (ImageView)v.findViewById(R.id.delete_btn);
+            deleteBtn.setTag(i);
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int index = (int)v.getTag();
+                    fieldList.remove(index);
+                    setAddFieldLayout();
+                }
+            });
 
-            li_addField.addView(tv);
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//            params.gravity = Gravity.CENTER;
+//
+//            TextView tv = new TextView(this);
+//            tv.setText(text);
+//            tv.setLayoutParams(params);
+//            tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.profile_content));
+//            tv.setGravity(Gravity.CENTER);
+
+            li_addField.addView(v);
 
         }
 

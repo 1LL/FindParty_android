@@ -14,7 +14,7 @@
         >
 
         <TextView
-            android:id="@+id/tv_reference"
+            android:id="@+id/tv_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/delete_btn"
@@ -26,7 +26,6 @@
             android:layout_marginBottom="5dp"
             android:maxLines="1"
             android:autoLink="all"
-            android:layout_centerVertical="true"
             />
 
         <ImageView

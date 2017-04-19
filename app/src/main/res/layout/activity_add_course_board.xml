@@ -215,6 +215,56 @@
 
                 </LinearLayout>
 
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:minHeight="40dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_question"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="질문"
+                        android:textSize="12sp"
+                        android:textColor="@color/profile_title"
+                        android:gravity="right"
+                        android:paddingRight="5dp"
+                        />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <LinearLayout
+                            android:id="@+id/li_question_field"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            >
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/add_question_btn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/li_question_field"
+                            android:text="추가하기"
+                            android:textColor="@color/colorPrimary"
+                            android:textStyle="bold"
+                            android:textSize="12sp"
+                            android:gravity="center"
+                            android:layout_marginBottom="3dp"
+                            />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
                 <!-- 필드 종료 -->
 
 
