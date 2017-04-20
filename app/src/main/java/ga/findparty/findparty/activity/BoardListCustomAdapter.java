@@ -110,7 +110,7 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
                             case R.id.menu_delete:
-                                activity.remoceBoard(id);
+                                activity.removeBoard(id);
                                 break;
                         }
 

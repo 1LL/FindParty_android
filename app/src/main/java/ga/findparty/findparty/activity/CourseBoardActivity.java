@@ -46,6 +46,8 @@ public class CourseBoardActivity extends BaseActivity implements OnAdapterSuppor
     private final int MSG_MESSAGE_SHOW_ADD_COURSE = 504;
     private final int MSG_MESSAGE_ALREADY_WRITE_BOARD = 505;
     private final int MSG_MESSAGE_ALREADY_APPLY_FIELD = 506;
+    private final int MSG_MESSAGE_DELETE_SUCCESS = 507;
+    private final int MSG_MESSAGE_DELETE_FAIL = 508;
 
     private Toolbar toolbar;
     private AVLoadingIndicatorView loading;
@@ -230,6 +232,7 @@ public class CourseBoardActivity extends BaseActivity implements OnAdapterSuppor
                         list = AdditionalFunc.getBoardListInfo(data);
 
                         handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_MAKE_LIST));
+
                     } else {
 
                         tempList.clear();
@@ -250,14 +253,17 @@ public class CourseBoardActivity extends BaseActivity implements OnAdapterSuppor
         }
     }
 
-
-    public void makeList(){
-
+    private void checkMsg(){
         if(list.size()>0){
             tv_msg.setVisibility(View.GONE);
         }else{
             tv_msg.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void makeList(){
+
+        checkMsg();
 
         adapter = new BoardListCustomAdapter(getApplicationContext(), list, rv, this, this);
 
@@ -286,9 +292,27 @@ public class CourseBoardActivity extends BaseActivity implements OnAdapterSuppor
 
     }
 
-    public void remoceBoard(String id){
+    public void removeBoard(String id){
 
-        showSnackbar(id + " remove!");
+        progressDialog.show();
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("service", "deleteBoard");
+        map.put("id", id);
+
+        new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
+
+            @Override
+            protected void afterThreadFinish(String data) {
+
+                if("1".equals(data)){
+                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_DELETE_SUCCESS));
+                }else{
+                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_DELETE_FAIL));
+                }
+
+            }
+        }.start();
 
     }
 
@@ -384,6 +408,18 @@ public class CourseBoardActivity extends BaseActivity implements OnAdapterSuppor
                                     dialog.dismiss();
                                 }
                             })
+                            .show();
+                    break;
+                case MSG_MESSAGE_DELETE_SUCCESS:
+                    initLoadValue();
+                    getBoardList();
+                    break;
+                case MSG_MESSAGE_DELETE_FAIL:
+                    progressDialog.hide();
+                    new MaterialDialog.Builder(CourseBoardActivity.this)
+                            .title("오류")
+                            .content("잠시 후 다시시도해주세요.")
+                            .positiveText("확인")
                             .show();
                     break;
                 default:
