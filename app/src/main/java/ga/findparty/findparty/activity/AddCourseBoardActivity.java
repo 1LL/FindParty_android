@@ -203,6 +203,27 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
         map.put("interest", interestText);
         map.put("boardField", fieldText);
 
+        String question1 = "";
+        String question2 = "";
+        String question3 = "";
+
+        for(int i=0; i<questionList.size(); i++){
+            switch (i){
+                case 0:
+                    question1 = questionList.get(i);
+                    break;
+                case 1:
+                    question2 = questionList.get(i);
+                    break;
+                case 2:
+                    question3 = questionList.get(i);
+                    break;
+            }
+        }
+        map.put("question1", question1);
+        map.put("question2", question2);
+        map.put("question3", question3);
+
         new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
 
             @Override
