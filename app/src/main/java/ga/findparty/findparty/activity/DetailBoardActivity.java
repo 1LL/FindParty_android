@@ -358,6 +358,7 @@ public class DetailBoardActivity extends BaseActivity {
                     Intent intent = new Intent(getApplicationContext(), ApplyFormActivity.class);
                     intent.putExtra("item", lastTouchField);
                     intent.putExtra("courseId", courseId);
+                    intent.putStringArrayListExtra("question", (ArrayList<String>)item.get("question"));
                     startActivityForResult(intent, UPDATE_APPLY_FORM);
                     break;
                 case MSG_MESSAGE_SUCCESS_DECISION:

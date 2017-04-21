@@ -366,6 +366,21 @@ public class AdditionalFunc {
                 hashTemp.put("total", Integer.parseInt((String)temp.get("total")));
                 hashTemp.put("isDecision", Integer.parseInt((String)temp.get("isDecision")));
 
+                ArrayList<String> question = new ArrayList<>();
+                String question1 = (String)temp.get("question1");
+                String question2 = (String)temp.get("question2");
+                String question3 = (String)temp.get("question3");
+                if(!"".equals(question1)){
+                    question.add(question1);
+                    if(!"".equals(question2)){
+                        question.add(question2);
+                        if(!"".equals(question3)){
+                            question.add(question3);
+                        }
+                    }
+                }
+                hashTemp.put("question", question);
+
                 ArrayList<String> in = new ArrayList<String>();
                 String interest = (String)temp.get("interest");
                 if(!interest.equals("")){

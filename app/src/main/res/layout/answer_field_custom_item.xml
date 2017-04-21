@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/tv_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/delete_btn"
+            android:text="Question"
+            android:textColor="@color/dark_gray"
+            android:textSize="12sp"
+            android:layout_marginBottom="5dp"
+            />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="질문에 대한 답을 적어주세요."
+            android:textSize="12sp"
+            android:textColor="@color/profile_content"
+            app:met_minCharacters="10"
+            app:met_primaryColor="@color/profile_content"
+            />
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

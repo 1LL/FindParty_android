@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -47,10 +48,15 @@ public class ApplyFormActivity extends BaseActivity {
     private ImageView star2;
     private ImageView star3;
     private TextView timeBtn;
+    private LinearLayout li_questionField;
+    private LinearLayout li_answerField;
     private MaterialEditText editContent;
     private Button applyBtn;
 
+    private ArrayList<MaterialEditText> answerFieldList;
+
     private HashMap<String, Object> item;
+    private ArrayList<String> question;
     private String courseId;
     private String field;
     private int skill=0;
@@ -74,6 +80,7 @@ public class ApplyFormActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply_form);
 
+        answerFieldList = new ArrayList<>();
         monList = new ArrayList<>();
         tueList = new ArrayList<>();
         wedList = new ArrayList<>();
@@ -84,6 +91,7 @@ public class ApplyFormActivity extends BaseActivity {
         item = (HashMap<String, Object>)intent.getSerializableExtra("item");
         field = (String)item.get("field");
         courseId = intent.getStringExtra("courseId");
+        question = intent.getStringArrayListExtra("question");
 
         init();
 
@@ -158,6 +166,8 @@ public class ApplyFormActivity extends BaseActivity {
                 startActivityForResult(intent, UPDATE_TIME);
             }
         });
+        li_questionField = (LinearLayout)findViewById(R.id.li_question_field);
+        li_answerField = (LinearLayout)findViewById(R.id.li_answer_field);
         editContent = (MaterialEditText)findViewById(R.id.edit_content);
         editContent.addTextChangedListener(new TextWatcher() {
             @Override
@@ -184,7 +194,51 @@ public class ApplyFormActivity extends BaseActivity {
             }
         });
 
+        makeAnswerField();
+
         checkApplyable();
+
+    }
+
+    private void makeAnswerField(){
+
+
+        if(question.size() == 0){
+            li_questionField.setVisibility(View.GONE);
+            return;
+        }
+
+        li_answerField.removeAllViews();
+
+        for(String q : question){
+
+            View v = getLayoutInflater().inflate(R.layout.answer_field_custom_item, null, false);
+
+            TextView tv_text = (TextView)v.findViewById(R.id.tv_text);
+            MaterialEditText edit_text = (MaterialEditText)v.findViewById(R.id.edit_text);
+
+            tv_text.setText(q);
+            edit_text.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    checkApplyable();
+                }
+            });
+            answerFieldList.add(edit_text);
+
+            li_answerField.addView(v);
+
+        }
 
     }
 
@@ -225,8 +279,12 @@ public class ApplyFormActivity extends BaseActivity {
 
         boolean isLevel = skill > 0;
         boolean isContent = editContent.isCharactersCountValid();
+        boolean isAnswer = true;
+        for(MaterialEditText m : answerFieldList){
+            isAnswer = isAnswer && m.isCharactersCountValid();
+        }
 
-        boolean setting = isLevel && isContent;
+        boolean setting = isLevel && isContent && isAnswer;
 
         applyBtn.setEnabled(setting);
         if(setting){
