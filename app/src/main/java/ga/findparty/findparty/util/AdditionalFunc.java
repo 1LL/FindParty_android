@@ -479,6 +479,9 @@ public class AdditionalFunc {
                 hashTemp.put("courseId", (String)temp.get("courseId"));
                 hashTemp.put("boardFieldId", (String)temp.get("boardFieldId"));
                 hashTemp.put("skill", Integer.parseInt((String)temp.get("skill")));
+                hashTemp.put("answer1", (String)temp.get("answer1"));
+                hashTemp.put("answer2", (String)temp.get("answer2"));
+                hashTemp.put("answer3", (String)temp.get("answer3"));
                 hashTemp.put("content", (String)temp.get("content"));
                 hashTemp.put("userId", (String)temp.get("userId"));
                 hashTemp.put("name", (String)temp.get("name"));

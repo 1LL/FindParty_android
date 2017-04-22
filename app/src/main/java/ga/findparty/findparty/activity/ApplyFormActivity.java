@@ -259,6 +259,26 @@ public class ApplyFormActivity extends BaseActivity {
         map.put("thu", AdditionalFunc.integerArrayListToString(thuList));
         map.put("fri", AdditionalFunc.integerArrayListToString(friList));
 
+        String answer1, answer2, answer3;
+        answer1 = answer2 = answer3 = "";
+
+        for(int i=0; i<answerFieldList.size(); i++){
+            switch (i){
+                case 0:
+                    answer1 = AdditionalFunc.replaceNewLineString(answerFieldList.get(i).getText().toString());
+                    break;
+                case 1:
+                    answer2 = AdditionalFunc.replaceNewLineString(answerFieldList.get(i).getText().toString());
+                    break;
+                case 2:
+                    answer3 = AdditionalFunc.replaceNewLineString(answerFieldList.get(i).getText().toString());
+                    break;
+            }
+        }
+        map.put("answer1", answer1);
+        map.put("answer2", answer2);
+        map.put("answer3", answer3);
+
         new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
 
             @Override
@@ -304,7 +324,18 @@ public class ApplyFormActivity extends BaseActivity {
                 case MSG_MESSAGE_FINISH:
                     progressDialog.dismiss();
                     setResult(DetailBoardActivity.UPDATE_APPLY_FORM);
-                    finish();
+                    new MaterialDialog.Builder(ApplyFormActivity.this)
+                            .title("안내")
+                            .content("성공적으로 지원하였습니다.")
+                            .positiveText("확인")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            })
+                            .show();
                     break;
                 case MSG_MESSAGE_ERROR:
                     progressDialog.hide();
