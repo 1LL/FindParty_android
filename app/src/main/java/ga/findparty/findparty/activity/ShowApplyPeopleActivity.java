@@ -53,6 +53,7 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
     private String fieldTitle;
     private ArrayList<HashMap<String, Object>> list;
     private ArrayList<String> selectList;
+    private ArrayList<String> question;
 
     private MaterialDialog progressDialog;
 
@@ -61,17 +62,22 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_apply_people);
 
+        selectList = new ArrayList<>();
+        question = new ArrayList<>();
+
         Intent intent = getIntent();
         boardFieldId = intent.getStringExtra("id");
         fieldTitle = intent.getStringExtra("title");
         number = intent.getIntExtra("number", 0);
         isSelectMode = intent.getBooleanExtra("isSelectMode", false);
+        if(isSelectMode){
+            question = intent.getStringArrayListExtra("question");
+        }
         isTeamListMode = intent.getBooleanExtra("isTeamListMode", false);
         if(isTeamListMode){
             list = (ArrayList<HashMap<String, Object>>)intent.getSerializableExtra("list");
         }
 
-        selectList = new ArrayList<>();
 
         init();
 
@@ -135,6 +141,7 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
             makeList();
         }
 
+
     }
 
     private void getParticipantList(){
@@ -186,6 +193,8 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
             TextView tv_email = (TextView)v.findViewById(R.id.tv_email);
             ImageView profileImg = (ImageView)v.findViewById(R.id.profileImg);
             TextView tv_field = (TextView)v.findViewById(R.id.tv_field);
+
+            LinearLayout li_answerField = (LinearLayout)v.findViewById(R.id.li_answer_field);
 
             ImageView star1 = (ImageView)v.findViewById(R.id.star1);
             ImageView star2 = (ImageView)v.findViewById(R.id.star2);
@@ -245,6 +254,30 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
                     star3.setImageResource(R.drawable.star_yellow);
                     break;
             }
+
+            if(isSelectMode){
+                li_answerField.setVisibility(View.VISIBLE);
+                li_answerField.removeAllViews();
+                ArrayList<String> answerList = (ArrayList<String>)map.get("answer");
+                for(int k=0; k<answerList.size(); k++){
+                    String q = question.get(k);
+                    String a = answerList.get(k);
+                    View qav = getLayoutInflater().inflate(R.layout.question_and_answer_custom_item, null, false);
+
+                    TextView tv_question = (TextView)qav.findViewById(R.id.tv_question);
+                    TextView tv_answer = (TextView)qav.findViewById(R.id.tv_answer);
+
+                    tv_question.setText(q);
+                    tv_answer.setText(a);
+
+                    li_answerField.addView(qav);
+
+                }
+
+            }else{
+                li_answerField.setVisibility(View.GONE);
+            }
+
 
             tv_content.setText((String)map.get("content"));
 

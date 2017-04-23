@@ -479,14 +479,26 @@ public class AdditionalFunc {
                 hashTemp.put("courseId", (String)temp.get("courseId"));
                 hashTemp.put("boardFieldId", (String)temp.get("boardFieldId"));
                 hashTemp.put("skill", Integer.parseInt((String)temp.get("skill")));
-                hashTemp.put("answer1", (String)temp.get("answer1"));
-                hashTemp.put("answer2", (String)temp.get("answer2"));
-                hashTemp.put("answer3", (String)temp.get("answer3"));
                 hashTemp.put("content", (String)temp.get("content"));
                 hashTemp.put("userId", (String)temp.get("userId"));
                 hashTemp.put("name", (String)temp.get("name"));
                 hashTemp.put("img", (String)temp.get("img"));
                 hashTemp.put("email", (String)temp.get("email"));
+
+                ArrayList<String> answer = new ArrayList<>();
+                String answer1 = (String)temp.get("answer1");
+                String answer2 = (String)temp.get("answer2");
+                String answer3 = (String)temp.get("answer3");
+                if(!"".equals(answer1)){
+                    answer.add(answer1);
+                    if(!"".equals(answer2)){
+                        answer.add(answer2);
+                        if(!"".equals(answer3)){
+                            answer.add(answer3);
+                        }
+                    }
+                }
+                hashTemp.put("answer", answer);
 
                 String mon = (String)temp.get("mon");
                 ArrayList<Integer> monList = new ArrayList<>();

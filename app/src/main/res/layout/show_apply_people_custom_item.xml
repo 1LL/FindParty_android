@@ -69,6 +69,18 @@
 
         </RelativeLayout>
 
+        <LinearLayout
+            android:id="@+id/li_answer_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            >
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/tv_content"
             android:layout_width="match_parent"
@@ -80,6 +92,11 @@
             android:textColor="@color/dark_gray"
             />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="@color/light_gray2"
+            />
 
         <RelativeLayout
             android:layout_width="match_parent"

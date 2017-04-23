@@ -197,6 +197,7 @@ public class DetailBoardActivity extends BaseActivity {
                         intent.putExtra("title", (String)map.get("field"));
                         intent.putExtra("isSelectMode", true);
                         intent.putExtra("number", (int)map.get("number"));
+                        intent.putStringArrayListExtra("question", (ArrayList<String>)item.get("question"));
                         startActivityForResult(intent, UPDATE_APPLY_FORM_SELECT_MODE);
                     }else {
                         applyField(map);
