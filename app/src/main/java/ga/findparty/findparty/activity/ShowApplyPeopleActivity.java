@@ -92,11 +92,7 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
         tv_msg.setVisibility(View.GONE);
 
         endBtn = (Button)findViewById(R.id.end_btn);
-        if(isSelectMode){
-            endBtn.setVisibility(View.VISIBLE);
-        }else{
-            endBtn.setVisibility(View.GONE);
-        }
+        endBtn.setVisibility(View.GONE);
         endBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -334,6 +330,9 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
             switch (msg.what)
             {
                 case MSG_MESSAGE_MAKE_LIST:
+                    if(isSelectMode){
+                        endBtn.setVisibility(View.VISIBLE);
+                    }
                     loading.hide();
                     makeList();
                     break;
