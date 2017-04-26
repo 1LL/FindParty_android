@@ -152,7 +152,7 @@ public class DetailBoardActivity extends BaseActivity {
                     intent.putExtra("id", (String)map.get("id"));
                     intent.putExtra("title", (String)map.get("field"));
                     intent.putExtra("number", (int)map.get("number"));
-                    startActivity(intent);
+                    startActivityForResult(intent, UPDATE_APPLY_FORM);
                 }
             });
 

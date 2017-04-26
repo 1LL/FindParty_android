@@ -7,8 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -38,6 +40,8 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
     private final int MSG_MESSAGE_MAKE_LIST = 500;
     private final int MSG_MESSAGE_FINISH_SELECT_MEMBER = 501;
     private final int MSG_MESSAGE_ERROR_SELECT_MEMBER = 502;
+    private final int MSG_MESSAGE_SUCCESS_DELETE = 503;
+    private final int MSG_MESSAGE_FAIL_DELETE = 504;
 
     private Toolbar toolbar;
     private AVLoadingIndicatorView loading;
@@ -161,6 +165,41 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
 
     }
 
+    private void deleteApply(final String applyFormId){
+
+        new MaterialDialog.Builder(this)
+                .title("확인")
+                .content("지원을 철회하시겠습니까?")
+                .positiveText("철회")
+                .negativeText("취소")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        progressDialog.show();
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("service", "deleteApply");
+                        map.put("boardFieldId", boardFieldId);
+                        map.put("applyFormId", applyFormId);
+
+                        new ParsePHP(Information.MAIN_SERVER_ADDRESS, map){
+
+                            @Override
+                            protected void afterThreadFinish(String data) {
+
+                                if("11".equals(data)){
+                                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_SUCCESS_DELETE));
+                                }else{
+                                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_FAIL_DELETE));
+                                }
+
+                            }
+                        }.start();
+                    }
+                })
+                .show();
+
+    }
+
     private void makeList(){
 
         li_list.removeAllViews();
@@ -173,6 +212,7 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
 
         for(int i=0; i<list.size(); i++){
             final HashMap<String, Object> map  = list.get(i);
+            final String id = (String)map.get("id");
 
             View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.show_apply_people_custom_item, null, false);
 
@@ -189,6 +229,37 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
             TextView tv_email = (TextView)v.findViewById(R.id.tv_email);
             ImageView profileImg = (ImageView)v.findViewById(R.id.profileImg);
             TextView tv_field = (TextView)v.findViewById(R.id.tv_field);
+            ImageView dotMenu = (ImageView)v.findViewById(R.id.dot_menu);
+            dotMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popup = new PopupMenu(ShowApplyPeopleActivity.this, v);
+                    popup.getMenuInflater().inflate(R.menu.menu_delete, popup.getMenu());
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()){
+                                case R.id.menu_delete:
+                                    deleteApply(id);
+                                    break;
+                            }
+
+                            return true;
+                        }
+                    });
+                    popup.show();
+                }
+            });
+
+            if((!isSelectMode) && (!isTeamListMode)){
+                if(StartActivity.USER_ID.equals(map.get("userId"))){
+                    dotMenu.setVisibility(View.VISIBLE);
+                }else{
+                    dotMenu.setVisibility(View.GONE);
+                }
+            }else{
+                dotMenu.setVisibility(View.GONE);
+            }
 
             LinearLayout li_answerField = (LinearLayout)v.findViewById(R.id.li_answer_field);
 
@@ -353,6 +424,24 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
                                     dialog.dismiss();
                                 }
                             })
+                            .show();
+                    break;
+                case MSG_MESSAGE_SUCCESS_DELETE:
+                    progressDialog.hide();
+                    setResult(DetailBoardActivity.UPDATE_APPLY_FORM);
+                    getParticipantList();
+                    new MaterialDialog.Builder(ShowApplyPeopleActivity.this)
+                            .title("안내")
+                            .content("성공적으로 철회하였습니다.")
+                            .positiveText("확인")
+                            .show();
+                    break;
+                case MSG_MESSAGE_FAIL_DELETE:
+                    progressDialog.hide();
+                    new MaterialDialog.Builder(ShowApplyPeopleActivity.this)
+                            .title("오류")
+                            .content("잠시 후 다시 시도해주세요.")
+                            .positiveText("확인")
                             .show();
                     break;
                 default:
