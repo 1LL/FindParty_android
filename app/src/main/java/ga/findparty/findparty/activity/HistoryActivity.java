@@ -8,8 +8,10 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -17,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -195,11 +198,12 @@ public class HistoryActivity extends BaseActivity {
             ImageView profileImg = (ImageView)v.findViewById(R.id.profileImg);
             TextView tv_name = (TextView)v.findViewById(R.id.tv_name);
             TextView tv_email = (TextView)v.findViewById(R.id.tv_email);
+            ImageView dotMenu = (ImageView)v.findViewById(R.id.dot_menu);
             TextView tv_content = (TextView)v.findViewById(R.id.tv_content);
             TextView referenceBtn = (TextView)v.findViewById(R.id.reference_btn);
             TextView tv_date = (TextView)v.findViewById(R.id.tv_date);
 
-            String id = (String)map.get("id");
+            final String id = (String)map.get("id");
             String teamId = (String)map.get("teamId");
             final String userId = (String)map.get("userId");
             String name = (String)map.get("name");
@@ -229,6 +233,33 @@ public class HistoryActivity extends BaseActivity {
                     startActivity(intent);
                 }
             });
+
+            dotMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popup = new PopupMenu(HistoryActivity.this, v);
+                    popup.getMenuInflater().inflate(R.menu.menu_delete, popup.getMenu());
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()){
+                                case R.id.menu_delete:
+                                    deleteHistory(id);
+                                    break;
+                            }
+
+                            return true;
+                        }
+                    });
+                    popup.show();
+                }
+            });
+
+            if(userId.equals(StartActivity.USER_ID)){
+                dotMenu.setVisibility(View.VISIBLE);
+            }else{
+                dotMenu.setVisibility(View.GONE);
+            }
 
             // participant
             View line1 = v.findViewById(R.id.line1);
@@ -297,6 +328,23 @@ public class HistoryActivity extends BaseActivity {
             li_listField.addView(v);
 
         }
+
+    }
+
+    private void deleteHistory(String id){
+
+        new MaterialDialog.Builder(this)
+                .title("확인")
+                .content("해당 게시글을 삭제하시겠습니까?")
+                .positiveText("삭제")
+                .negativeText("취소")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        showSnackbar("삭제!");
+                    }
+                })
+                .show();
 
     }
 

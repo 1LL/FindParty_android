@@ -54,6 +54,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_toRightOf="@+id/profileImg"
+                android:layout_toLeftOf="@+id/dot_menu"
                 android:layout_centerVertical="true"
                 >
 
@@ -74,6 +75,19 @@
                     />
 
             </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/dot_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_dots_vertical_grey600_18dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                />
 
         </RelativeLayout>
 
