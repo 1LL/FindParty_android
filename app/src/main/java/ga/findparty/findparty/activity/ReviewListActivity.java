@@ -90,6 +90,14 @@ public class ReviewListActivity extends AppCompatActivity {
             tv_email.setText((String)map.get("email"));
             tv_field.setText((String)map.get("field"));
 
+            reviewBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ReviewListActivity.this, ReviewActivity.class);
+                    startActivity(intent);
+                }
+            });
+
             if(alreadyReviewList.contains(StartActivity.USER_ID)){
                 rl_background.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_gray));
                 reviewBtn.setEnabled(false);
