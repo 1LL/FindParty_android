@@ -843,4 +843,51 @@ public class AdditionalFunc {
 
     }
 
+    public static ArrayList<HashMap<String, Object>> getQAListItem(String data){
+
+        ArrayList<HashMap<String, Object>> list = new ArrayList<>();
+
+        try {
+            JSONObject jObject = new JSONObject(data);
+            JSONArray results = jObject.getJSONArray("result");
+            String countTemp = (String)jObject.get("num_result");
+            int count = Integer.parseInt(countTemp);
+
+            for ( int i = 0; i < count; ++i ) {
+                JSONObject temp = results.getJSONObject(i);
+
+                HashMap<String, Object> hashTemp = new HashMap<>();
+                hashTemp.put("id", (String)temp.get("id"));
+                hashTemp.put("question", (String)temp.get("question"));
+
+                JSONObject jObjectAns = (JSONObject)temp.get("answer");
+                JSONArray resultsAns = jObjectAns.getJSONArray("result");
+                String countTempAns = (String)jObjectAns.get("num_answer");
+                int countAns = Integer.parseInt(countTempAns);
+
+                String[] answerList = new String[countAns];
+
+                for(int j=0; j<countAns; j++){
+
+                    JSONObject tempans = resultsAns.getJSONObject(j);
+
+                    String ans = (String) tempans.get("ans");
+                    answerList[j] = ans;
+
+                }
+
+                hashTemp.put("answer", answerList);
+
+                list.add(hashTemp);
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+
+    }
+
 }

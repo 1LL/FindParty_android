@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ga.findparty.findparty.activity.ReviewActivity"
-    android:background="@color/white"
+    android:background="@color/background_color"
     >
 
 
@@ -22,9 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="5dp"
-            android:showDividers="middle"
-            android:divider="@drawable/empty_tall_divider"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             >
 
         </LinearLayout>
@@ -42,6 +41,15 @@
         android:layout_alignParentBottom="true"
         />
 
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:indicatorName="LineSpinFadeLoaderIndicator"
+        app:indicatorColor="@color/colorPrimary"
+        style="@style/AVLoadingIndicatorView.Small"
+        android:layout_centerInParent="true" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
