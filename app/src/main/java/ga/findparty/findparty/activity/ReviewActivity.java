@@ -32,6 +32,7 @@ public class ReviewActivity extends BaseActivity {
     private AVLoadingIndicatorView loading;
 
     private ArrayList<HashMap<String, Object>> ratingList;
+    private int[] answerIndexList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,31 @@ public class ReviewActivity extends BaseActivity {
         submitBtn = (Button)findViewById(R.id.submit);
         loading = (AVLoadingIndicatorView)findViewById(R.id.loading);
 
-        //makeList();
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+            }
+        });
+
+    }
+
+    private void submitAble(){
+
+        boolean able = true;
+
+        for(int i=0; i<answerIndexList.length; i++){
+            if(answerIndexList[i] < 0){
+                able = false;
+            }
+        }
+
+        submitBtn.setEnabled(able);
+        if(able){
+            submitBtn.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+        }else{
+            submitBtn.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_gray));
+        }
 
     }
 
@@ -93,6 +118,10 @@ public class ReviewActivity extends BaseActivity {
             protected void afterThreadFinish(String data) {
 
                 ratingList = AdditionalFunc.getQAListItem(data);
+                answerIndexList = new int[ratingList.size()];
+                for(int i=0; i<answerIndexList.length; i++){
+                    answerIndexList[i] = -1;
+                }
                 handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_MAKE_LIST));
 
             }
@@ -107,6 +136,7 @@ public class ReviewActivity extends BaseActivity {
         for(int i=0; i<ratingList.size(); i++){
             HashMap<String, Object> map = ratingList.get(i);
 
+            final int pos = i;
             final String question = (i+1) + ". " + map.get("question");
             final String[] answer = (String[])map.get("answer");
 
@@ -131,6 +161,8 @@ public class ReviewActivity extends BaseActivity {
                                     if(text != null) {
                                         String a = text.toString();
                                         selectAnswer(tv_answer, a);
+                                        answerIndexList[pos] = which;
+                                        submitAble();
                                     }
                                     return true;
                                 }
