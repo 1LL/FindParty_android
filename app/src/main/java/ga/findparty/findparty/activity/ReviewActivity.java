@@ -33,6 +33,7 @@ public class ReviewActivity extends BaseActivity {
 
     private ArrayList<HashMap<String, Object>> ratingList;
     private int[] answerIndexList;
+    private boolean isSecret;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +76,38 @@ public class ReviewActivity extends BaseActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
+                checkSecret();
             }
         });
+
+    }
+
+    private void checkSecret(){
+
+        String ans[] = {
+                "당사자에게 보이게 하기",
+                "당사자에게 안 보이게 하기"
+        };
+
+        new MaterialDialog.Builder(this)
+                .title("해당 평가를 당사자에게 보이도록 하겠습니까?")
+                .items(ans)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        if(text != null) {
+                            if(which == 0){
+                                isSecret = false;
+                            }else{
+                                isSecret = true;
+                            }
+                            // TODO
+                        }
+                        return true;
+                    }
+                })
+                .positiveText("확인")
+                .show();
 
     }
 
