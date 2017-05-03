@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ga.findparty.findparty.BaseActivity;
 import ga.findparty.findparty.Information;
 import ga.findparty.findparty.R;
 import ga.findparty.findparty.util.ParsePHP;
@@ -36,7 +37,7 @@ import ga.findparty.findparty.util.ParsePHP;
  * Created by tw on 2017-03-28.
  */
 
-public class SelectInterestActivity extends AppCompatActivity {
+public class SelectInterestActivity extends BaseActivity {
 
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_MAKE_LIST = 500;

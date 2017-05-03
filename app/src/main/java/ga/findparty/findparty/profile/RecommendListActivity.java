@@ -180,7 +180,7 @@ public class RecommendListActivity extends BaseActivity {
 
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("service", "recommendUser");
-        map.put("userId", StartActivity.USER_ID);
+        map.put("userId", getUserID(this));
         map.put("recipientId", userId);
         map.put("field", field);
 
@@ -206,7 +206,7 @@ public class RecommendListActivity extends BaseActivity {
 
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("service", "getRecommendedList");
-        map.put("userId", StartActivity.USER_ID);
+        map.put("userId", getUserID(this));
         map.put("recipientId", userId);
 
         loading.show();

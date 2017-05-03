@@ -253,7 +253,7 @@ public class AddCourseActivity extends BaseActivity implements OnAdapterSupport{
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "saveUserCourse");
         map.put("school", StartActivity.USER_SCHOOL);
-        map.put("userId", StartActivity.USER_ID);
+        map.put("userId", getUserID(this));
         map.put("courseId", id);
 
         new ParsePHP(Information.MAIN_SERVER_ADDRESS, map){

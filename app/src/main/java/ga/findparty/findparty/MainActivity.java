@@ -170,7 +170,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else if (id == R.id.nav_show_profile) {
 
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-            intent.putExtra("id", StartActivity.USER_ID);
+            intent.putExtra("id", getUserID(this));
             startActivity(intent);
 
         } else if(id == R.id.nav_logout){
@@ -192,14 +192,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 facebookLogin.logout();
                 editor.remove("login");
                 editor.commit();
-                removeUser(StartActivity.USER_ID);
+                removeUser(getUserID(this));
 
             } else if (StartActivity.NAVER_LOGIN.equals(login)) {
 
                 naverLogin.deleteToken();
                 editor.remove("login");
                 editor.commit();
-                removeUser(StartActivity.USER_ID);
+                removeUser(getUserID(this));
 
             }
 

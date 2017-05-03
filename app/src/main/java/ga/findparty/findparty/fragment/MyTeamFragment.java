@@ -257,7 +257,7 @@ public class MyTeamFragment extends BaseFragment {
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "getTeamList");
         if(userId == null){
-            map.put("userId", StartActivity.USER_ID);
+            map.put("userId", getUserID(this));
         }else {
             map.put("userId", userId);
         }

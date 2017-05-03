@@ -8,11 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ga.findparty.findparty.R;
+import ga.findparty.findparty.fragment.BaseFragment;
 
 /**
  * Created by tw on 2017-04-05.
  */
-public class ReviewFragment extends Fragment {
+public class ReviewFragment extends BaseFragment {
 
     // BASIC UI
     private View view;

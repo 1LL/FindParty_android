@@ -245,7 +245,7 @@ public class MyReviewFragment extends BaseFragment {
 
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "getTeamList");
-        map.put("userId", StartActivity.USER_ID);
+        map.put("userId", getUserID(this));
 
         new ParsePHP(Information.MAIN_SERVER_ADDRESS, map){
 

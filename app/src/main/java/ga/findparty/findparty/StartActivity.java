@@ -65,7 +65,7 @@ public class StartActivity extends BaseActivity implements FacebookLoginSupport,
     private RelativeLayout rl_background;
     private LinearLayout li_login;
 
-    public static String USER_ID = "";
+    private String USER_ID = "";
     public static HashMap<String, Object> USER_DATA = new HashMap<>();
     public static String USER_SCHOOL = "";
 
@@ -132,6 +132,8 @@ public class StartActivity extends BaseActivity implements FacebookLoginSupport,
                 if(facebookLogin.isAlreadyLogin()){
 
                     USER_ID = facebookLogin.getID();
+                    editor.putString("userId", USER_ID);
+                    editor.commit();
                     checkLogin(MSG_MESSAGE_SUCCESS, MSG_MESSAGE_FAIL_FB);
 
                     return;
@@ -144,6 +146,8 @@ public class StartActivity extends BaseActivity implements FacebookLoginSupport,
                 if(!data.isEmpty()){
 
                     USER_ID = data.get("id");
+                    editor.putString("userId", USER_ID);
+                    editor.commit();
                     checkLogin(MSG_MESSAGE_SUCCESS, MSG_MESSAGE_FAIL_NAVER);
 
                     return;
@@ -217,6 +221,8 @@ public class StartActivity extends BaseActivity implements FacebookLoginSupport,
         editor.commit();
 
         USER_ID = profile.getId();
+        editor.putString("userId", USER_ID);
+        editor.commit();
 
         wt_id = profile.getId();
         wt_img = profile.getProfilePictureUri(500, 500).toString();
@@ -249,6 +255,8 @@ public class StartActivity extends BaseActivity implements FacebookLoginSupport,
         editor.commit();
 
         USER_ID = data.get("id");
+        editor.putString("userId", USER_ID);
+        editor.commit();
 
         wt_id = data.get("id");
         wt_img = data.get("img");

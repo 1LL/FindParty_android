@@ -185,7 +185,7 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
 
         progressDialog.show();
 
-        String userId = StartActivity.USER_ID;
+        String userId = getUserID(this);
         String content = editContent.getText().toString();
         content = AdditionalFunc.replaceNewLineString(content);
         String startText = start.toString();

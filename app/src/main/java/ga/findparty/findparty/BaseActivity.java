@@ -1,5 +1,7 @@
 package ga.findparty.findparty;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,14 @@ import android.view.View;
  */
 
 public class BaseActivity extends AppCompatActivity {
+
+
+    public String getUserID(Activity activity){
+
+        String userId = activity.getSharedPreferences("setting", 0).getString("userId", null);
+        return userId;
+
+    }
 
     public void showSnackbar(String msg){
         Snackbar snackbar = Snackbar.make(getWindow().getDecorView().getRootView(), msg, Snackbar.LENGTH_SHORT);

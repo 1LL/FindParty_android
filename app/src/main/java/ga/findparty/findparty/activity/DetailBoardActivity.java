@@ -83,7 +83,7 @@ public class DetailBoardActivity extends BaseActivity {
         String userId = intent.getStringExtra("userId");
         isDecision = intent.getBooleanExtra("isDecision", false);
 
-        if(StartActivity.USER_ID.equals(userId)){
+        if(getUserID(this).equals(userId)){
             isMyBoard = true;
         }
 
@@ -264,7 +264,7 @@ public class DetailBoardActivity extends BaseActivity {
 
                         HashMap<String, String> map = new HashMap<>();
                         map.put("service", "decisionMember");
-                        map.put("userId", StartActivity.USER_ID);
+                        map.put("userId", getUserID(DetailBoardActivity.this));
                         map.put("boardId", boardId);
                         map.put("courseId", courseId);
                         map.put("member", AdditionalFunc.arrayListToString(endFieldList));
@@ -300,7 +300,7 @@ public class DetailBoardActivity extends BaseActivity {
         lastTouchField = h;
         String userId = (String)item.get("userId");
 
-        if(StartActivity.USER_ID.equals(userId)){
+        if(getUserID(this).equals(userId)){
             new MaterialDialog.Builder(this)
                     .title("경고")
                     .content("본인 글에는 지원할 수 없습니다.")
@@ -317,7 +317,7 @@ public class DetailBoardActivity extends BaseActivity {
 
             HashMap<String, String> map = new HashMap<>();
             map.put("service", "checkAddAble");
-            map.put("userId", StartActivity.USER_ID);
+            map.put("userId", getUserID(this));
             map.put("courseId", courseId);
 
             new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {

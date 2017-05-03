@@ -26,6 +26,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ga.findparty.findparty.BaseActivity;
 import ga.findparty.findparty.Information;
 import ga.findparty.findparty.R;
 import ga.findparty.findparty.StartActivity;
@@ -34,7 +35,7 @@ import ga.findparty.findparty.util.AdditionalFunc;
 import ga.findparty.findparty.util.ParsePHP;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class ShowApplyPeopleActivity extends AppCompatActivity {
+public class ShowApplyPeopleActivity extends BaseActivity {
 
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_MAKE_LIST = 500;
@@ -252,7 +253,7 @@ public class ShowApplyPeopleActivity extends AppCompatActivity {
             });
 
             if((!isSelectMode) && (!isTeamListMode)){
-                if(StartActivity.USER_ID.equals(map.get("userId"))){
+                if(getUserID(this).equals(map.get("userId"))){
                     dotMenu.setVisibility(View.VISIBLE);
                 }else{
                     dotMenu.setVisibility(View.GONE);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,13 +27,14 @@ import java.util.HashMap;
 import ga.findparty.findparty.Information;
 import ga.findparty.findparty.R;
 import ga.findparty.findparty.StartActivity;
+import ga.findparty.findparty.fragment.BaseFragment;
 import ga.findparty.findparty.util.AdditionalFunc;
 import ga.findparty.findparty.util.ParsePHP;
 
 /**
  * Created by tw on 2017-04-05.
  */
-public class InfoFragment extends Fragment {
+public class InfoFragment extends BaseFragment {
 
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_FILL_FORM = 500;
@@ -110,11 +112,11 @@ public class InfoFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(context, WtInfoActivity.class);
                 intent.putExtra("edit", true);
-                intent.putExtra("id", StartActivity.USER_ID);
+                intent.putExtra("id", getUserID(InfoFragment.this));
                 startActivityForResult(intent, ProfileActivity.EDIT_PROFILE);
             }
         });
-        if (StartActivity.USER_ID.equals(userId)) {
+        if (getUserID(InfoFragment.this).equals(userId)) {
             fabEdit.setVisibility(View.VISIBLE);
         } else {
             fabEdit.setVisibility(View.GONE);

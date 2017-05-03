@@ -22,12 +22,13 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.HashMap;
 
+import ga.findparty.findparty.BaseActivity;
 import ga.findparty.findparty.R;
 import ga.findparty.findparty.StartActivity;
 import ga.findparty.findparty.fragment.MyTeamFragment;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseActivity {
 
     public final static int EDIT_PROFILE = 100;
     public final static int UPDATE_RECOMMEND_LIST = 200;
@@ -72,7 +73,7 @@ public class ProfileActivity extends AppCompatActivity {
         rl_profile = (RelativeLayout)findViewById(R.id.rl_profile);
 
         recommendBtn = (TextView)findViewById(R.id.recommend_btn);
-        if(StartActivity.USER_ID.equals(userId)){
+        if(getUserID(this).equals(userId)){
             recommendBtn.setVisibility(View.GONE);
         }
         recommendBtn.setOnClickListener(new View.OnClickListener() {

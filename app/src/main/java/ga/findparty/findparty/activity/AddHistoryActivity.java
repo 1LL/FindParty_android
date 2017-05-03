@@ -435,7 +435,7 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
         if(isHWMode || isPresentMode){
             map.put("userId", (String)chargeMember.get("userId"));
         }else {
-            map.put("userId", StartActivity.USER_ID);
+            map.put("userId", getUserID(this));
         }
         if(isHWMode){
             map.put("classification", "homework");

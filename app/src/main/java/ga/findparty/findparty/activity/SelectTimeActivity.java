@@ -12,9 +12,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import ga.findparty.findparty.BaseActivity;
 import ga.findparty.findparty.R;
 
-public class SelectTimeActivity extends AppCompatActivity {
+public class SelectTimeActivity extends BaseActivity {
 
     private Toolbar toolbar;
     private boolean isEditAble;

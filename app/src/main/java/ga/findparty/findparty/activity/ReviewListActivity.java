@@ -17,13 +17,14 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ga.findparty.findparty.BaseActivity;
 import ga.findparty.findparty.R;
 import ga.findparty.findparty.StartActivity;
 import ga.findparty.findparty.profile.ProfileActivity;
 import ga.findparty.findparty.util.AdditionalFunc;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class ReviewListActivity extends AppCompatActivity {
+public class ReviewListActivity extends BaseActivity {
 
     private LinearLayout li_participantList;
 
@@ -58,7 +59,7 @@ public class ReviewListActivity extends AppCompatActivity {
 
             final String userId = (String)map.get("userId");
 
-            if(userId.equals((StartActivity.USER_ID))){
+            if(userId.equals(getUserID(this))){
                 continue;
             }
 
@@ -98,7 +99,7 @@ public class ReviewListActivity extends AppCompatActivity {
                 }
             });
 
-            if(alreadyReviewList.contains(StartActivity.USER_ID)){
+            if(alreadyReviewList.contains(getUserID(this))){
                 rl_background.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_gray));
                 reviewBtn.setEnabled(false);
             }else{

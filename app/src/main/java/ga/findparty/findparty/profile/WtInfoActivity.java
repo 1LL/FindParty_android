@@ -1,6 +1,7 @@
 package ga.findparty.findparty.profile;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
@@ -34,6 +35,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ga.findparty.findparty.BaseActivity;
 import ga.findparty.findparty.Information;
 import ga.findparty.findparty.MainActivity;
 import ga.findparty.findparty.R;
@@ -42,13 +44,16 @@ import ga.findparty.findparty.util.AdditionalFunc;
 import ga.findparty.findparty.util.ParsePHP;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class WtInfoActivity extends AppCompatActivity {
+public class WtInfoActivity extends BaseActivity {
 
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_FINISH = 500;
     private final int MSG_MESSAGE_SAVE_USER_PROFILE = 501;
     private final int MSG_MESSAGE_UPDATE_PROFILE_FINISH = 502;
     private final int MSG_MESSAGE_UPDATE_PROFILE = 503;
+
+    private SharedPreferences setting;
+    private SharedPreferences.Editor editor;
 
     // UI
     private ImageView profileImage;
@@ -84,6 +89,9 @@ public class WtInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wt_info);
+
+        setting = getSharedPreferences("setting", 0);
+        editor = setting.edit();
 
         initData();
 
@@ -459,7 +467,8 @@ public class WtInfoActivity extends AppCompatActivity {
             @Override
             protected void afterThreadFinish(String data) {
                 if("1".equals(data)) {
-                    StartActivity.USER_ID = id;
+                    editor.putString("userId", id);
+                    editor.commit();
 
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("service", "getUserInfo");
@@ -501,13 +510,6 @@ public class WtInfoActivity extends AppCompatActivity {
         intent.putExtra("item", StartActivity.USER_DATA);
         setResult(ProfileActivity.EDIT_PROFILE, intent);
         finish();
-    }
-
-    private void showSnackbar(String msg) {
-        Snackbar snackbar = Snackbar.make(getWindow().getDecorView().getRootView(), msg, Snackbar.LENGTH_SHORT);
-        View view = snackbar.getView();
-        view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.snackbar_color));
-        snackbar.show();
     }
 
 

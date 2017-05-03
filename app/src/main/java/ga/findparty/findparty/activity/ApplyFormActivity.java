@@ -250,7 +250,7 @@ public class ApplyFormActivity extends BaseActivity {
         map.put("service", "applyField");
         map.put("courseId", courseId);
         map.put("boardFieldId", (String)item.get("id"));
-        map.put("userId", StartActivity.USER_ID);
+        map.put("userId", getUserID(this));
         map.put("skill", skill+"");
         map.put("content", AdditionalFunc.replaceNewLineString(editContent.getText().toString()));
         map.put("mon", AdditionalFunc.integerArrayListToString(monList));

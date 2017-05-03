@@ -211,7 +211,7 @@ public class MyClassFragment extends BaseFragment implements OnAdapterSupport {
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "getUserCourse");
         map.put("school", StartActivity.USER_SCHOOL);
-        map.put("userId", StartActivity.USER_ID);
+        map.put("userId", getUserID(this));
 
         handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_SHOW_LOADING));
 

@@ -70,7 +70,7 @@ public class HistoryActivity extends BaseActivity {
         teamId = intent.getStringExtra("teamId");
         memberList = (ArrayList<HashMap<String, Object>>)intent.getSerializableExtra("memberList");
         for(HashMap<String, Object> map : memberList){
-            if(StartActivity.USER_ID.equals((String)map.get("userId"))){
+            if(getUserID(this).equals((String)map.get("userId"))){
                 isEditAble = true;
             }
         }
@@ -255,7 +255,7 @@ public class HistoryActivity extends BaseActivity {
                 }
             });
 
-            if(userId.equals(StartActivity.USER_ID)){
+            if(userId.equals(getUserID(this))){
                 dotMenu.setVisibility(View.VISIBLE);
             }else{
                 dotMenu.setVisibility(View.GONE);

@@ -176,7 +176,7 @@ public class CourseBoardActivity extends BaseActivity implements OnAdapterSuppor
 
                 HashMap<String, String> map = new HashMap<>();
                 map.put("service", "checkAddAble");
-                map.put("userId", StartActivity.USER_ID);
+                map.put("userId", getUserID(CourseBoardActivity.this));
                 map.put("courseId", courseId);
 
                 new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {

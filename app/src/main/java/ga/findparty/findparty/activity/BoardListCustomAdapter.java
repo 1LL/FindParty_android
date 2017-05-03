@@ -120,7 +120,7 @@ public class BoardListCustomAdapter extends RecyclerView.Adapter<BoardListCustom
                 popup.show();
             }
         });
-        if(userId.equals(StartActivity.USER_ID) && isDecision != 1){
+        if(userId.equals(activity.getUserID(activity)) && isDecision != 1){
             holder.dot_menu.setVisibility(View.VISIBLE);
         }else{
             holder.dot_menu.setVisibility(View.GONE);
