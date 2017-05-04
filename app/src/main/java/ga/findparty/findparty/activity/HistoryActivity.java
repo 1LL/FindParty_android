@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.squareup.picasso.Picasso;
@@ -44,8 +45,11 @@ public class HistoryActivity extends BaseActivity {
 
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_MAKE_LIST = 500;
+    private final int MSG_MESSAGE_DELETE_SUCCESS = 501;
+    private final int MSG_MESSAGE_DELETE_FAIL = 502;
 
     private AVLoadingIndicatorView loading;
+    private MaterialDialog progressDialog;
     private TextView tv_msg;
     private LinearLayout li_listField;
 
@@ -85,6 +89,12 @@ public class HistoryActivity extends BaseActivity {
 
     private void init(){
 
+        progressDialog = new MaterialDialog.Builder(this)
+                .content("잠시만 기다려주세요.")
+                .progress(true, 0)
+                .progressIndeterminateStyle(true)
+                .theme(Theme.LIGHT)
+                .build();
         loading = (AVLoadingIndicatorView)findViewById(R.id.loading);
         tv_msg = (TextView)findViewById(R.id.tv_msg);
         tv_msg.setVisibility(View.GONE);
@@ -331,7 +341,7 @@ public class HistoryActivity extends BaseActivity {
 
     }
 
-    private void deleteHistory(String id){
+    private void deleteHistory(final String id){
 
         new MaterialDialog.Builder(this)
                 .title("확인")
@@ -341,7 +351,24 @@ public class HistoryActivity extends BaseActivity {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        showSnackbar("삭제!");
+
+                        progressDialog.show();
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("service", "removeHistory");
+                        map.put("id", id);
+
+                        new ParsePHP(Information.MAIN_SERVER_ADDRESS, map){
+
+                            @Override
+                            protected void afterThreadFinish(String data) {
+                                if("1".equals(data)) {
+                                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_DELETE_SUCCESS));
+                                }else{
+                                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_DELETE_FAIL));
+                                }
+                            }
+                        }.start();
+
                     }
                 })
                 .show();
@@ -359,6 +386,13 @@ public class HistoryActivity extends BaseActivity {
                     loading.hide();
                     makeList();
                     break;
+                case MSG_MESSAGE_DELETE_SUCCESS:
+                    progressDialog.hide();
+                    getHistoryList();
+                    break;
+                case MSG_MESSAGE_DELETE_FAIL:
+                    progressDialog.hide();
+                    break;
                 default:
                     break;
             }
@@ -375,6 +409,14 @@ public class HistoryActivity extends BaseActivity {
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(progressDialog != null){
+            progressDialog.dismiss();
         }
     }
 
