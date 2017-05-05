@@ -1,8 +1,13 @@
 package ga.findparty.findparty.activity;
 
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
@@ -19,10 +25,13 @@ import java.util.HashMap;
 import ga.findparty.findparty.BaseActivity;
 import ga.findparty.findparty.Information;
 import ga.findparty.findparty.R;
+import ga.findparty.findparty.fragment.ReviewItemFragment;
 import ga.findparty.findparty.util.AdditionalFunc;
+import ga.findparty.findparty.util.CustomViewPager;
 import ga.findparty.findparty.util.ParsePHP;
+import ga.findparty.findparty.util.ReviewSelectListener;
 
-public class ReviewActivity extends BaseActivity {
+public class ReviewActivity extends BaseActivity implements ReviewSelectListener{
 
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_MAKE_LIST = 500;
@@ -30,6 +39,12 @@ public class ReviewActivity extends BaseActivity {
     private LinearLayout li_listField;
     private Button submitBtn;
     private AVLoadingIndicatorView loading;
+
+    private DotIndicator dotIndicator;
+    private CustomViewPager viewPager;
+    private NavigationAdapter mPagerAdapter;
+    private ReviewItemFragment[] reviewItemFragments;
+    private int lastPage = 0;
 
     private ArrayList<HashMap<String, Object>> ratingList;
     private int[] answerIndexList;
@@ -41,25 +56,6 @@ public class ReviewActivity extends BaseActivity {
         setContentView(R.layout.activity_review);
 
         ratingList = new ArrayList<>();
-//        HashMap<String, Object> map = new HashMap<>();
-//        map.put("question", "첫번째 질문입니다.");
-//        String s[] = {
-//                "a. 첫번째 답",
-//                "b. 두번째 답",
-//                "c. 세번째 답"
-//        };
-//        map.put("answer", s);
-//        ratingList.add(map);
-//
-//        map = new HashMap<>();
-//        map.put("question", "두번째 질문입니다.");
-//        String s2[] = {
-//                "a. 첫번째 답",
-//                "b. 두번째 답",
-//                "c. 세번째 답"
-//        };
-//        map.put("answer", s2);
-//        ratingList.add(map);
 
         init();
 
@@ -69,16 +65,17 @@ public class ReviewActivity extends BaseActivity {
 
     private void init(){
 
-        li_listField = (LinearLayout)findViewById(R.id.li_list_field);
-        submitBtn = (Button)findViewById(R.id.submit);
+//        li_listField = (LinearLayout)findViewById(R.id.li_list_field);
+//        submitBtn = (Button)findViewById(R.id.submit);
         loading = (AVLoadingIndicatorView)findViewById(R.id.loading);
 
-        submitBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkSecret();
-            }
-        });
+//        submitBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                checkSecret();
+//            }
+//        });
+
 
     }
 
@@ -161,50 +158,92 @@ public class ReviewActivity extends BaseActivity {
 
     private void makeList(){
 
-        li_listField.removeAllViews();
+        reviewItemFragments = new ReviewItemFragment[ratingList.size()];
 
-        for(int i=0; i<ratingList.size(); i++){
-            HashMap<String, Object> map = ratingList.get(i);
+        dotIndicator = (DotIndicator) findViewById(R.id.main_indicator_ad);
+        dotIndicator.setSelectedDotColor(Color.parseColor("#FF4081"));
+        dotIndicator.setUnselectedDotColor(Color.parseColor("#CFCFCF"));
+        dotIndicator.setNumberOfItems(ratingList.size());
+        dotIndicator.setSelectedItem(0, false);
+        viewPager = (CustomViewPager) findViewById(R.id.pager);
+        viewPager.setOffscreenPageLimit(ratingList.size());
+        mPagerAdapter = new NavigationAdapter(getSupportFragmentManager(), ratingList, this);
+        viewPager.setAdapter(mPagerAdapter);
+        viewPager.setCurrentItem(0);
 
-            final int pos = i;
-            final String question = (i+1) + ". " + map.get("question");
-            final String[] answer = (String[])map.get("answer");
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            View v = getLayoutInflater().inflate(R.layout.question_and_answer_2_custom_item, null, false);
+            }
 
-            TextView tv_question = (TextView)v.findViewById(R.id.tv_question);
-            tv_question.setText(question);
+            @Override
+            public void onPageSelected(int position) {
+                dotIndicator.setSelectedItem(position, true);
+            }
 
-            final TextView tv_answer = (TextView)v.findViewById(R.id.tv_answer);
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
-            tv_answer.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-            tv_answer.setText("답변 선택");
-            tv_answer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new MaterialDialog.Builder(ReviewActivity.this)
-                            .title(question)
-                            .items(answer)
-                            .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
-                                @Override
-                                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                    if(text != null) {
-                                        String a = text.toString();
-                                        selectAnswer(tv_answer, a);
-                                        answerIndexList[pos] = which;
-                                        submitAble();
-                                    }
-                                    return true;
-                                }
-                            })
-                            .positiveText("확인")
-                            .show();
-                }
-            });
+            }
+        });
 
-            li_listField.addView(v);
+//        li_listField.removeAllViews();
+//
+//        for(int i=0; i<ratingList.size(); i++){
+//            HashMap<String, Object> map = ratingList.get(i);
+//
+//            final int pos = i;
+//            final String question = (i+1) + ". " + map.get("question");
+//            final String[] answer = (String[])map.get("answer");
+//
+//            View v = getLayoutInflater().inflate(R.layout.question_and_answer_2_custom_item, null, false);
+//
+//            TextView tv_question = (TextView)v.findViewById(R.id.tv_question);
+//            tv_question.setText(question);
+//
+//            final TextView tv_answer = (TextView)v.findViewById(R.id.tv_answer);
+//
+//            tv_answer.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+//            tv_answer.setText("답변 선택");
+//            tv_answer.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    new MaterialDialog.Builder(ReviewActivity.this)
+//                            .title(question)
+//                            .items(answer)
+//                            .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+//                                @Override
+//                                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+//                                    if(text != null) {
+//                                        String a = text.toString();
+//                                        selectAnswer(tv_answer, a);
+//                                        answerIndexList[pos] = which;
+//                                        submitAble();
+//                                    }
+//                                    return true;
+//                                }
+//                            })
+//                            .positiveText("확인")
+//                            .show();
+//                }
+//            });
+//
+//            li_listField.addView(v);
+//
+//        }
 
-        }
+    }
+
+    @Override
+    public void select(final int fragmentPosition, String answer, int selectAnswerIndex) {
+        showSnackbar(fragmentPosition + " / " + answer + " / " + selectAnswerIndex);
+        Runnable runnable = new Runnable(){
+            public void run(){
+                viewPager.setCurrentItem(fragmentPosition+1, true);
+            }
+        };
+        handler.postDelayed(runnable, 500);
 
     }
 
@@ -219,6 +258,57 @@ public class ReviewActivity extends BaseActivity {
                 default:
                     break;
             }
+        }
+    }
+
+    public void setReviewItemFragments(ReviewItemFragment f, int position){
+        reviewItemFragments[position] = f;
+    }
+    public ReviewItemFragment getReviewItemFragment(int position){
+        return reviewItemFragments[position];
+    }
+
+    private static class NavigationAdapter extends FragmentPagerAdapter {
+
+        private int size;
+        private ArrayList<HashMap<String, Object>> list;
+        private ReviewActivity activity;
+
+        public NavigationAdapter(FragmentManager fm, ArrayList<HashMap<String, Object>> list, ReviewActivity activity) {
+            super(fm);
+            this.list = list;
+            this.size = list.size();
+            this.activity = activity;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+
+            final int pattern = position % size;
+
+            ReviewItemFragment f;
+
+            if(activity.getReviewItemFragment(pattern) == null){
+
+                f = new ReviewItemFragment();
+                Bundle bdl = new Bundle(1);
+                bdl.putInt("position", pattern);
+                bdl.putSerializable("item", list.get(pattern));
+                ReviewSelectListener listener = (ReviewSelectListener)activity;
+                bdl.putSerializable("listener", listener);
+                f.setArguments(bdl);
+
+                activity.setReviewItemFragments(f, pattern);
+            }else {
+                f = activity.getReviewItemFragment(pattern);
+            }
+
+            return f;
+        }
+
+        @Override
+        public int getCount() {
+            return size;
         }
     }
 

@@ -9,37 +9,55 @@
     android:background="@color/background_color"
     >
 
-
-    <ScrollView
+    <ga.findparty.findparty.util.CustomViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/custom_actionbar_size"
-        android:layout_above="@+id/submit"
+        android:layout_above="@+id/main_indicator_ad"
         >
 
-        <LinearLayout
-            android:id="@+id/li_list_field"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            >
+    </ga.findparty.findparty.util.CustomViewPager>
 
-        </LinearLayout>
-
-    </ScrollView>
-
-    <Button
-        android:id="@+id/submit"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:text="제출"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:background="@color/dark_gray"
+    <com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator
+        android:id="@+id/main_indicator_ad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
         />
+
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginTop="@dimen/custom_actionbar_size"-->
+        <!--android:layout_above="@+id/submit"-->
+        <!--&gt;-->
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/li_list_field"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--android:paddingTop="5dp"-->
+            <!--android:paddingBottom="5dp"-->
+            <!--&gt;-->
+
+        <!--</LinearLayout>-->
+
+    <!--</ScrollView>-->
+
+    <!--<Button-->
+        <!--android:id="@+id/submit"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="35dp"-->
+        <!--android:text="제출"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="12sp"-->
+        <!--android:background="@color/dark_gray"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--/>-->
 
 
     <com.wang.avi.AVLoadingIndicatorView
