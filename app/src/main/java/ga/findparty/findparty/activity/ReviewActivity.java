@@ -174,7 +174,9 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                if(position == lastPage+1){
+                    viewPager.setCurrentItem(lastPage, true);
+                }
             }
 
             @Override
@@ -237,14 +239,19 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
 
     @Override
     public void select(final int fragmentPosition, String answer, int selectAnswerIndex) {
-        showSnackbar(fragmentPosition + " / " + answer + " / " + selectAnswerIndex);
-        Runnable runnable = new Runnable(){
-            public void run(){
-                viewPager.setCurrentItem(fragmentPosition+1, true);
-            }
-        };
-        handler.postDelayed(runnable, 500);
+        if(lastPage == fragmentPosition){
+            showSnackbar((fragmentPosition+1) + "/" + ratingList.size() + " 완료");
 
+            Runnable runnable = new Runnable(){
+                public void run(){
+                    if(fragmentPosition == lastPage){
+                        lastPage += 1;
+                    }
+                    viewPager.setCurrentItem(fragmentPosition+1, true);
+                }
+            };
+            handler.postDelayed(runnable, 500);
+        }
     }
 
     private class MyHandler extends Handler {
@@ -296,9 +303,13 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
                 bdl.putSerializable("item", list.get(pattern));
                 ReviewSelectListener listener = (ReviewSelectListener)activity;
                 bdl.putSerializable("listener", listener);
+                if(pattern == size-1){
+                    bdl.putBoolean("isEditMode", true);
+                }
                 f.setArguments(bdl);
 
                 activity.setReviewItemFragments(f, pattern);
+
             }else {
                 f = activity.getReviewItemFragment(pattern);
             }

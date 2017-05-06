@@ -13,48 +13,80 @@
         android:layout_margin="20dp"
         >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/white"
-            >
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tv_question"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="질문"
-                android:textColor="@color/dark_gray"
-                android:textSize="16sp"
-                android:padding="10dp"
-                />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:background="@color/light_gray2"
-                />
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:background="@color/white"
                 >
 
-                <LinearLayout
-                    android:id="@+id/li_radio"
+                <TextView
+                    android:id="@+id/tv_question"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:divider="@drawable/empty_tall_divider"
+                    android:text="질문"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="16sp"
+                    android:padding="10dp"
+                    />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/light_gray2"
+                    />
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:clipToPadding="false"
                     >
 
-                </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/li_radio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:divider="@drawable/empty_tall_divider"
+                        >
 
-            </ScrollView>
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edit_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="내용을 입력해주세요."
+                            android:textSize="12sp"
+                            android:textColor="@color/profile_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            app:met_minCharacters="10"
+                            app:met_primaryColor="@color/profile_content"
+                            />
 
-        </LinearLayout>
+                    </LinearLayout>
+
+                </ScrollView>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/nextBtn"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/dark_gray"
+                android:text="다음"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                />
+
+        </RelativeLayout>
+
+
 
     </android.support.v7.widget.CardView>
 

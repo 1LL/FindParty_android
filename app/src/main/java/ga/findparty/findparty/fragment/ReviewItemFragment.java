@@ -2,13 +2,18 @@ package ga.findparty.findparty.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rey.material.widget.CompoundButton;
 import com.rey.material.widget.RadioButton;
 
@@ -27,6 +32,8 @@ public class ReviewItemFragment extends BaseFragment {
     private TextView tv_question;
     private LinearLayout li_radio;
     private RadioButton[] rb_answer;
+    private MaterialEditText editText;
+    private Button nextBtn;
 
     private int position;
     private String question;
@@ -37,11 +44,14 @@ public class ReviewItemFragment extends BaseFragment {
     private String answer;
     private int selectAnswerIndex = -1;
 
+    private boolean isEditMode;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         this.setRetainInstance(true);
         if(getArguments() != null) {
+            isEditMode = getArguments().getBoolean("isEditMode", false);
             position = getArguments().getInt("position");
             item = (HashMap<String, Object>)getArguments().getSerializable("item");
             question = (String)item.get("question");
@@ -71,16 +81,60 @@ public class ReviewItemFragment extends BaseFragment {
 
         tv_question = (TextView)view.findViewById(R.id.tv_question);
         li_radio = (LinearLayout) view.findViewById(R.id.li_radio);
+        editText = (MaterialEditText)view.findViewById(R.id.edit_text);
+        nextBtn = (Button)view.findViewById(R.id.nextBtn);
 
-        makeList();
+        String qu = (position+1) + ". " + question;
+        tv_question.setText(qu);
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                checkNextEnable();
+            }
+        });
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectListener.select(position, getEditAnswer(), -1);
+            }
+        });
+
+        if(isEditMode){
+            editText.setVisibility(View.VISIBLE);
+            nextBtn.setVisibility(View.VISIBLE);
+        }else{
+            editText.setVisibility(View.GONE);
+            nextBtn.setVisibility(View.GONE);
+            makeAnswerList();
+        }
 
     }
 
-    private void makeList(){
+    private void checkNextEnable(){
 
-        String qu = (position+1) + ". " + question;
+        if(editText.isCharactersCountValid()){
+            nextBtn.setEnabled(true);
+            nextBtn.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        }else{
+            nextBtn.setEnabled(false);
+            nextBtn.setBackgroundColor(ContextCompat.getColor(context, R.color.dark_gray));
+        }
 
-        tv_question.setText(qu);
+    }
+
+    private void makeAnswerList(){
+
         rb_answer = new RadioButton[answerList.length];
 
         CompoundButton.OnCheckedChangeListener listener = new android.widget.CompoundButton.OnCheckedChangeListener() {
@@ -126,6 +180,9 @@ public class ReviewItemFragment extends BaseFragment {
     }
     public int getSelectAnswerIndex(){
         return selectAnswerIndex;
+    }
+    public String getEditAnswer(){
+        return editText.getText().toString();
     }
 
 }

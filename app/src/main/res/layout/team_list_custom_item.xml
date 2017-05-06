@@ -188,8 +188,8 @@
         <Button
             android:id="@+id/reviewBtn"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:text="리뷰하기"
+            android:layout_height="28dp"
+            android:text="평가하기"
             android:textColor="@color/white"
             android:textSize="12sp"
             android:background="@color/colorPrimary"

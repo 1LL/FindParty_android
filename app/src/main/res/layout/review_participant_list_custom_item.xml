@@ -85,7 +85,7 @@
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:background="@color/transparency"
-                android:text="리뷰하기"
+                android:text="평가하기"
                 android:textColor="@color/white"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"

@@ -165,7 +165,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }else if(id == R.id.nav_my_review){
 
             showFragment("nav_my_review", new MyReviewFragment());
-            title = "리뷰하기";
+            title = "평가하기";
 
         } else if (id == R.id.nav_show_profile) {
 
