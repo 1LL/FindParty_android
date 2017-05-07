@@ -158,15 +158,15 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
 
     private void makeList(){
 
-        reviewItemFragments = new ReviewItemFragment[ratingList.size()];
+        reviewItemFragments = new ReviewItemFragment[ratingList.size()+1];
 
         dotIndicator = (DotIndicator) findViewById(R.id.main_indicator_ad);
         dotIndicator.setSelectedDotColor(Color.parseColor("#FF4081"));
         dotIndicator.setUnselectedDotColor(Color.parseColor("#CFCFCF"));
-        dotIndicator.setNumberOfItems(ratingList.size());
+        dotIndicator.setNumberOfItems(reviewItemFragments.length);
         dotIndicator.setSelectedItem(0, false);
         viewPager = (CustomViewPager) findViewById(R.id.pager);
-        viewPager.setOffscreenPageLimit(ratingList.size());
+        viewPager.setOffscreenPageLimit(reviewItemFragments.length);
         mPagerAdapter = new NavigationAdapter(getSupportFragmentManager(), ratingList, this);
         viewPager.setAdapter(mPagerAdapter);
         viewPager.setCurrentItem(0);
@@ -238,20 +238,37 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
     }
 
     @Override
-    public void select(final int fragmentPosition, String answer, int selectAnswerIndex) {
+    public void select(final int fragmentPosition, String answer, int selectAnswerIndex, boolean force) {
         if(lastPage == fragmentPosition){
             showSnackbar((fragmentPosition+1) + "/" + ratingList.size() + " 완료");
+            String ques = (fragmentPosition+1) +". " + ratingList.get(fragmentPosition).get("question");
+            reviewItemFragments[ratingList.size()].addSubmitContent(ques, answer);
 
-            Runnable runnable = new Runnable(){
-                public void run(){
-                    if(fragmentPosition == lastPage){
+            Runnable runnable = new Runnable() {
+                public void run() {
+                    if (fragmentPosition == lastPage) {
                         lastPage += 1;
                     }
-                    viewPager.setCurrentItem(fragmentPosition+1, true);
+                    viewPager.setCurrentItem(fragmentPosition + 1, true);
                 }
             };
-            handler.postDelayed(runnable, 500);
+            if(force) {
+                handler.postDelayed(runnable, 0);
+            }else{
+                handler.postDelayed(runnable, 500);
+            }
+        }else{
+            reviewItemFragments[ratingList.size()].setSubmitContent(fragmentPosition, answer);
+            if(force){
+                viewPager.setCurrentItem(fragmentPosition + 1, true);
+            }
         }
+
+    }
+
+    @Override
+    public void submit(){
+        checkSecret();
     }
 
     private class MyHandler extends Handler {
@@ -284,7 +301,7 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
         public NavigationAdapter(FragmentManager fm, ArrayList<HashMap<String, Object>> list, ReviewActivity activity) {
             super(fm);
             this.list = list;
-            this.size = list.size();
+            this.size = list.size()+1;
             this.activity = activity;
         }
 
@@ -299,13 +316,22 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
 
                 f = new ReviewItemFragment();
                 Bundle bdl = new Bundle(1);
-                bdl.putInt("position", pattern);
-                bdl.putSerializable("item", list.get(pattern));
-                ReviewSelectListener listener = (ReviewSelectListener)activity;
-                bdl.putSerializable("listener", listener);
+
                 if(pattern == size-1){
-                    bdl.putBoolean("isEditMode", true);
+                    bdl.putInt("position", pattern);
+                    //ReviewSelectListener listener = (ReviewSelectListener)activity;
+                    bdl.putSerializable("listener", activity);
+                    bdl.putBoolean("isSubmitMode", true);
+                }else{
+                    bdl.putInt("position", pattern);
+                    bdl.putSerializable("item", list.get(pattern));
+                    //ReviewSelectListener listener = (ReviewSelectListener)activity;
+                    bdl.putSerializable("listener", activity);
+                    if(pattern == size-2){
+                        bdl.putBoolean("isEditMode", true);
+                    }
                 }
+
                 f.setArguments(bdl);
 
                 activity.setReviewItemFragments(f, pattern);

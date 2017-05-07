@@ -7,5 +7,6 @@ import java.io.Serializable;
  */
 
 public interface ReviewSelectListener extends Serializable {
-    void select(int fragmentPosition, String answer, int selectAnswerIndex);
+    void select(int fragmentPosition, String answer, int selectAnswerIndex, boolean force);
+    void submit();
 }

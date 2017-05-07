@@ -17,6 +17,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rey.material.widget.CompoundButton;
 import com.rey.material.widget.RadioButton;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import ga.findparty.findparty.R;
@@ -44,16 +45,26 @@ public class ReviewItemFragment extends BaseFragment {
     private String answer;
     private int selectAnswerIndex = -1;
 
+    private ArrayList<HashMap<String, String>> submitList;
+
     private boolean isEditMode;
+    private boolean isSubmitMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         this.setRetainInstance(true);
+        submitList = new ArrayList<>();
+
         if(getArguments() != null) {
             isEditMode = getArguments().getBoolean("isEditMode", false);
+            isSubmitMode = getArguments().getBoolean("isSubmitMode", false);
             position = getArguments().getInt("position");
-            item = (HashMap<String, Object>)getArguments().getSerializable("item");
+            if(isSubmitMode){
+                item = new HashMap<>();
+            }else {
+                item = (HashMap<String, Object>) getArguments().getSerializable("item");
+            }
             question = (String)item.get("question");
             answerList = (String[])item.get("answer");
             selectListener = (ReviewSelectListener)getArguments().getSerializable("listener");
@@ -84,9 +95,6 @@ public class ReviewItemFragment extends BaseFragment {
         editText = (MaterialEditText)view.findViewById(R.id.edit_text);
         nextBtn = (Button)view.findViewById(R.id.nextBtn);
 
-        String qu = (position+1) + ". " + question;
-        tv_question.setText(qu);
-
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -103,20 +111,88 @@ public class ReviewItemFragment extends BaseFragment {
                 checkNextEnable();
             }
         });
-        nextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectListener.select(position, getEditAnswer(), -1);
-            }
-        });
 
         if(isEditMode){
+
+            String qu = (position+1) + ". " + question;
+            tv_question.setText(qu);
+            nextBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectListener.select(position, getEditAnswer(), -1, true);
+                }
+            });
             editText.setVisibility(View.VISIBLE);
             nextBtn.setVisibility(View.VISIBLE);
+
+        }else if(isSubmitMode){
+
+            tv_question.setText("종합");
+            nextBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectListener.submit();
+                }
+            });
+            nextBtn.setText("제출");
+            nextBtn.setEnabled(true);
+            nextBtn.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            nextBtn.setVisibility(View.VISIBLE);
+
         }else{
+
+            String qu = (position+1) + ". " + question;
+            tv_question.setText(qu);
             editText.setVisibility(View.GONE);
             nextBtn.setVisibility(View.GONE);
             makeAnswerList();
+
+        }
+
+    }
+
+    public void addSubmitContent(String question, String answer){
+        if(isSubmitMode) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("question", question);
+            map.put("answer", answer);
+            submitList.add(map);
+            makeSubmitList();
+        }
+    }
+    public void setSubmitContent(int position, String answer){
+        if(isSubmitMode){
+            HashMap<String, String> map = submitList.get(position);
+            map.put("answer", answer);
+            submitList.set(position, map);
+            makeSubmitList();
+        }
+    }
+
+    private void makeSubmitList(){
+
+        li_radio.removeAllViews();
+
+        for(HashMap<String, String> map : submitList){
+
+            View v = LayoutInflater.from(context).inflate(R.layout.question_and_answer_custom_item, null, false);
+
+            TextView tv_question = (TextView)v.findViewById(R.id.tv_question);
+            TextView tv_answer = (TextView)v.findViewById(R.id.tv_answer);
+
+            String question = map.get("question");
+            String answer = map.get("answer");
+
+            tv_question.setText(question);
+            tv_answer.setText(answer);
+
+            tv_question.setTextColor(ContextCompat.getColor(context, R.color.dark_gray));
+            tv_answer.setTextColor(ContextCompat.getColor(context, R.color.gray));
+
+            tv_answer.setPadding(10, 0, 0, 0);
+
+            li_radio.addView(v);
+
         }
 
     }
@@ -148,7 +224,7 @@ public class ReviewItemFragment extends BaseFragment {
                             int index = (int)rb.getTag();
                             answer = answerList[index];
                             selectAnswerIndex = index;
-                            selectListener.select(position, answer, selectAnswerIndex);
+                            selectListener.select(position, answer, selectAnswerIndex, false);
                         }
                     }
                 }
