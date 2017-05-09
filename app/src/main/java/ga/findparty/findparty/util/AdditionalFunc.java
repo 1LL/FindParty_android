@@ -589,6 +589,7 @@ public class AdditionalFunc {
                 hashTemp.put("boardUserName", boardUserName);
                 hashTemp.put("boardUserEmail", boardUserEmail);
                 hashTemp.put("boardUserImg", boardUserImg);
+                hashTemp.put("table", "teamTbl");
                 hashTemp.put("review", (String)temp.get("review"));
                 String courseId = (String)temp.get("courseId");
                 hashTemp.put("courseId", courseId);
@@ -638,6 +639,7 @@ public class AdditionalFunc {
                     map.put("field", (String)tempMem.get("field"));
                     map.put("skill", Integer.parseInt((String)tempMem.get("skill")));
                     map.put("content", (String)tempMem.get("content"));
+                    map.put("table", "applyFormTbl");
                     map.put("review", (String)tempMem.get("review"));
 
                     String mon = (String)tempMem.get("mon");

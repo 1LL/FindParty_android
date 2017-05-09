@@ -17,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.squareup.picasso.Picasso;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -35,6 +37,8 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class MyReviewFragment extends BaseFragment {
 
+    public final static int UPDATE_LIST = 200;
+
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_MAKE_LIST = 500;
 
@@ -44,6 +48,7 @@ public class MyReviewFragment extends BaseFragment {
 
     private ScrollView parentSV;
     private AVLoadingIndicatorView loading;
+    private MaterialDialog progressDialog;
     private TextView tv_msg;
     private LinearLayout li_listField;
     private ArrayList<HorizontalScrollView> memberScrollViewList;
@@ -72,12 +77,19 @@ public class MyReviewFragment extends BaseFragment {
 
         initUI();
 
-        getTeamList();
+        getTeamList(false);
 
         return view;
     }
 
     private void initUI(){
+
+        progressDialog = new MaterialDialog.Builder(context)
+                .content("잠시만 기다려주세요.")
+                .progress(true, 0)
+                .progressIndeterminateStyle(true)
+                .theme(Theme.LIGHT)
+                .build();
 
         parentSV = (ScrollView)view.findViewById(R.id.sv_parent);
         parentSV.setOnTouchListener(new View.OnTouchListener() {
@@ -150,6 +162,8 @@ public class MyReviewFragment extends BaseFragment {
             tempMap.put("name", (String)map.get("boardUserName"));
             tempMap.put("email", (String)map.get("boardUserEmail"));
             tempMap.put("field", "대표");
+            tempMap.put("table", (String)map.get("table"));
+            tempMap.put("tableId", (String)map.get("id"));
             tempMap.put("review", (String)map.get("review"));
             reviewList.add(tempMap);
 
@@ -190,6 +204,8 @@ public class MyReviewFragment extends BaseFragment {
                 tempMap.put("name", (String)m.get("name"));
                 tempMap.put("email", (String)m.get("email"));
                 tempMap.put("field", (String)m.get("field"));
+                tempMap.put("tableId", (String)m.get("id"));
+                tempMap.put("table", (String)m.get("table"));
                 tempMap.put("review", (String)m.get("review"));
                 reviewList.add(tempMap);
 
@@ -223,7 +239,7 @@ public class MyReviewFragment extends BaseFragment {
                 public void onClick(View v) {
                     Intent intent = new Intent(context, ReviewListActivity.class);
                     intent.putExtra("list", reviewList);
-                    startActivity(intent);
+                    startActivityForResult(intent, UPDATE_LIST);
                 }
             });
 
@@ -239,9 +255,13 @@ public class MyReviewFragment extends BaseFragment {
 
     }
 
-    private void getTeamList(){
+    public void getTeamList(boolean isShowDialog){
 
-        loading.show();
+        if(isShowDialog){
+            progressDialog.show();
+        }else {
+            loading.show();
+        }
 
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "getTeamList");
@@ -266,11 +286,20 @@ public class MyReviewFragment extends BaseFragment {
             {
                 case MSG_MESSAGE_MAKE_LIST:
                     loading.hide();
+                    progressDialog.hide();
                     makeList();
                     break;
                 default:
                     break;
             }
+        }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(progressDialog != null){
+            progressDialog.dismiss();
         }
     }
 

@@ -1,8 +1,10 @@
 package ga.findparty.findparty.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -12,11 +14,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
+import com.squareup.picasso.Picasso;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
@@ -30,15 +36,25 @@ import ga.findparty.findparty.util.AdditionalFunc;
 import ga.findparty.findparty.util.CustomViewPager;
 import ga.findparty.findparty.util.ParsePHP;
 import ga.findparty.findparty.util.ReviewSelectListener;
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ReviewActivity extends BaseActivity implements ReviewSelectListener{
 
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_MAKE_LIST = 500;
+    private final int MSG_MESSAGE_SAVE_SUCCESS = 501;
+    private final int MSG_MESSAGE_SAVE_FAIL = 502;
 
     private LinearLayout li_listField;
     private Button submitBtn;
     private AVLoadingIndicatorView loading;
+    private MaterialDialog progressDialog;
+
+    // UI
+    private ImageView profileImage;
+    private TextView tv_name;
+    private TextView tv_email;
+    private TextView tv_field;
 
     private DotIndicator dotIndicator;
     private CustomViewPager viewPager;
@@ -50,10 +66,17 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
     private int[] answerIndexList;
     private boolean isSecret;
 
+    private int position;
+    private HashMap<String, Object> userItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
+
+        Intent intent = getIntent();
+        userItem = (HashMap<String, Object>)intent.getSerializableExtra("item");
+        position = intent.getIntExtra("position", -1);
 
         ratingList = new ArrayList<>();
 
@@ -65,6 +88,12 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
 
     private void init(){
 
+        progressDialog = new MaterialDialog.Builder(this)
+                .content("잠시만 기다려주세요.")
+                .progress(true, 0)
+                .progressIndeterminateStyle(true)
+                .theme(Theme.LIGHT)
+                .build();
 //        li_listField = (LinearLayout)findViewById(R.id.li_list_field);
 //        submitBtn = (Button)findViewById(R.id.submit);
         loading = (AVLoadingIndicatorView)findViewById(R.id.loading);
@@ -76,6 +105,18 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
 //            }
 //        });
 
+        profileImage = (ImageView)findViewById(R.id.profileImg);
+        tv_name = (TextView)findViewById(R.id.tv_name);
+        tv_email = (TextView)findViewById(R.id.tv_email);
+        tv_field = (TextView)findViewById(R.id.tv_field);
+
+        Picasso.with(getApplicationContext())
+                .load((String)userItem.get("img"))
+                .transform(new CropCircleTransformation())
+                .into(profileImage);
+        tv_name.setText((String)userItem.get("name"));
+        tv_email.setText((String)userItem.get("email"));
+        tv_field.setText((String)userItem.get("field"));
 
     }
 
@@ -98,13 +139,39 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
                             }else{
                                 isSecret = true;
                             }
-                            // TODO
+                            submitToServer();
                         }
                         return true;
                     }
                 })
                 .positiveText("확인")
                 .show();
+
+    }
+
+    private void submitToServer(){
+
+        progressDialog.show();
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("service", "saveReview");
+        map.put("table", (String)userItem.get("table"));
+        map.put("tableId", (String)userItem.get("tableId"));
+        map.put("userId", getUserID(this));
+
+        new ParsePHP(Information.MAIN_SERVER_ADDRESS, map){
+
+            @Override
+            protected void afterThreadFinish(String data) {
+
+                if("1".equals(data)){
+                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_SAVE_SUCCESS));
+                }else{
+                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_SAVE_FAIL));
+                }
+
+            }
+        }.start();
 
     }
 
@@ -271,6 +338,10 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
         checkSecret();
     }
 
+    private void activityFinish(){
+        finish();
+    }
+
     private class MyHandler extends Handler {
 
         public void handleMessage(Message msg) {
@@ -278,6 +349,36 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
                 case MSG_MESSAGE_MAKE_LIST:
                     loading.hide();
                     makeList();
+                    break;
+                case MSG_MESSAGE_SAVE_SUCCESS:
+                    progressDialog.hide();
+                    String review = (String)userItem.get("review");
+                    review += (","+getUserID(ReviewActivity.this));
+                    userItem.put("review", review);
+                    Intent intent = new Intent();
+                    intent.putExtra("position", position);
+                    intent.putExtra("item", userItem);
+                    setResult(ReviewListActivity.UPDATE_LIST, intent);
+                    new MaterialDialog.Builder(ReviewActivity.this)
+                            .title("완료")
+                            .content("평가가 성공적으로 저장되었습니다.")
+                            .positiveText("확인")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                    activityFinish();
+                                }
+                            })
+                            .show();
+                    break;
+                case MSG_MESSAGE_SAVE_FAIL:
+                    progressDialog.hide();
+                    new MaterialDialog.Builder(ReviewActivity.this)
+                            .title("오류")
+                            .content("잠시 후 다시 시도해주세요.")
+                            .positiveText("확인")
+                            .show();
                     break;
                 default:
                     break;
@@ -346,6 +447,14 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
         @Override
         public int getCount() {
             return size;
+        }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(progressDialog != null){
+            progressDialog.dismiss();
         }
     }
 

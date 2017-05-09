@@ -20,11 +20,14 @@ import java.util.HashMap;
 import ga.findparty.findparty.BaseActivity;
 import ga.findparty.findparty.R;
 import ga.findparty.findparty.StartActivity;
+import ga.findparty.findparty.fragment.MyReviewFragment;
 import ga.findparty.findparty.profile.ProfileActivity;
 import ga.findparty.findparty.util.AdditionalFunc;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ReviewListActivity extends BaseActivity {
+
+    public static final int UPDATE_LIST = 100;
 
     private LinearLayout li_participantList;
 
@@ -55,7 +58,8 @@ public class ReviewListActivity extends BaseActivity {
         li_participantList.removeAllViews();
 
         for(int i=0; i<list.size(); i++){
-            HashMap<String, Object> map = list.get(i);
+            final int pos = i;
+            final HashMap<String, Object> map = list.get(i);
 
             final String userId = (String)map.get("userId");
 
@@ -95,16 +99,20 @@ public class ReviewListActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(ReviewListActivity.this, ReviewActivity.class);
-                    startActivity(intent);
+                    intent.putExtra("item", map);
+                    intent.putExtra("position", pos);
+                    startActivityForResult(intent, UPDATE_LIST);
                 }
             });
 
             if(alreadyReviewList.contains(getUserID(this))){
                 rl_background.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_gray));
                 reviewBtn.setEnabled(false);
+                reviewBtn.setText("완료");
             }else{
                 rl_background.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
                 reviewBtn.setEnabled(true);
+                reviewBtn.setText("평가하기");
             }
 
             li_participantList.addView(v);
@@ -112,4 +120,24 @@ public class ReviewListActivity extends BaseActivity {
         }
 
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) {
+            case UPDATE_LIST:
+                int position = data.getIntExtra("position", -1);
+                if(position >= 0){
+                    HashMap<String, Object> item = (HashMap<String, Object>)data.getSerializableExtra("item");
+                    list.set(position, item);
+                    setResult(MyReviewFragment.UPDATE_LIST);
+                    makeList();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
 }

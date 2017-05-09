@@ -9,11 +9,67 @@
     android:background="@color/background_color"
     >
 
+    <RelativeLayout
+        android:id="@+id/rl_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/custom_actionbar_size"
+        android:background="@color/white"
+        >
+
+        <ImageView
+            android:id="@+id/profileImg"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toRightOf="@+id/profileImg"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/tv_field"
+            >
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/dark_gray"
+                />
+
+            <TextView
+                android:id="@+id/tv_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/dark_gray"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@+id/dot_menu"
+            android:padding="10dp"
+            android:textColor="@color/dark_gray"
+            android:textSize="12sp"
+            />
+
+    </RelativeLayout>
+
     <ga.findparty.findparty.util.CustomViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/custom_actionbar_size"
+        android:layout_below="@+id/rl_profile"
         android:layout_above="@+id/main_indicator_ad"
         >
 

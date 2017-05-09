@@ -309,6 +309,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 fragment.getUserCourseList();
                 break;
             }
+            case MyReviewFragment.UPDATE_LIST:{
+                MyReviewFragment fragment = (MyReviewFragment)getSupportFragmentManager().findFragmentByTag("nav_my_review");
+                fragment.getTeamList(true);
+                break;
+            }
             default:
                 break;
         }
