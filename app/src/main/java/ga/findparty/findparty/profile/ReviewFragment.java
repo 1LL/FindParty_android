@@ -37,9 +37,11 @@ public class ReviewFragment extends BaseFragment {
 
     private AVLoadingIndicatorView loading;
     private TextView tv_msg;
+    private TextView tv_countMsg;
     private LinearLayout li_listField;
 
     private ArrayList<HashMap<String, Object>> ratingList;
+    private ArrayList<HashMap<String, Object>> reviewList;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -66,6 +68,7 @@ public class ReviewFragment extends BaseFragment {
 
     private void initData(){
 
+        reviewList = new ArrayList<>();
 
     }
 
@@ -74,6 +77,8 @@ public class ReviewFragment extends BaseFragment {
         loading = (AVLoadingIndicatorView)view.findViewById(R.id.loading);
         tv_msg = (TextView)view.findViewById(R.id.tv_msg);
         tv_msg.setVisibility(View.GONE);
+        tv_countMsg = (TextView)view.findViewById(R.id.tv_count_msg);
+        tv_countMsg.setVisibility(View.GONE);
         li_listField = (LinearLayout)view.findViewById(R.id.li_list_field);
 
 
@@ -82,6 +87,10 @@ public class ReviewFragment extends BaseFragment {
     private void makeList(){
 
         li_listField.removeAllViews();
+
+        tv_countMsg.setText(String.format("현재 %d개의 평가가 있습니다.", reviewList.size()));
+        tv_countMsg.setVisibility(View.VISIBLE);
+        li_listField.addView(tv_countMsg);
 
         for(int i=0; i<ratingList.size(); i++){
             HashMap<String, Object> map = ratingList.get(i);
