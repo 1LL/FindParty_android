@@ -47,6 +47,7 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_SAVE_SUCCESS = 503;
     private final int MSG_MESSAGE_SAVE_FAIL = 504;
+    private final int MSG_MESSAGE_SHOW_SAMPLE_QUESTION = 505;
 
     private Button submit;
     private MaterialEditText editContent;
@@ -68,6 +69,7 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
     private ArrayList<String> interest;
     private ArrayList<HashMap<String, String>> fieldList;
     private ArrayList<String> questionList;
+    private String[] sampleQuestionList;
 
     private boolean isDuration = false;
 
@@ -80,6 +82,7 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
 
         Intent intent = getIntent();
         courseId = intent.getStringExtra("courseId");
+        sampleQuestionList = new String[0];
 
         interest = new ArrayList<>();
         fieldList = new ArrayList<>();
@@ -166,7 +169,16 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
                                     makeQuestionLayout();
                                 }
                             }
-                        }).show();
+                        })
+                        .neutralText("목록에서 추가")
+                        .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                                getQuestionList();
+                            }
+                        })
+                        .show();
             }
         });
 
@@ -178,6 +190,33 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
                 .build();
 
         checkAddable();
+
+    }
+
+    private void getQuestionList(){
+
+        if(sampleQuestionList.length == 0){
+            progressDialog.show();
+
+            HashMap<String, String> map = new HashMap<>();
+            map.put("service", "getQuestionList");
+
+            new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
+
+                @Override
+                protected void afterThreadFinish(String data) {
+
+                    sampleQuestionList = AdditionalFunc.getSampleQuestionList(data);
+                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_SHOW_SAMPLE_QUESTION));
+
+                }
+            }.start();
+        }else{
+
+            handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_SHOW_SAMPLE_QUESTION));
+
+        }
+
 
     }
 
@@ -276,6 +315,21 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
                                     dialog.dismiss();
                                 }
                             })
+                            .show();
+                    break;
+                case MSG_MESSAGE_SHOW_SAMPLE_QUESTION:
+                    progressDialog.hide();
+                    new MaterialDialog.Builder(AddCourseBoardActivity.this)
+                            .title("질문 선택")
+                            .items(sampleQuestionList)
+                            .itemsCallback(new MaterialDialog.ListCallback() {
+                                @Override
+                                public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                    questionList.add(AdditionalFunc.replaceNewLineString(sampleQuestionList[which]));
+                                    makeQuestionLayout();
+                                }
+                            })
+                            .positiveText("닫기")
                             .show();
                     break;
                 default:

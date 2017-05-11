@@ -892,4 +892,32 @@ public class AdditionalFunc {
 
     }
 
+    public static String[] getSampleQuestionList(String data){
+
+        String[] list;
+
+        try {
+            JSONObject jObject = new JSONObject(data);
+            JSONArray results = jObject.getJSONArray("result");
+            String countTemp = (String)jObject.get("num_result");
+            int count = Integer.parseInt(countTemp);
+
+            list = new String[count];
+
+            for ( int i = 0; i < count; ++i ) {
+                JSONObject temp = results.getJSONObject(i);
+
+                list[i] = (String)temp.get("content");
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            list = new String[0];
+        }
+
+        return list;
+
+    }
+
 }
