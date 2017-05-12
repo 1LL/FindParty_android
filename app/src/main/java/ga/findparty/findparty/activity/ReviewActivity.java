@@ -65,6 +65,7 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
     private ArrayList<HashMap<String, Object>> ratingList;
     private int[] answerIndexList;
     private boolean isSecret;
+    private ArrayList<String[]> submitList;
 
     private int position;
     private HashMap<String, Object> userItem;
@@ -79,6 +80,7 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
         position = intent.getIntExtra("position", -1);
 
         ratingList = new ArrayList<>();
+        submitList = new ArrayList<>();
 
         init();
 
@@ -153,6 +155,16 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
 
         progressDialog.show();
 
+        String content = "";
+        for(int i=0; i<submitList.size(); i++){
+            String[] s = submitList.get(i);
+            content += (s[0] + ":" + s[1]);
+
+            if(i < submitList.size()-1){
+                content += ";";
+            }
+        }
+
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("service", "saveReview");
         map.put("table", (String)userItem.get("table"));
@@ -172,6 +184,54 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
 
             }
         }.start();
+
+    }
+
+
+    @Override
+    public void select(final int fragmentPosition, String questionID,  String answer, int selectAnswerIndex, boolean force) {
+
+        String[] temp = {
+                questionID,
+                Integer.toString(selectAnswerIndex)
+        };
+        if(fragmentPosition == ratingList.size()-1){
+            temp[1] = answer;
+        }
+
+        if(lastPage == fragmentPosition){
+
+            showSnackbar((fragmentPosition+1) + "/" + ratingList.size() + " 완료");
+            String ques = (fragmentPosition+1) +". " + ratingList.get(fragmentPosition).get("question");
+            reviewItemFragments[ratingList.size()].addSubmitContent(ques, answer);
+
+            submitList.add(temp);
+
+            Runnable runnable = new Runnable() {
+                public void run() {
+                    if (fragmentPosition == lastPage) {
+                        lastPage += 1;
+                    }
+                    viewPager.setCurrentItem(fragmentPosition + 1, true);
+                }
+            };
+
+            if(force) {
+                handler.postDelayed(runnable, 0);
+            }else{
+                handler.postDelayed(runnable, 500);
+            }
+
+        }else{
+
+            reviewItemFragments[ratingList.size()].setSubmitContent(fragmentPosition, answer);
+            submitList.set(fragmentPosition, temp);
+
+            if(force){
+                viewPager.setCurrentItem(fragmentPosition + 1, true);
+            }
+
+        }
 
     }
 
@@ -301,35 +361,6 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
 //            li_listField.addView(v);
 //
 //        }
-
-    }
-
-    @Override
-    public void select(final int fragmentPosition, String answer, int selectAnswerIndex, boolean force) {
-        if(lastPage == fragmentPosition){
-            showSnackbar((fragmentPosition+1) + "/" + ratingList.size() + " 완료");
-            String ques = (fragmentPosition+1) +". " + ratingList.get(fragmentPosition).get("question");
-            reviewItemFragments[ratingList.size()].addSubmitContent(ques, answer);
-
-            Runnable runnable = new Runnable() {
-                public void run() {
-                    if (fragmentPosition == lastPage) {
-                        lastPage += 1;
-                    }
-                    viewPager.setCurrentItem(fragmentPosition + 1, true);
-                }
-            };
-            if(force) {
-                handler.postDelayed(runnable, 0);
-            }else{
-                handler.postDelayed(runnable, 500);
-            }
-        }else{
-            reviewItemFragments[ratingList.size()].setSubmitContent(fragmentPosition, answer);
-            if(force){
-                viewPager.setCurrentItem(fragmentPosition + 1, true);
-            }
-        }
 
     }
 

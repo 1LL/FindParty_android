@@ -37,6 +37,7 @@ public class ReviewItemFragment extends BaseFragment {
     private Button nextBtn;
 
     private int position;
+    private String questionID;
     private String question;
     private String[] answerList;
     private HashMap<String, Object> item;
@@ -64,6 +65,7 @@ public class ReviewItemFragment extends BaseFragment {
                 item = new HashMap<>();
             }else {
                 item = (HashMap<String, Object>) getArguments().getSerializable("item");
+                questionID = (String)item.get("id");
             }
             question = (String)item.get("question");
             answerList = (String[])item.get("answer");
@@ -119,7 +121,7 @@ public class ReviewItemFragment extends BaseFragment {
             nextBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    selectListener.select(position, getEditAnswer(), -1, true);
+                    selectListener.select(position, questionID, getEditAnswer(), -1, true);
                 }
             });
             editText.setVisibility(View.VISIBLE);
@@ -224,7 +226,7 @@ public class ReviewItemFragment extends BaseFragment {
                             int index = (int)rb.getTag();
                             answer = answerList[index];
                             selectAnswerIndex = index;
-                            selectListener.select(position, answer, selectAnswerIndex, false);
+                            selectListener.select(position, questionID, answer, selectAnswerIndex, false);
                         }
                     }
                 }
