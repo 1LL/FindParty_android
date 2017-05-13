@@ -64,6 +64,11 @@ public class AdditionalFunc {
 
     }
 
+    public static long getTodayMilliseconds(){
+        Calendar now = Calendar.getInstance();
+        return getMilliseconds(now.get(Calendar.YEAR), now.get(Calendar.MONTH)+1, now.get(Calendar.DAY_OF_MONTH));
+    }
+
     public static int getDday(long eTime){
 
         long cTime = System.currentTimeMillis();

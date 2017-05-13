@@ -170,6 +170,14 @@ public class ReviewActivity extends BaseActivity implements ReviewSelectListener
         map.put("table", (String)userItem.get("table"));
         map.put("tableId", (String)userItem.get("tableId"));
         map.put("userId", getUserID(this));
+        map.put("targetId", (String)userItem.get("userId"));
+        map.put("content", content);
+        if(isSecret){
+            map.put("isSecret", "1");
+        }else{
+            map.put("isSecret", "0");
+        }
+        map.put("date", Long.toString(AdditionalFunc.getTodayMilliseconds()));
 
         new ParsePHP(Information.MAIN_SERVER_ADDRESS, map){
 
