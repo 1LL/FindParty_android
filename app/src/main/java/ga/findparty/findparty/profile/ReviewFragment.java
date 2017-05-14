@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wang.avi.AVLoadingIndicatorView;
@@ -30,6 +31,7 @@ public class ReviewFragment extends BaseFragment {
 
     private MyHandler handler = new MyHandler();
     private final int MSG_MESSAGE_MAKE_LIST = 500;
+    private final int MSG_MESSAGE_GET_REVIEW = 501;
 
     // BASIC UI
     private View view;
@@ -37,8 +39,11 @@ public class ReviewFragment extends BaseFragment {
 
     private AVLoadingIndicatorView loading;
     private TextView tv_msg;
+    private RelativeLayout rl_detailBtn;
     private TextView tv_countMsg;
     private LinearLayout li_listField;
+
+    private String userId;
 
     private ArrayList<HashMap<String, Object>> ratingList;
     private ArrayList<HashMap<String, Object>> reviewList;
@@ -47,7 +52,7 @@ public class ReviewFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
+        userId = getArguments().getString("id");
         // resultCode = getArguments().getInt("code");
     }
 
@@ -77,6 +82,7 @@ public class ReviewFragment extends BaseFragment {
         loading = (AVLoadingIndicatorView)view.findViewById(R.id.loading);
         tv_msg = (TextView)view.findViewById(R.id.tv_msg);
         tv_msg.setVisibility(View.GONE);
+        rl_detailBtn = (RelativeLayout)view.findViewById(R.id.rl_detail_btn);
         tv_countMsg = (TextView)view.findViewById(R.id.tv_count_msg);
         tv_countMsg.setVisibility(View.GONE);
         li_listField = (LinearLayout)view.findViewById(R.id.li_list_field);
@@ -137,6 +143,25 @@ public class ReviewFragment extends BaseFragment {
             protected void afterThreadFinish(String data) {
 
                 ratingList = AdditionalFunc.getQAListItem(data);
+                handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_GET_REVIEW));
+
+            }
+        }.start();
+
+    }
+
+    private void getUserReviewList(){
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("service", "getUserReviewList");
+        map.put("userId", userId);
+
+        new ParsePHP(Information.MAIN_SERVER_ADDRESS, map){
+
+            @Override
+            protected void afterThreadFinish(String data) {
+
+                reviewList = AdditionalFunc.getUserReviewListItem(data);
                 handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_MAKE_LIST));
 
             }
@@ -150,6 +175,9 @@ public class ReviewFragment extends BaseFragment {
         {
             switch (msg.what)
             {
+                case MSG_MESSAGE_GET_REVIEW:
+                    getUserReviewList();
+                    break;
                 case MSG_MESSAGE_MAKE_LIST:
                     loading.hide();
                     makeList();

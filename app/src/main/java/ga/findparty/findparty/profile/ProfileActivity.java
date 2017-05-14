@@ -111,6 +111,9 @@ public class ProfileActivity extends BaseActivity {
                     case 1:
                         if(reviewFragment == null){
                             reviewFragment = new ReviewFragment();
+                            Bundle bdl = new Bundle(1);
+                            bdl.putString("id", userId);
+                            reviewFragment.setArguments(bdl);
                         }
                         f = reviewFragment;
                         break;

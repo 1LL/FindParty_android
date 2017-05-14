@@ -925,4 +925,50 @@ public class AdditionalFunc {
 
     }
 
+    public static ArrayList<HashMap<String, Object>> getUserReviewListItem(String data){
+
+        ArrayList<HashMap<String, Object>> list = new ArrayList<>();
+
+        try {
+            JSONObject jObject = new JSONObject(data);
+            JSONArray results = jObject.getJSONArray("result");
+            String countTemp = (String)jObject.get("num_result");
+            int count = Integer.parseInt(countTemp);
+
+            for ( int i = 0; i < count; ++i ) {
+                JSONObject temp = results.getJSONObject(i);
+
+                HashMap<String, Object> hashTemp = new HashMap<>();
+                hashTemp.put("id", (String)temp.get("id"));
+                hashTemp.put("targetId", (String)temp.get("targetId"));
+                hashTemp.put("date", Long.parseLong((String)temp.get("date")));
+                if("1".equals((String)temp.get("isSecret"))){
+                    hashTemp.put("isSecret", true);
+                }else{
+                    hashTemp.put("isSecret", false);
+                }
+
+                String content = (String)temp.get("content");
+                String[] contentListTemp = content.split(";");
+                ArrayList<String[]> contentList = new ArrayList<>();
+                for(int k=0; k<contentListTemp.length-1; k++){
+                    String s = contentListTemp[k];
+                    contentList.add(s.split(":"));
+                }
+                hashTemp.put("content", contentList);
+
+                hashTemp.put("writeAnswer", contentListTemp[contentListTemp.length-1].split(":"));
+
+                list.add(hashTemp);
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+
+    }
+
 }
