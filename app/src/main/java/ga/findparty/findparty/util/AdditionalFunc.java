@@ -466,6 +466,34 @@ public class AdditionalFunc {
 
     }
 
+    public static String[] getSampleQuestionList(String data){
+
+        String[] list;
+
+        try {
+            JSONObject jObject = new JSONObject(data);
+            JSONArray results = jObject.getJSONArray("result");
+            String countTemp = (String)jObject.get("num_result");
+            int count = Integer.parseInt(countTemp);
+
+            list = new String[count];
+
+            for ( int i = 0; i < count; ++i ) {
+                JSONObject temp = results.getJSONObject(i);
+
+                list[i] = (String)temp.get("content");
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            list = new String[0];
+        }
+
+        return list;
+
+    }
+
     public static ArrayList<HashMap<String, Object>> getApplyParticipantList(String data){
 
         ArrayList<HashMap<String, Object>> list = new ArrayList<>();
@@ -897,9 +925,9 @@ public class AdditionalFunc {
 
     }
 
-    public static String[] getSampleQuestionList(String data){
+    public static HashMap<String, Object> getQAHashItem(String data){
 
-        String[] list;
+        HashMap<String, Object> list = new HashMap<>();
 
         try {
             JSONObject jObject = new JSONObject(data);
@@ -907,18 +935,42 @@ public class AdditionalFunc {
             String countTemp = (String)jObject.get("num_result");
             int count = Integer.parseInt(countTemp);
 
-            list = new String[count];
-
             for ( int i = 0; i < count; ++i ) {
                 JSONObject temp = results.getJSONObject(i);
 
-                list[i] = (String)temp.get("content");
+                String id = (String)temp.get("id");
+                HashMap<String, Object> hashTemp = new HashMap<>();
+                //hashTemp.put("id", (String)temp.get("id"));
+                hashTemp.put("question", (String)temp.get("question"));
+
+                JSONObject jObjectAns = (JSONObject)temp.get("answer");
+                JSONArray resultsAns = jObjectAns.getJSONArray("result");
+                String countTempAns = (String)jObjectAns.get("num_answer");
+                int countAns = Integer.parseInt(countTempAns);
+
+                String[] answerList = new String[countAns];
+
+                for(int j=0; j<countAns; j++){
+
+                    JSONObject tempans = resultsAns.getJSONObject(j);
+
+                    String ans = (String) tempans.get("ans");
+                    answerList[j] = ans;
+
+                }
+
+                hashTemp.put("total", 0);
+                hashTemp.put("answer", answerList);
+                hashTemp.put("answerCount", new int[answerList.length]);
+
+                list.put(id, hashTemp);
+                //list.add(hashTemp);
+
 
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
-            list = new String[0];
         }
 
         return list;

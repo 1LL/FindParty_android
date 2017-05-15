@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import ga.findparty.findparty.Information;
@@ -45,7 +46,7 @@ public class ReviewFragment extends BaseFragment {
 
     private String userId;
 
-    private ArrayList<HashMap<String, Object>> ratingList;
+    private HashMap<String, Object> ratingList;
     private ArrayList<HashMap<String, Object>> reviewList;
 
     @Override
@@ -98,20 +99,37 @@ public class ReviewFragment extends BaseFragment {
         tv_countMsg.setVisibility(View.VISIBLE);
         li_listField.addView(tv_countMsg);
 
-        for(int i=0; i<ratingList.size(); i++){
-            HashMap<String, Object> map = ratingList.get(i);
+        String[] keyList = new String[ratingList.size()];
+        ratingList.keySet().toArray(keyList);
+        Arrays.sort(keyList);
+
+        for(int i=0; i<keyList.length; i++){
+            String key = keyList[i];
+            HashMap<String, Object> map = (HashMap<String, Object>)ratingList.get(key);
 
             String question = (i+1) + ". " + map.get("question");
             String answer = "";
             String[] answerList = (String[])map.get("answer");
+            int total = (int)map.get("total");
+            int[] answerCount = (int[])map.get("answerCount");
 
-            String index = "가나다라마바사아자차카타파하";
-            for(int j=0; j<answerList.length; j++){
-                String s = index.charAt(j) + ". " + answerList[j];
-                if(j < answerList.length-1){
-                    s += "\n";
+            if(i != keyList.length-1) {
+                String index = "가나다라마바사아자차카타파하";
+                for (int j = 0; j < answerList.length; j++) {
+
+                    int percentage = 0;
+                    if (total > 0) {
+                        percentage = (int) ((double) answerCount[j] / total) * 100;
+                    }
+                    String s = index.charAt(j) + ". " + answerList[j] + "(" + percentage + "%)";
+
+                    if (j < answerList.length - 1) {
+                        s += "\n";
+                    }
+                    answer += s;
                 }
-                answer += s;
+            }else{
+                answer = "TODO";
             }
 
             View v = LayoutInflater.from(context).inflate(R.layout.question_and_answer_custom_item, null, false);
@@ -128,6 +146,87 @@ public class ReviewFragment extends BaseFragment {
             tv_answer.setPadding(20, 0, 0, 0);
 
             li_listField.addView(v);
+
+        }
+
+//        for(int i=0; i<ratingList.size(); i++){
+//            HashMap<String, Object> map = ratingList.get(i);
+//
+//            String question = (i+1) + ". " + map.get("question");
+//            String answer = "";
+//            String[] answerList = (String[])map.get("answer");
+//
+//            String index = "가나다라마바사아자차카타파하";
+//            for(int j=0; j<answerList.length; j++){
+//                String s = index.charAt(j) + ". " + answerList[j];
+//                if(j < answerList.length-1){
+//                    s += "\n";
+//                }
+//                answer += s;
+//            }
+//
+//            View v = LayoutInflater.from(context).inflate(R.layout.question_and_answer_custom_item, null, false);
+//
+//            TextView tv_question = (TextView)v.findViewById(R.id.tv_question);
+//            TextView tv_answer = (TextView)v.findViewById(R.id.tv_answer);
+//
+//            tv_question.setText(question);
+//            tv_answer.setText(answer);
+//
+//            tv_question.setTextColor(ContextCompat.getColor(context, R.color.dark_gray));
+//            tv_answer.setTextColor(ContextCompat.getColor(context, R.color.gray));
+//
+//            tv_answer.setPadding(20, 0, 0, 0);
+//
+//            li_listField.addView(v);
+//        }
+
+    }
+
+    private void makeData(){
+
+//        for(int i=0; i<ratingList.size(); i++){
+//            HashMap<String, Object> map = ratingList.get(i);
+//
+//            String questionId = (String)map.get("id");
+//            String[] answerList = (String[])map.get("answer");
+//            int[] answerCount = new int[answerList.length];
+//
+//            for(HashMap<String, Object> h : reviewList){
+//
+//            }
+//
+//        }
+
+        for(HashMap<String, Object> h : reviewList){
+
+            ArrayList<String[]> content = (ArrayList<String[]>)h.get("content");
+            for(String[] data : content){
+
+                String id = data[0];
+                int index = Integer.parseInt(data[1]);
+
+                if(ratingList.containsKey(id)){
+
+                    HashMap<String, Object> map = (HashMap<String, Object>)ratingList.get(id);
+
+                    int total = (int)map.get("total");
+                    int[] answerCount = (int[])map.get("answerCount");
+
+                    if(index < answerCount.length) {
+                        answerCount[index] += 1;
+                        total += 1;
+
+                        map.put("total", total);
+                        map.put("answerCount", answerCount);
+
+                        ratingList.put(id, map);
+                    }
+
+                }
+
+            }
+
         }
 
     }
@@ -142,7 +241,7 @@ public class ReviewFragment extends BaseFragment {
             @Override
             protected void afterThreadFinish(String data) {
 
-                ratingList = AdditionalFunc.getQAListItem(data);
+                ratingList = AdditionalFunc.getQAHashItem(data);
                 handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_GET_REVIEW));
 
             }
@@ -180,6 +279,7 @@ public class ReviewFragment extends BaseFragment {
                     break;
                 case MSG_MESSAGE_MAKE_LIST:
                     loading.hide();
+                    makeData();
                     makeList();
                     break;
                 default:
