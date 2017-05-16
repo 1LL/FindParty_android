@@ -1,6 +1,7 @@
 package ga.findparty.findparty.profile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -48,6 +49,7 @@ public class ReviewFragment extends BaseFragment {
 
     private HashMap<String, Object> ratingList;
     private ArrayList<HashMap<String, Object>> reviewList;
+    private boolean isLoadFinish = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -88,6 +90,16 @@ public class ReviewFragment extends BaseFragment {
         tv_countMsg.setVisibility(View.GONE);
         li_listField = (LinearLayout)view.findViewById(R.id.li_list_field);
 
+        rl_detailBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isLoadFinish){
+                    Intent intent = new Intent(context, ReviewUserListActivity.class);
+                    intent.putExtra("list", reviewList);
+                    startActivity(intent);
+                }
+            }
+        });
 
     }
 
@@ -149,54 +161,9 @@ public class ReviewFragment extends BaseFragment {
 
         }
 
-//        for(int i=0; i<ratingList.size(); i++){
-//            HashMap<String, Object> map = ratingList.get(i);
-//
-//            String question = (i+1) + ". " + map.get("question");
-//            String answer = "";
-//            String[] answerList = (String[])map.get("answer");
-//
-//            String index = "가나다라마바사아자차카타파하";
-//            for(int j=0; j<answerList.length; j++){
-//                String s = index.charAt(j) + ". " + answerList[j];
-//                if(j < answerList.length-1){
-//                    s += "\n";
-//                }
-//                answer += s;
-//            }
-//
-//            View v = LayoutInflater.from(context).inflate(R.layout.question_and_answer_custom_item, null, false);
-//
-//            TextView tv_question = (TextView)v.findViewById(R.id.tv_question);
-//            TextView tv_answer = (TextView)v.findViewById(R.id.tv_answer);
-//
-//            tv_question.setText(question);
-//            tv_answer.setText(answer);
-//
-//            tv_question.setTextColor(ContextCompat.getColor(context, R.color.dark_gray));
-//            tv_answer.setTextColor(ContextCompat.getColor(context, R.color.gray));
-//
-//            tv_answer.setPadding(20, 0, 0, 0);
-//
-//            li_listField.addView(v);
-//        }
-
     }
 
     private void makeData(){
-
-//        for(int i=0; i<ratingList.size(); i++){
-//            HashMap<String, Object> map = ratingList.get(i);
-//
-//            String questionId = (String)map.get("id");
-//            String[] answerList = (String[])map.get("answer");
-//            int[] answerCount = new int[answerList.length];
-//
-//            for(HashMap<String, Object> h : reviewList){
-//
-//            }
-//
-//        }
 
         for(HashMap<String, Object> h : reviewList){
 
@@ -281,6 +248,7 @@ public class ReviewFragment extends BaseFragment {
                     loading.hide();
                     makeData();
                     makeList();
+                    isLoadFinish = true;
                     break;
                 default:
                     break;
