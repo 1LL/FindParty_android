@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ga.findparty.findparty.profile.ReviewDetailActivity"
+    android:background="@color/transparent"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_color"
+        android:layout_margin="20dp"
+        android:clickable="true"
+        >
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/close_btn"
+            >
+
+            <LinearLayout
+                android:id="@+id/li_list_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/close_btn"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:text="닫기"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:background="@color/colorPrimary"
+            android:layout_alignParentBottom="true"
+            />
+
+    </RelativeLayout>
+
+</FrameLayout>

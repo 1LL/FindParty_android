@@ -36,6 +36,7 @@ public class ReviewUserListActivity extends BaseActivity implements OnAdapterSup
     private LinearLayoutManager mLinearLayoutManager;
     private ReviewUserListCustomAdapter adapter;
 
+    private HashMap<String, Object> ratingList;
     private ArrayList<HashMap<String, Object>> reviewList;
 
     @Override
@@ -46,6 +47,7 @@ public class ReviewUserListActivity extends BaseActivity implements OnAdapterSup
         Intent intent = getIntent();
 
         reviewList = (ArrayList<HashMap<String,Object>>)intent.getSerializableExtra("list");
+        ratingList = (HashMap<String, Object>)intent.getSerializableExtra("question");
 
         init();
 
@@ -99,6 +101,10 @@ public class ReviewUserListActivity extends BaseActivity implements OnAdapterSup
 
         adapter.notifyDataSetChanged();
 
+    }
+
+    public HashMap<String, Object> getRatingList(){
+        return ratingList;
     }
 
     @Override

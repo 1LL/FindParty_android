@@ -90,12 +90,49 @@ public class ReviewUserListCustomAdapter extends RecyclerView.Adapter<ReviewUser
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.showSnackbar("click ID : " + data.get("id"));
+                Intent intent = new Intent(context, ReviewDetailActivity.class);
+                intent.putExtra("data", makeData(data));
+                activity.redirectActivity(intent);
+                // activity.showSnackbar("click ID : " + data.get("id"));
             }
         });
 
     }
 
+    private ArrayList<String[]> makeData(HashMap<String, Object> h){
+
+        HashMap<String, Object> ratingList = activity.getRatingList();
+
+        ArrayList<String[]> list = new ArrayList<>();
+
+        String indexString = "가나다라마바사아자차카타파하";
+
+        ArrayList<String[]> content = (ArrayList<String[]>)h.get("content");
+        for(String[] data : content){
+
+            String id = data[0];
+            int index = Integer.parseInt(data[1]);
+
+            if(ratingList.containsKey(id)){
+
+                HashMap<String, Object> map = (HashMap<String, Object>)ratingList.get(id);
+                String question = (String)map.get("question");
+                String[] answerList = (String[])map.get("answer");
+                String answer = indexString.charAt(index) + ". " + answerList[index];
+
+                String[] s = {
+                        question,
+                        answer
+                };
+                list.add(s);
+
+            }
+
+        }
+
+        return list;
+
+    }
 
     @Override
     public int getItemCount() {

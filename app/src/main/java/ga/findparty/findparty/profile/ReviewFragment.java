@@ -47,6 +47,7 @@ public class ReviewFragment extends BaseFragment {
 
     private String userId;
 
+    private HashMap<String, Object> originalRatingList;
     private HashMap<String, Object> ratingList;
     private ArrayList<HashMap<String, Object>> reviewList;
     private boolean isLoadFinish = false;
@@ -77,6 +78,7 @@ public class ReviewFragment extends BaseFragment {
     private void initData(){
 
         reviewList = new ArrayList<>();
+        originalRatingList = new HashMap<>();
 
     }
 
@@ -96,6 +98,7 @@ public class ReviewFragment extends BaseFragment {
                 if(isLoadFinish){
                     Intent intent = new Intent(context, ReviewUserListActivity.class);
                     intent.putExtra("list", reviewList);
+                    intent.putExtra("question", originalRatingList);
                     startActivity(intent);
                 }
             }
@@ -209,6 +212,7 @@ public class ReviewFragment extends BaseFragment {
             protected void afterThreadFinish(String data) {
 
                 ratingList = AdditionalFunc.getQAHashItem(data);
+                originalRatingList = (HashMap<String, Object>)ratingList.clone();
                 handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_GET_REVIEW));
 
             }
