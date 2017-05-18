@@ -57,7 +57,27 @@ public class ReviewDetailActivity extends BaseActivity {
 
     private void makeList(){
 
+        li_listField.removeAllViews();
 
+        for(int i=0; i<data.size(); i++){
+
+            String[] s = data.get(i);
+
+            String question = (i+1) + ". " + s[0];
+            String answer = s[1];
+
+            View v = getLayoutInflater().inflate(R.layout.question_and_answer_2_custom_item, null, false);
+
+            TextView tv_question = (TextView)v.findViewById(R.id.tv_question);
+            TextView tv_answer = (TextView)v.findViewById(R.id.tv_answer);
+
+            tv_answer.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.gray));
+
+            tv_question.setText(question);
+            tv_answer.setText(answer);
+
+            li_listField.addView(v);
+        }
 
     }
 
