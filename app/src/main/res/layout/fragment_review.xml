@@ -66,8 +66,19 @@
                     android:id="@+id/tv_count_msg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="현재 0개의 평가가 있습니다."
+                    android:text="현재 총 0개의 평가가 있습니다."
                     android:textColor="@color/dark_gray"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    />
+
+
+                <TextView
+                    android:id="@+id/tv_secret_count_msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="현재 0개의 비공개 평가가 있습니다."
+                    android:textColor="@color/red"
                     android:textSize="12sp"
                     android:gravity="center"
                     />
