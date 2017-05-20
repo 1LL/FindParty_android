@@ -185,7 +185,7 @@ public class ReviewFragment extends BaseFragment {
 
             boolean isSecret = (boolean)h.get("isSecret");
 
-            if(isSecret){
+            if(isSecret && getUserID(this).equals(h.get("targetId"))){
                 secretCount += 1;
             }
             else {
