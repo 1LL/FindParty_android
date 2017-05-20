@@ -100,8 +100,17 @@ public class ReviewFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if(isLoadFinish){
+                    ArrayList<HashMap<String, Object>> temp = new ArrayList<>();
+                    for(HashMap<String, Object> h : reviewList){
+                        boolean isSecret = (boolean)h.get("isSecret");
+                        if(isSecret && getUserID(ReviewFragment.this).equals(h.get("targetId"))){
+
+                        }else{
+                            temp.add(h);
+                        }
+                    }
                     Intent intent = new Intent(context, ReviewUserListActivity.class);
-                    intent.putExtra("list", reviewList);
+                    intent.putExtra("list", temp);
                     intent.putExtra("question", originalRatingList);
                     startActivity(intent);
                 }
