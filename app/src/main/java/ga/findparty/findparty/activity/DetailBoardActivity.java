@@ -56,6 +56,7 @@ public class DetailBoardActivity extends BaseActivity {
     private ImageView profileImage;
     private TextView tv_name;
     private TextView tv_email;
+    private TextView recommendBtn;
     private TextView tv_content;
     private TextView tv_interest;
     private TextView tv_duration;
@@ -109,11 +110,21 @@ public class DetailBoardActivity extends BaseActivity {
         profileImage = (ImageView)findViewById(R.id.profileImg);
         tv_name = (TextView)findViewById(R.id.tv_name);
         tv_email = (TextView)findViewById(R.id.tv_email);
+        recommendBtn = (TextView)findViewById(R.id.recommend_btn);
         tv_content = (TextView)findViewById(R.id.tv_content);
         tv_interest = (TextView)findViewById(R.id.tv_interest);
         tv_duration = (TextView)findViewById(R.id.tv_duration);
         decisionBtn = (Button)findViewById(R.id.decision_btn);
         decisionBtn.setEnabled(false);
+
+        recommendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailBoardActivity.this, RecommendCourseUserActivity.class);
+                intent.putExtra("courseId", courseId);
+                startActivity(intent);
+            }
+        });
 
         li_add_field = (LinearLayout)findViewById(R.id.li_add_field);
 
@@ -241,6 +252,7 @@ public class DetailBoardActivity extends BaseActivity {
                     decision();
                 }
             });
+            recommendBtn.setVisibility(View.VISIBLE);
         }
 
         String startText = AdditionalFunc.getDateString((Long)item.get("start"));
