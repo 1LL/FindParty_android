@@ -1,6 +1,7 @@
 package ga.findparty.findparty;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +20,13 @@ public class BaseActivity extends AppCompatActivity {
         String userId = activity.getSharedPreferences("setting", 0).getString("userId", null);
         return userId;
 
+    }
+
+    public void redirectStartPage(){
+        Intent intent = new Intent(getApplicationContext(), StartActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     public void showSnackbar(String msg){

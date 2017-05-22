@@ -358,11 +358,4 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return version;
     }
 
-    private void redirectStartPage(){
-        Intent intent = new Intent(getApplicationContext(), StartActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
-    }
-
 }

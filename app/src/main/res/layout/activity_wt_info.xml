@@ -8,21 +8,43 @@
     tools:context="ga.findparty.findparty.profile.WtInfoActivity"
     android:background="@color/background_color">
 
-    <Button
-        android:id="@+id/nextBtn"
+    <LinearLayout
+        android:id="@+id/li_btn"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/dark_gray"
-        android:text="계속"
-        android:textColor="@color/light_gray"
-        android:gravity="center"
-        android:layout_alignParentBottom="true" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        >
+        <Button
+            android:id="@+id/logoutBtn"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@color/gray"
+            android:text="로그아웃"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            />
+        <Button
+            android:id="@+id/nextBtn"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@color/dark_gray"
+            android:text="계속"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            />
+
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparency"
-        android:layout_above="@id/nextBtn"
+        android:layout_above="@id/li_btn"
         android:clickable="false">
 
 

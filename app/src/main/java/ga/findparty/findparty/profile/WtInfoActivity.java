@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -41,6 +42,8 @@ import ga.findparty.findparty.MainActivity;
 import ga.findparty.findparty.R;
 import ga.findparty.findparty.StartActivity;
 import ga.findparty.findparty.util.AdditionalFunc;
+import ga.findparty.findparty.util.FacebookLogin;
+import ga.findparty.findparty.util.NaverLogin;
 import ga.findparty.findparty.util.ParsePHP;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -65,7 +68,12 @@ public class WtInfoActivity extends BaseActivity {
     private MaterialEditText editIntro;
     private MaterialEditText editEmail;
 
+    private Button logoutBtn;
     private Button nextBtn;
+
+
+    private FacebookLogin facebookLogin;
+    private NaverLogin naverLogin;
 
     // UI - Interest Field
     private LinearLayout interestField;
@@ -88,8 +96,10 @@ public class WtInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        facebookLogin = new FacebookLogin(this);
         setContentView(R.layout.activity_wt_info);
 
+        naverLogin = new NaverLogin(this, new OAuthLoginButton(this));
         setting = getSharedPreferences("setting", 0);
         editor = setting.edit();
 
@@ -161,6 +171,16 @@ public class WtInfoActivity extends BaseActivity {
                 redirectSelectActivity();
             }
         });
+        logoutBtn = (Button)findViewById(R.id.logoutBtn);
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
+        if(isEditMode){
+            logoutBtn.setVisibility(View.GONE);
+        }
         nextBtn = (Button)findViewById(R.id.nextBtn);
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,6 +237,20 @@ public class WtInfoActivity extends BaseActivity {
                 .theme(Theme.LIGHT)
                 .build();
 
+    }
+
+    private void logout(){
+        String login = setting.getString("login", null);
+        if (StartActivity.FACEBOOK_LOGIN.equals(login)) {
+            facebookLogin.logout();
+        } else if (StartActivity.NAVER_LOGIN.equals(login)) {
+            naverLogin.logout();
+        }
+
+        editor.remove("login");
+        editor.commit();
+
+        redirectStartPage();
     }
 
     private void checkEditText(){
