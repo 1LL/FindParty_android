@@ -32,6 +32,8 @@ public class RecommendCourseUserActivity extends BaseActivity implements OnAdapt
     private final int MSG_MESSAGE_MAKE_LIST = 500;
     private final int MSG_MESSAGE_MAKE_ENDLESS_LIST = 501;
     private final int MSG_MESSAGE_PROGRESS_HIDE = 502;
+    private final int MSG_MESSAGE_INVITE_SUCCESS = 503;
+    private final int MSG_MESSAGE_INVITE_FAIL = 504;
 
     private AVLoadingIndicatorView loading;
     private MaterialDialog progressDialog;
@@ -40,6 +42,7 @@ public class RecommendCourseUserActivity extends BaseActivity implements OnAdapt
     private TextView tv_msg;
 
     private String courseId;
+    private String boardId;
     private int page = 0;
     private ArrayList<HashMap<String, String>> tempList;
     private ArrayList<HashMap<String, String>> list;
@@ -57,6 +60,7 @@ public class RecommendCourseUserActivity extends BaseActivity implements OnAdapt
 
         Intent intent = getIntent();
         courseId = intent.getStringExtra("courseId");
+        boardId = intent.getStringExtra("boardId");
 
         init();
 
@@ -177,6 +181,30 @@ public class RecommendCourseUserActivity extends BaseActivity implements OnAdapt
 
     }
 
+    public void invite(String targetId){
+
+        progressDialog.show();
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("service", "saveInvite");
+        map.put("targetId", targetId);
+        map.put("boardId", boardId);
+
+        new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {
+
+            @Override
+            protected void afterThreadFinish(String data) {
+
+                if("1".equals(data)){
+                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_INVITE_SUCCESS));
+                }else{
+                    handler.sendMessage(handler.obtainMessage(MSG_MESSAGE_INVITE_FAIL));
+                }
+
+            }
+        }.start();
+    }
+
     @Override
     public void showView() {
 
@@ -216,6 +244,22 @@ public class RecommendCourseUserActivity extends BaseActivity implements OnAdapt
                 case MSG_MESSAGE_PROGRESS_HIDE:
                     progressDialog.hide();
                     loading.hide();
+                    break;
+                case MSG_MESSAGE_INVITE_SUCCESS:
+                    progressDialog.hide();
+                    new MaterialDialog.Builder(RecommendCourseUserActivity.this)
+                            .title("알림")
+                            .content("성공적으로 초대 메시지를 전송하였습니다.")
+                            .positiveText("확인")
+                            .show();
+                    break;
+                case MSG_MESSAGE_INVITE_FAIL:
+                    progressDialog.hide();
+                    new MaterialDialog.Builder(RecommendCourseUserActivity.this)
+                            .title("알림")
+                            .content("잠시 후 다시 시도해주세요.")
+                            .positiveText("확인")
+                            .show();
                     break;
                 default:
                     break;

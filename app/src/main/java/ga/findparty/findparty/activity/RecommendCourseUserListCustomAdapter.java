@@ -100,7 +100,7 @@ public class RecommendCourseUserListCustomAdapter extends RecyclerView.Adapter<R
         holder.inviteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.showSnackbar("TODO");
+                activity.invite(item.get("id"));
             }
         });
 

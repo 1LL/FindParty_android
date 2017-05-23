@@ -122,6 +122,7 @@ public class DetailBoardActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(DetailBoardActivity.this, RecommendCourseUserActivity.class);
                 intent.putExtra("courseId", courseId);
+                intent.putExtra("boardId", boardId);
                 startActivity(intent);
             }
         });
