@@ -34,6 +34,7 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 
 import ga.findparty.findparty.fragment.MyClassFragment;
+import ga.findparty.findparty.fragment.MyInviteFragment;
 import ga.findparty.findparty.fragment.MyReviewFragment;
 import ga.findparty.findparty.fragment.MyTeamFragment;
 import ga.findparty.findparty.profile.ProfileActivity;
@@ -49,7 +50,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private NavigationView navigationView;
 
-    private String[] menuList = {"nav_my_team", "nav_my_class", "nav_my_review", "nav_info", "nav_report", "nav_help", "nav_open_source"};
+    private String[] menuList = {"nav_my_team", "nav_my_class", "nav_my_review", "nav_invite", "nav_info", "nav_report", "nav_help", "nav_open_source"};
 
     // Logout
     private MaterialDialog progressDialog;
@@ -167,7 +168,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             showFragment("nav_my_review", new MyReviewFragment());
             title = "평가하기";
 
-        } else if (id == R.id.nav_show_profile) {
+        }else if(id == R.id.nav_invite) {
+
+            showFragment("nav_invite", new MyInviteFragment());
+            title = "초대목록";
+
+        }else if (id == R.id.nav_show_profile) {
 
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
             intent.putExtra("id", getUserID(this));

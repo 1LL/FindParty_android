@@ -187,7 +187,9 @@ public class RecommendCourseUserActivity extends BaseActivity implements OnAdapt
 
         HashMap<String, String> map = new HashMap<>();
         map.put("service", "saveInvite");
+        map.put("userId", getUserID(this));
         map.put("targetId", targetId);
+        map.put("date", Long.toString(AdditionalFunc.getTodayMilliseconds()));
         map.put("boardId", boardId);
 
         new ParsePHP(Information.MAIN_SERVER_ADDRESS, map) {

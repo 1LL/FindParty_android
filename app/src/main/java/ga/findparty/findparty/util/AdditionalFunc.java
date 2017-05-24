@@ -1065,4 +1065,40 @@ public class AdditionalFunc {
 
     }
 
+    public static ArrayList<HashMap<String, Object>> getInviteList(String data){
+
+        ArrayList<HashMap<String, Object>> list = new ArrayList<>();
+
+        try {
+            JSONObject jObject = new JSONObject(data);
+            JSONArray results = jObject.getJSONArray("result");
+            String countTemp = (String)jObject.get("num_result");
+            int count = Integer.parseInt(countTemp);
+
+            for ( int i = 0; i < count; ++i ) {
+                JSONObject temp = results.getJSONObject(i);
+
+                HashMap<String, Object> hashTemp = new HashMap<>();
+                hashTemp.put("id", (String)temp.get("id"));
+                hashTemp.put("userId", (String)temp.get("userId"));
+                hashTemp.put("name", (String)temp.get("name"));
+                hashTemp.put("img", (String)temp.get("img"));
+                hashTemp.put("email", (String)temp.get("email"));
+                hashTemp.put("date", Long.parseLong((String)temp.get("date")));
+                hashTemp.put("boardId", (String)temp.get("boardId"));
+                hashTemp.put("courseId", (String)temp.get("courseId"));
+                hashTemp.put("courseTitle", (String)temp.get("courseTitle"));
+
+                list.add(hashTemp);
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+
+    }
+
 }

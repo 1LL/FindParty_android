@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ga.findparty.findparty.fragment.MyInviteFragment"
+    android:background="@color/background_color"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <ScrollView
+        android:id="@+id/sv_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="10dp"
+        android:clipToPadding="false"
+        >
+
+        <LinearLayout
+            android:id="@+id/li_list_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:clipToPadding="false"
+            >
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <TextView
+            android:id="@+id/tv_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="초대 받은 목록이 없습니다."
+            android:textColor="@color/dark_gray"
+            />
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:indicatorName="LineSpinFadeLoaderIndicator"
+            app:indicatorColor="@color/colorPrimary"
+            style="@style/AVLoadingIndicatorView.Small"
+            android:layout_centerInParent="true"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>
