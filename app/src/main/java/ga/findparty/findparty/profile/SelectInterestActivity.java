@@ -169,7 +169,7 @@ public class SelectInterestActivity extends BaseActivity {
 
         listTemp.clear();
         for (String s : list) {
-            int i = s.indexOf(sh);
+            int i = s.toLowerCase().indexOf(sh.toLowerCase());
             if (i >= 0) {
                 listTemp.add(s);
             }
