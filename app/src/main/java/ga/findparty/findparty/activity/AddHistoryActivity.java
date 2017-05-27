@@ -477,7 +477,7 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
                     setResult(HistoryActivity.UPDATE_HISTORY_LIST);
                     new MaterialDialog.Builder(AddHistoryActivity.this)
                             .title("안내")
-                            .content("정삭적으로 추가하였습니다.")
+                            .content("정상적으로 추가하였습니다.")
                             .theme(Theme.LIGHT)
                             .positiveText("확인")
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
@@ -493,7 +493,7 @@ public class AddHistoryActivity extends BaseActivity implements DatePickerDialog
                     progressDialog.hide();
                     new MaterialDialog.Builder(AddHistoryActivity.this)
                             .title("안내")
-                            .content("정삭적으로 추가하지 못했습니다. 잠시 후 다시 시도해주세요.")
+                            .content("정상적으로 추가하지 못했습니다. 잠시 후 다시 시도해주세요.")
                             .theme(Theme.LIGHT)
                             .positiveText("확인")
                             .onPositive(new MaterialDialog.SingleButtonCallback() {

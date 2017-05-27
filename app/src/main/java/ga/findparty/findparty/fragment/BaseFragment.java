@@ -17,7 +17,12 @@ public class BaseFragment extends Fragment {
 
     public String getUserID(Fragment fragment){
 
-        String userId = fragment.getActivity().getSharedPreferences("setting", 0).getString("userId", null);
+        String userId = "";
+        try {
+            userId = fragment.getActivity().getSharedPreferences("setting", 0).getString("userId", null);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
         return userId;
 
     }

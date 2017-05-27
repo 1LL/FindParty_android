@@ -17,7 +17,12 @@ public class BaseActivity extends AppCompatActivity {
 
     public String getUserID(Activity activity){
 
-        String userId = activity.getSharedPreferences("setting", 0).getString("userId", null);
+        String userId = "";
+        try {
+            userId = activity.getSharedPreferences("setting", 0).getString("userId", null);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
         return userId;
 
     }

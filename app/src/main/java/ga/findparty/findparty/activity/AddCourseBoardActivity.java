@@ -290,7 +290,7 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
                     setResult(CourseBoardActivity.UPDATE_COURSE_BOARD);
                     new MaterialDialog.Builder(AddCourseBoardActivity.this)
                             .title("안내")
-                            .content("수업을 정삭적으로 추가하였습니다.")
+                            .content("수업을 정상적으로 추가하였습니다.")
                             .theme(Theme.LIGHT)
                             .positiveText("확인")
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
@@ -306,7 +306,7 @@ public class AddCourseBoardActivity extends BaseActivity implements DatePickerDi
                     progressDialog.hide();
                     new MaterialDialog.Builder(AddCourseBoardActivity.this)
                             .title("안내")
-                            .content("게시글을 정삭적으로 게시하지 못했습니다. 잠시 후 다시 시도해주세요.")
+                            .content("게시글을 정상적으로 게시하지 못했습니다. 잠시 후 다시 시도해주세요.")
                             .theme(Theme.LIGHT)
                             .positiveText("확인")
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
