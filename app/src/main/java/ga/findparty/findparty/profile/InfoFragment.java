@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -174,7 +175,7 @@ public class InfoFragment extends BaseFragment {
     private void setInterestField(){
 
         try {
-            ArrayList<String> interest = (ArrayList<String>) item.get("interest");
+            final ArrayList<String> interest = (ArrayList<String>) item.get("interest");
             loadingInterest.hide();
 
             interestField.removeAllViews();
@@ -204,7 +205,11 @@ public class InfoFragment extends BaseFragment {
             finalText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //redirectSelectActivity();
+                    new MaterialDialog.Builder(context)
+                            .title("관심분야")
+                            .items(AdditionalFunc.arrayListToStringArray(interest))
+                            .positiveText("닫기")
+                            .show();
                 }
             });
 

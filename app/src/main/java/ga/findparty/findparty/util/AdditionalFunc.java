@@ -127,6 +127,14 @@ public class AdditionalFunc {
         return list;
     }
 
+    public static String[] arrayListToStringArray(ArrayList<String> list){
+        String[] st = new String[list.size()];
+        for(int i=0; i<list.size(); i++){
+            st[i] = list.get(i);
+        }
+        return st;
+    }
+
     public static String arrayListToString(ArrayList<String> list) {
 
         String str = "";
